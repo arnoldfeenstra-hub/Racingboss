@@ -1,0 +1,350 @@
+# Optimalisatie LG Therma V HN0913T – woning Eelderwolde (label A++)
+
+*Opgesteld 11-11-2026 op basis van foto's van installatie, display, installateursmenu en de
+vloerverwarmings-/ventilatietekening. Buitentemperatuur tijdens de metingen: 3 °C.*
+
+---
+
+## 1. In het kort
+
+De warmtepomp **pendelt**: vanavond ruim **2 starts per uur** (≈ 50 per etmaal bij 3 °C), met
+draaitijden van gemiddeld 16 minuten en pauzes van 11 minuten. De oorzaak is vooral dat de
+**stooklijn veel te hoog staat** voor dit huis. De LG mikt bij 3 °C buiten op ≈ 34 °C
+retourwater, terwijl het huis al warm genoeg is bij ≈ 22 °C retour. De pomp haalt zijn eigen doel dus
+nooit, jaagt de compressor elke cyclus omhoog en wordt dan van buitenaf (thermostaat of
+roomsensor) stilgezet.
+
+**Top-6 aanpassingen (in volgorde van effect):**
+
+| # | Wat | Nu | Advies |
+|---|-----|----|--------|
+| 1 | Stooklijn (Seizoensgeb. auto temp, op *Invoer*) | −10 °C → 45 °C / +20 °C → ≈19 °C | **−10 °C → 25 °C / +18 °C → 22 °C** |
+| 2 | Hysterese verwarmingswater | Aan −2,0 / Uit +2,0 | **Aan −1,0 / Uit +3,0** |
+| 3 | Temperatuursensor selecteren | (niet gefotografeerd) | **Water** (de bediening hangt in de berging) |
+| 4 | Honeywell DT4 woonkamer | 20 °C, standaard schakelfrequentie | **21,5–22 °C als begrenzer**, CR = 3, OT = 5 min |
+| 5 | Legionella-ontsmetting | 67 °C, vrijdag 12:00 | **60 °C**, vrijdag 12:00, 10 min |
+| 6 | Stille modus | continu aan | **Alleen 's nachts** (schema) of uit |
+
+Daarnaast: de **berging** (3 groepen, staat nu op 21 °C) en de **slaapkamergroepen** waterzijdig
+terugregelen in plaats van via de thermostaat, en de **twee groepspompen** zo laag mogelijk zetten.
+
+Verwachte winst (indicatief, zie §8): minder dan de helft van het aantal starts, en in de orde van
+**300–700 kWh per jaar** minder stroom bij gelijk comfort.
+
+> **Let op garantie:** LG schrijft voor dat installateursinstellingen door een erkende installateur
+> worden gewijzigd. Bespreek de wijzigingen in het installateursmenu met je installateur of laat
+> hem/haar ze doorvoeren. De thermostaatinstellingen, DHW-temperatuur, AI-correctie en stille modus
+> zijn gebruikersinstellingen.
+
+---
+
+## 2. De installatie (zoals uit foto's en tekening af te leiden)
+
+| Onderdeel | Gegevens |
+|---|---|
+| Binnenunit | LG Therma V R32 **HN0913T** (Split IWT, 9 kW, 3 kW elektrisch element), buitendeel "Single" |
+| Draaiuren | binnenunit 19.960 h (≈ 2,3 jaar onder spanning), interne pomp 4.107 h |
+| Warm water | 180 L geëmailleerde, geïsoleerde boiler, DHW-setpoint 48 °C, nu 44 °C |
+| Buffervat | 50 L staal, geïsoleerd, **4 aansluitingen = parallel buffer / hydraulische scheiding** |
+| Primair debiet | 28,9 L/min (regeling "Optimale debiet", pomp 100 %), waterdruk 1,6 bar (prima) |
+| Secundair | 2 groepspompen op de wand, **niet** door de LG aangestuurd ("Externe pomp gebruiken: Niet gebruiken") |
+| Vloerverwarming | BG-verdeler 13 groepen + groep 1 naar de badkamer boven; verdieping 7 groepen; zolder 6 groepen; **berging: aparte 3-groepsverdeler** (≈ 30 groepen totaal) |
+| Thermostaten | 2× Honeywell Home DT4 (aan/uit): woonkamer 20 °C, slaapkamer 18,5 °C |
+| Ventilatie | Itho Daalderop HRU 400 (WTW, 400 m³/h, rendement 95,5 %) op zolder |
+| Regeling LG | Modus Auto/**AI** (= stooklijn), regeling op **Invoer** (retourtemperatuur), stille modus aan |
+
+De bediening (met ingebouwde kamersensor) zit op de toren in de berging en meet daar 21,0 °C.
+Dat is geen representatieve plek voor ruimteregeling.
+
+---
+
+## 3. Wat de data laten zien
+
+### 3.1 Pendelen (Gegevensregistratie 11-11, 16:39–19:45)
+
+| Start | Stop | Draaitijd | Pauze daarna | In/Uit bij stop |
+|---|---|---|---|---|
+| 16:39 | 16:57 | 18 min | 11 min | 22 / 25 °C |
+| 17:08 | 17:23 | 15 min | 11 min | 22 / 24 °C |
+| 17:34 | 17:47 | 13 min | 12 min | 22 / 22 °C |
+| 17:59 | 18:12 | 13 min | 12 min | 22 / 21 °C |
+| 18:24 | 18:40 | 16 min | 11 min | 22 / 22 °C |
+| 18:51 | 19:09 | 18 min | 11 min | 21 / 19 °C (waarschijnlijk ontdooien) |
+| 19:20 | 19:37 | 17 min | 8 min | 22 / 26 °C |
+
+* Cyclus ≈ 27 min → **≈ 2,3 starts per uur**, looptijd ≈ 59 %.
+* De pauzes zijn opvallend constant **11–12 minuten**. Dat is precies de huidige
+  *Pompinstelling in verwarming*: 1 min overloop + 10 min pomp uit + 1 min meten. Bij de eerste meting
+  start de unit direct weer, omdat het water ver onder het (te hoge) doel ligt.
+* Bij elke stop is de retour pas **21–22 °C**, ver onder het stooklijndoel van ≈ 34 °C. De stop komt
+  dus **niet** uit de eigen waterhysterese, maar van buitenaf: de DT4 of de ruimtesensor van de
+  bediening in de berging.
+
+### 3.2 Stooklijn versus werkelijke behoefte
+
+Huidige lijn (op retour): −10 °C → 45 °C, +20 °C → ≈ 19 °C (laatste punt op de foto niet exact
+leesbaar). Bij 3 °C buiten is het doel daarmee **≈ 34 °C retour**.
+
+Werkelijk: het huis blijft op 20–21 °C met een retour van **21–22 °C** en een aanvoer van
+**24–26 °C**, terwijl de pomp maar 59 % van de tijd draait. Continu draaiend is een retour van ≈ 22–23 °C
+dus genoeg. Extrapolatie naar −10 °C geeft ≈ 24 °C retour. Voor een A++-woning met veel
+vloerverwarmingsoppervlak is dat heel normaal.
+
+Grove schatting van de warmtevraag (uit verbruik vandaag en debiet × ΔT): ≈ 3 kW bij 3 °C, dus
+≈ 5 kW bij −10 °C. **De 9 kW-unit is ruim bemeten.** Lang en laag moduleren is daarom extra belangrijk.
+
+### 3.3 Verbruik
+
+| | Warmte | DHW | Totaal |
+|---|---|---|---|
+| Vandaag (t/m 19:52) | 14,6 kWh | 1,1 kWh | 15,8 kWh |
+| November (11 dagen) | 86,4 kWh | 8,9 kWh | 95,4 kWh |
+| Dit jaar | 1.879,5 kWh | 524,7 kWh | 2.404,2 kWh |
+
+Een betrouwbare **COP** is hier nog niet uit te halen. Daarvoor is het tabblad
+**Samenvatting → Warmteafgifte** nodig (COP = Warmteafgifte ÷ Energie, per kolom). Een grove schatting
+op basis van debiet × ΔT × looptijd geeft voor vandaag ergens tussen 3,5 en 5, maar met de afgeronde
+displaywaarden is dat te onzeker om op te sturen. Richtwaarden na optimalisatie bij 0–5 °C buiten:
+verwarming **≥ 4,5**, warm water **2,5–3**.
+
+---
+
+## 4. Aanbevolen instellingen LG (installateursmenu)
+
+Bereiken komen uit de LG-installatiehandleiding van de HN0913T.
+
+### 4.1 Regeling en stooklijn
+
+| Menu | Nu | Advies | Waarom |
+|---|---|---|---|
+| Configuratie → **Temperatuursensor selecteren** | ? | **Water** | De bediening (en dus de "kamer"-sensor) hangt in de berging. Kamertemperatuur regel je met stooklijn + DT4, niet met deze sensor. |
+| Kamerverwarming → **Verwarming temp. instelling** | Invoer | **Invoer laten** | Retourregeling past goed bij een parallel buffer: de retour verandert langzaam, wat helpt tegen pendelen. De stooklijnwaarden hieronder zijn daarom **retourtemperaturen**. |
+| Seizoensgeb. auto temp → **Buitentemp.** | −10 / 20 | **−10 / 18** | LG-standaard tweede punt; boven 18 °C is geen warmte nodig. |
+| Seizoensgeb. auto temp → **Target temp.** | 45 / ≈19 | **25 / 22** | Zie tabel hieronder; startwaarde, daarna fijnregelen (§7). |
+| Hysteresis Verwarmingswater | Aan −2,0 / Uit +2,0 | **Aan −1,0 / Uit +3,0** | Bereik: Aan 0…−9, Uit 0…+4. Een grotere bovenmarge geeft langere runs en de vloer buffert de warmte. Aan klein houden zorgt dat de herstartdrempel boven kamertemperatuur blijft (anders start hij bij zacht weer niet meer). |
+| Waterverwarming temp. inst. (bereik) | 15 / 45 | **15 / 35** | Veiligheidsplafond voor vloerverwarming; voorkomt dat een AI-correctie of fout de aanvoer onnodig hoog maakt. |
+| AI-correctie (±, op het AI-icoon) | ? | **0** | Na het invoeren van de nieuwe lijn op 0 zetten. Fijnregelen in stappen van ±1. |
+| Hysteresis Kamerlucht (verwarming) | −0,5 / +1,5 | laten | Niet meer in gebruik bij sensor = Water. |
+| Pompinstelling in verwarming | Tijdsinstelling 1 / 10 | **laten** | De groepspompen houden de vloer in beweging; de LG-pomp hoeft tijdens thermo-uit niet continu door het buffervat te draaien. |
+| Stille modus | continu | **schema: alleen 's nachts**, of uit | Beperkt compressor en ventilator; bij vorst kan het element dan bijspringen. |
+| Waterdebiet controle | Optimale debiet (28,9 L/min) | **laten** | Pas aanpassen na het inregelen van de secundaire kant (§6). |
+| Voorrangsregeling 20 / 10 | Gebruik | **laten** | Is LG's "Forced operation": de pomp draait 10 min na 20 uur stilstand (anti-vastlopen). |
+| Pompvoorloop/-overloop | 1 / 1 | laten | |
+
+**Nieuwe stooklijn (retour = Invoer), met de aanvoer die je ongeveer kunt verwachten:**
+
+| Buiten | Doel retour | ≈ Aanvoer | Huidige lijn (retour) |
+|---|---|---|---|
+| −10 °C | 25,0 °C | 27–28 °C | 45 °C |
+| −5 °C | 24,5 °C | 27 °C | 41 °C |
+| 0 °C | 23,9 °C | 26 °C | 36 °C |
+| 3 °C | 23,6 °C | 26 °C | ≈ 34 °C |
+| 5 °C | 23,4 °C | 25–26 °C | ≈ 32 °C |
+| 10 °C | 22,9 °C | 25 °C | ≈ 28 °C |
+| 15 °C | 22,3 °C | 24 °C | ≈ 23 °C |
+
+### 4.2 Back-up element en energiemeting
+
+| Menu | Nu | Advies |
+|---|---|---|
+| Verwarmer aan-temperatuur (*Heater On Temperature*) | niet gefotografeerd | **Zo laag mogelijk (bijv. −10 °C of lager).** De 9 kW-unit dekt deze woning ruim; het element hoeft voor verwarming eigenlijk nooit. |
+| Energiebewaking → Instelling elektrische verwarming | Extern, 3 kW | **Laten controleren:** de HN0913T heeft een intern 3 kW-element. Klopt deze instelling niet, dan kloppen de energiecijfers (en je COP-berekening) ook niet. |
+
+### 4.3 Warm water (180 L)
+
+| Menu | Nu | Advies | Waarom |
+|---|---|---|---|
+| DHW-temperatuur (gebruiker) | 48 °C | **45–46 °C proberen**, terug naar 48 als het tekortschiet | Per graad lager ≈ 2 % betere COP en minder stilstandsverlies; 180 L op 45 °C is ruim voor een normaal huishouden. |
+| Tank instelling 2 → Hysterese | 3 | **4** (maximum) | Minder korte naverwarmingsbeurten. "Verwarming voorrang" staat bij IWT altijd op DHW. |
+| Tank instelling 1 | Min 5 / Comp.limiet 58 | laten | Warmtepomp mag tot 58 °C. |
+| DHW tijdsinstelling | 45 / 30 | laten | |
+| Gebruik de tankverwarmer | Gebruik, Cyclus, 60 min | laten | Element pas na 60 min warmtepompbedrijf. |
+| Tank ontsmetting 1 | Gebruik, vrijdag, 12 uur | **laten** | Midden op de dag = warmste buitenlucht (en eventueel zonnestroom). |
+| Tank ontsmetting 2 | 67 °C / 10 min / eind 1 | **60 °C / 10 min / 1** | De warmtepomp doet tot 58 °C; alleen 58 → 60 °C gaat elektrisch in plaats van 58 → 67 °C. Bespaart ≈ 60–90 kWh/jaar. 60 °C blijft de gangbare desinfectietemperatuur; niet uitzetten. |
+| DHW-schema (optioneel) | – | Naverwarmen bij voorkeur tussen 12:00 en 17:00 | Hogere buitentemperatuur = hogere COP; past bij zon-PV of een dynamisch tarief. |
+| Hercirculatietijd | Niet gebruiken | laten | |
+
+### 4.4 Koelen (zomer, optioneel)
+
+De koelinstellingen staan nu op Uitvoer, water 17 °C (max 24) en "Water stop temp. tijdens koel." 18 °C.
+Wil je in de zomer vloerkoeling gebruiken, zet het koeldoel dan op **19–20 °C**. Laat de stoptemperatuur
+op 18 °C (condensatiebeveiliging) en isoleer de koude leidingen in de berging tegen condens.
+
+---
+
+## 5. Honeywell DT4-thermostaten
+
+De DT4 is een aan/uit-thermostaat met TPI-regeling. Installateursparameters (zie de handleiding van de
+bedrade T4/DT4): **2:CR** schakelfrequentie 3/6/9/12 per uur (standaard 6), **3:OT** minimale
+aan-tijd 1–5 min.
+
+| Instelling | Woonkamer | Slaapkamer |
+|---|---|---|
+| 2:CR (cycli per uur) | **3** | **3** |
+| 3:OT (minimale aan-tijd) | **5 min** | **5 min** |
+| Temperatuur | **21,5–22 °C** (≈ 1,5–2 °C boven de gewenste 20 °C) | zie hieronder |
+| Programma / nachtverlaging | **uit** (of hooguit 0,5 °C) | **uit** |
+
+**Waarom de woonkamer-DT4 hoger:** de stooklijn bepaalt voortaan de temperatuur (≈ 20 °C). De DT4 is
+alleen nog een **begrenzer** bij zoninstraling of veel interne warmte. Staat hij precies op de gewenste
+temperatuur, dan blijft de TPI-regeling rond het setpoint hakken. Dat is precies het pendelen dat we
+willen voorkomen. Een nachtverlaging levert bij vloerverwarming in een A++-woning niets op en kost
+'s ochtends juist een piek met een slechtere COP.
+
+**Slaapkamer-DT4 (18,5 °C): eerst controleren wat hij schakelt** (aansluitkastje bij de pompen):
+
+* **Parallel op de warmtepomp** (beide thermostaten kunnen de LG aanzetten): laat hem op 18,5 °C of zet
+  hem lager. Hij hoort vrijwel nooit te vragen; de slaapkamers volgen via de vloer mee.
+* **Schakelt hij de groepspomp van boven:** zet hem op 19,5–20 °C als begrenzer en maak de slaapkamers
+  koeler door hun groepen op de verdeler terug te regelen (§6). Zo blijft de pomp gewoon draaien.
+  Een pomp die steeds stopt, verkleint het afgifte-oppervlak en is juist een pendeloorzaak.
+
+---
+
+## 6. Vloerverwarming en hydrauliek
+
+1. **Berging (3 groepen, aparte verdeler):** de bediening meet daar 21,0 °C. Er staan ook al een boiler
+   en buffer die warmte afgeven. Moet de berging niet als woonruimte warm zijn, regel deze 3 groepen
+   dan terug of dicht tot ≈ 16–18 °C (minimaal vorstvrij voor de installatie). Besparing hangt af van hoe
+   goed de berging geïsoleerd is: ≈ 50–150 kWh/jaar.
+2. **Slaapkamers (verdeler verdieping):** wil je daar 18,5 °C, zet die groepen dan op ≈ 50–60 % van het
+   debiet van de woonkamergroepen. Zo komen ze vanzelf op temperatuur, zonder thermostaat-geschakel.
+3. **Badkamer (groep 1 van de BG-verdeler) en woonkamer/keuken (groepen 5–13):** volledig open.
+4. **Zolder (6 groepen):** afhankelijk van het gebruik. Bij opslag of weinig gebruik terugregelen.
+5. **Geen thermische motoren:** op de BG-verdeler zie ik handdoppen; laat alle groepen open. Een
+   warmtepomp wil een zo groot mogelijk, constant afgifte-oppervlak.
+6. **Groepspompen:** zet ze op de **laagste stand die de gewenste debieten nog haalt** (controleer de
+   flowmeters). Hun stroom zit **niet** in de LG-teller. Twee pompen die 24/7 draaien op 10–25 W kosten
+   samen ≈ 175–440 kWh per jaar. Zet ze buiten het stookseizoen uit. Optioneel: laat de installateur één pomp
+   via de LG aansturen ("Externe pomp gebruiken"), zodat ze vanzelf stoppen als er geen vraag is.
+7. **Debietverhouding primair/secundair:** tel de flowmeters van alle verdelers op en vergelijk die
+   som met de 28,9 L/min van de LG. Bij een parallel buffer werkt het het best als het primaire debiet
+   ongeveer gelijk aan of iets hoger is dan het secundaire. Is het secundair veel hoger, dan wordt de
+   aanvoer naar de vloer bijgemengd en moet de LG warmer stoken dan nodig. Dit is een klus voor de
+   installateur.
+
+---
+
+## 7. WTW Itho Daalderop HRU 400
+
+Met 95,5 % warmteterugwinning zijn de ventilatieverliezen klein. Belangrijk is vooral dat het huis niet
+onnodig veel ventileert en dat de bypass in de winter dicht blijft.
+
+* **Ventilatiestand:** in de winter op de laagste/automatische stand (vocht- of CO₂-sturing), alleen
+  hoger bij koken, douchen of veel bezoek.
+* **Bypass:** controleer dat de bypass in het stookseizoen dicht blijft. Zet de comfort-/bypass-
+  temperatuur op ≥ 23–24 °C, zodat hij op zonnige winterdagen geen warmte naar buiten stuurt.
+  Dat stel je in via de Itho-app of door de installateur.
+* **Filters:** iedere ≈ 3 maanden schoonmaken, jaarlijks vervangen (of bij filtermelding). Vuile filters
+  geven meer ventilatorvermogen en disbalans.
+* **Balans:** toevoer en afvoer moeten gelijk zijn (inregelen via de Itho Service-app). Disbalans geeft
+  extra infiltratie en dus extra warmtevraag.
+* **Vorstbeveiliging:** bij vorst beschermt de unit de warmtewisselaar. Dat is normaal, maar die
+  beveiliging hoort boven 0 °C niet actief te zijn.
+
+---
+
+## 8. Verwachte effecten (indicatief)
+
+| Maatregel | Effect |
+|---|---|
+| Lagere stooklijn + hysterese + DT4 als begrenzer | Van ≈ 50 naar ≈ 10–20 starts per etmaal bij 3 °C; compressor draait laag en lang. ≈ 5–15 % minder stroom voor verwarming (≈ 100–350 kWh/jaar). |
+| Ontsmetting 67 → 60 °C | ≈ 60–90 kWh/jaar |
+| DHW 48 → 45/46 °C + hysterese 4 | ≈ 20–50 kWh/jaar |
+| Berging terugregelen | ≈ 50–150 kWh/jaar (afhankelijk van isolatie) |
+| Groepspompen lager + 's zomers uit | ≈ 50–200 kWh/jaar (buiten de LG-teller) |
+| Stille modus alleen 's nachts | Voorkomt elementgebruik bij vorst; klein maar positief |
+
+Totaal in de orde van **300–700 kWh per jaar**. De bandbreedte is groot, omdat de COP-gegevens
+(Warmteafgifte) en de pompgegevens nog ontbreken.
+
+---
+
+## 9. Stappenplan en controle
+
+**Stap 1 (nu):** §4.1 (sensor, stooklijn, hysterese, stille modus) en §5 (DT4's).
+Wacht daarna 2–3 dagen; vloerverwarming reageert traag.
+
+**Stap 2 (na 1 week):** §4.3 (warm water en ontsmetting) en §4.2 (element, energiemeting).
+
+**Stap 3 (met de installateur):** §6 (berging, slaapkamers, groepspompen, debietverhouding) en
+§7 (WTW-balans en bypass).
+
+**Fijnregelen van de stooklijn** (max. één stap per 2–3 dagen):
+
+| Situatie (gemiddeld over een dag) | Actie |
+|---|---|
+| Woonkamer < 19,7 °C terwijl de DT4 blijft vragen | AI-correctie **+1** (of beide punten +1 °C) |
+| Woonkamer > 20,7 °C, of de DT4 schakelt vaak af | AI-correctie **−1** |
+| Alleen koud bij vorst, goed bij zacht weer | Alleen het −10 °C-punt +1 à 2 °C |
+| Alleen te warm bij zacht weer | Alleen het +18 °C-punt −1 °C (niet lager dan ≈ 21,5 °C: met hysterese Aan −1 moet de herstartdrempel boven kamertemperatuur blijven) |
+
+Is de AI-correctie na een paar weken structureel ±2 of meer, verwerk die dan in de stooklijnpunten en
+zet de correctie terug op 0. Controleer de lijn opnieuw bij de eerste echte vorst.
+
+**Bijhouden (dagelijks, zelfde tijdstip):**
+
+* Samenvatting → Energie én Warmteafgifte (dag) → **COP per dag** = warmte ÷ energie.
+* Gemiddelde buitentemperatuur van die dag. Het KNMI-station Eelde ligt op een paar kilometer, dus
+  daarmee kun je kWh per graaddag vergelijken.
+* Gegevensregistratie: tel het aantal "Auto"-starts per uur. Doel bij ≤ 5 °C buiten: **≤ 1 start per uur**
+  en draaitijden van ruim een uur of langer.
+
+**Jaarlijks onderhoud:** zeef/filter in de binnenunit en het magneetfilter reinigen (te laag debiet
+geeft o.a. foutcode CH14). Buitendeel vrijhouden van blad en sneeuw. Bij een geëmailleerde boiler de
+anode laten controleren.
+
+---
+
+## 10. Huidige waarden (om terug te kunnen zetten)
+
+| Menu | Waarde vóór wijziging |
+|---|---|
+| Verwarming temp. instelling | Invoer |
+| Seizoensgeb. auto temp – Buitentemp. | −10 / 20 °C |
+| Seizoensgeb. auto temp – Target temp. | 45 / ≈19 °C |
+| Waterverwarming temp. inst. | 15 / 45 °C |
+| Luchtverwarming temp. inst. | 16 / 30 °C |
+| Hysteresis Verwarmingswater | −2,0 / +2,0 |
+| Hysteresis Kamerlucht (verwarming) | −0,5 / +1,5 |
+| Pompinstelling in verwarming | Tijdsinstelling, aan 1 / uit 10 min |
+| Waterdebiet controle | Optimale debiet; pompcapaciteit 100 %; vast debiet 26 L/min; vaste ΔT 5 K |
+| Pompvoorloop / -overloop | 1 / 1 min |
+| Voorrangsregeling (forced operation) | Gebruik, 20 h / 10 min |
+| Externe pomp gebruiken / Mengcircuit | Niet gebruiken / Niet gebruiken |
+| Gebruik de tankverwarmer | Gebruik, Cyclus, vertraging 60 min |
+| DHW temp. inst. (bereik) | 40 / 55 °C; ingesteld 48 °C |
+| Tank instelling 1 | Min. temp 5, comp. limiet 58 °C |
+| Tank instelling 2 | Hysterese 3, voorrang DHW |
+| DHW tijdsinstelling | Actief 45 min, stop 30 min |
+| Tank ontsmetting 1 / 2 | Gebruik, vrijdag 12 uur / 67 °C, 10 min, eindtijd 1 |
+| Hercirculatietijd | Niet gebruiken (10/20) |
+| Energiebewaking | Gebruik; elektrische verwarming Extern 3 kW |
+| Antivriesoptie 1 | Type1 |
+| Vloerdroging | Uit |
+| Koeling | Uitvoer; water 17 (max 24); lucht 16 (max 30); stop 18 °C; hysterese ±0,5; pomp doorlopend |
+
+---
+
+## 11. Nog te controleren / aan te leveren
+
+* Tabblad **Warmteafgifte** (Samenvatting), voor de echte COP van verwarming en warm water.
+* Waarde van **Temperatuursensor selecteren** en **Verwarmer aan-temperatuur**.
+* De **AI-correctie** die nu op het AI-icoon staat.
+* **Bedrading van de DT4's:** wat schakelt welke thermostaat (LG-ingang en/of groepspomp)?
+* **Type en stand van de twee groepspompen**, en de **flowmeterstanden** per verdeler.
+* Is de **berging** binnen de geïsoleerde schil, en moet die warm zijn?
+
+---
+
+### Bronnen
+
+* LG Therma V HN0913T installatiehandleiding (installateursinstellingen p. 110–173):
+  <https://www.manualslib.com/manual/3289782/Lg-Therma-V-Hn0913t.html>
+* LG Therma V weersafhankelijke regeling / AI (communityhandleiding, o.a. hysterese ±4 tegen pendelen,
+  stille modus, thermostaat als begrenzer):
+  <https://community.openenergymonitor.org/uploads/short-url/tEjZHjhjWscXnJqqde5e0p5AVwc.pdf>
+* Honeywell Home T4 (bedraad) installatiehandleiding, parameters CR/OT:
+  <https://www.tlc-direct.co.uk/Technical/DataSheets/Honeywell_Lyric/Honewell%20T4%20wired%20Installation%20Guide.pdf>
+* Itho Daalderop HRU 400 productinformatie:
+  <https://ithodaalderop.compano.com/Data/Environments/000001/Attachment/Bijlage/19_0201%20HRU%20400%20introductie%20Leaflet_WEB.pdf>
