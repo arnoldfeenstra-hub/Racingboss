@@ -43,6 +43,47 @@ dit jaar ≈ **850–1.050 kWh minder stroom** gekost (zie §3.3 en §8).
 
 ---
 
+## 1b. Zelf te doen, zonder installateursmenu: vaste watertemperatuur
+
+De AI-correctie gaat op de LG maar tot **−5**. Met de huidige stooklijn (doel ≈ 34 °C retour bij 3 °C)
+is dat te weinig; effect komt pas rond −10 tot −12. Wat wel werkt zonder installateur: zet de LG op het
+hoofdscherm van **AI (Auto)** naar **Verwarmen (zon)** met een **vaste watertemperatuur**. Omdat er op
+*Invoer* wordt geregeld, is dat de **retourtemperatuur**. Toegestaan bereik: 15–45 °C.
+
+**Stel deze vaste watertemperatuur in, afhankelijk van het weer:**
+
+| Buitentemperatuur (verwachting komende dagen) | Vaste watertemperatuur |
+|---|---|
+| boven 2 °C | **22 °C** |
+| −2 tot 2 °C | **23 °C** |
+| −6 tot −2 °C | **24 °C** |
+| kouder dan −6 °C | **25 °C** |
+
+Met daarbij: woonkamer-DT4 op **20,5 °C** (als bovengrens), 2:CR = 3, 3:OT = 5, geen nachtverlaging,
+stille modus uit, warm water 11–16 uur, groepspompen op HD1 en de berging teruggeregeld (§6).
+
+**25 °C, zoals nu ingesteld, is te hoog.** Bij 2–3 °C buiten gebruikt het huis maar ≈ 22 °C retour. Bij
+25 °C haalt de warmtepomp zijn doel nooit en blijft de DT4 hem uitzetten: volgens de simulator nog
+steeds ≈ 60 starts per dag. Bij 22 °C draait hij vrijwel continu.
+
+| Simulator | Stroom LG per jaar | SCOP | Starts per jaar | Woonkamer in de winter |
+|---|---|---|---|---|
+| Huidig (AI, stooklijn 45/19) | ≈ 2.700 kWh | 2,55 | ≈ 11.300 | 20,0 °C |
+| Vast 25 °C (zoals nu) | ≈ 2.695 kWh | 2,55 | ≈ 11.200 | 19,9 °C |
+| **Vast met het weer mee (tabel)** | **≈ 2.325 kWh** | **2,95** | **≈ 390** | **20,0 °C** |
+| Advies met installateur (stooklijn 25/22, AI −3) | ≈ 2.150 kWh | 3,0 | ≈ 350 | 20,0 °C |
+
+Zonder installateur haal je dus ≈ 375 kWh per jaar van de ≈ 560 kWh. Het nadeel: bij omslaand weer
+moet je de waarde zelf bijstellen. Doe je dat niet, dan wordt het bij vorst kouder in huis (bij 22 °C en
+−5 °C buiten ≈ 18,5 °C) en bij zacht weer begrenst de DT4. De stooklijn van de installateur doet dat
+automatisch; blijft daarom ook de beste eindoplossing.
+
+**Op het display:** tijdens **Ontdooiing** is *Uitvoer* lager dan *Invoer* (bijv. 22 / 20 °C). Dat is
+normaal: de warmtepomp draait dan even omgekeerd en haalt warmte uit het water om het ijs op het
+buitendeel te smelten. Rond 0–4 °C en hoge luchtvochtigheid gebeurt dat meerdere keren per nacht.
+
+---
+
 ## 2. De installatie (zoals uit foto's en tekening af te leiden)
 
 | Onderdeel | Gegevens |
@@ -154,7 +195,7 @@ Bereiken komen uit de LG-installatiehandleiding van de HN0913T.
 | Seizoensgeb. auto temp → **Target temp.** | 45 / ≈19 | **25 / 22** | Zie tabel hieronder; startwaarde, daarna fijnregelen (§7). |
 | Hysteresis Verwarmingswater | Aan −2,0 / Uit +2,0 | **Aan −1,0 / Uit +3,0** | Bereik: Aan 0…−9, Uit 0…+4. Een grotere bovenmarge geeft langere runs en de vloer buffert de warmte. Aan klein houden zorgt dat de herstartdrempel boven kamertemperatuur blijft (anders start hij bij zacht weer niet meer). |
 | Waterverwarming temp. inst. (bereik) | 15 / 45 | **15 / 35** | Veiligheidsplafond voor vloerverwarming; voorkomt dat een AI-correctie of fout de aanvoer onnodig hoog maakt. |
-| AI-correctie (±, op het AI-icoon) | ? | **0** | Na het invoeren van de nieuwe lijn op 0 zetten. Fijnregelen in stappen van ±1. |
+| AI-correctie (±, op het AI-icoon) | ? | **0** | Na het invoeren van de nieuwe lijn op 0 zetten. Fijnregelen in stappen van ±1 (bereik op de LG: −5 tot +5). Hoofdscherm daarna terug op **AI**, als je tijdelijk de vaste watertemperatuur (§1b) gebruikte. |
 | Hysteresis Kamerlucht (verwarming) | −0,5 / +1,5 | laten | Niet meer in gebruik bij sensor = Water. |
 | Pompinstelling in verwarming | Tijdsinstelling 1 / 10 | **laten** | De groepspompen houden de vloer in beweging; de LG-pomp hoeft tijdens thermo-uit niet continu door het buffervat te draaien. |
 | Stille modus | continu | **schema: alleen 's nachts**, of uit | Beperkt compressor en ventilator; bij vorst kan het element dan bijspringen. |
