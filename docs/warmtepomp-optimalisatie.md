@@ -229,6 +229,17 @@ willen voorkomen. Een nachtverlaging levert bij vloerverwarming in een A++-wonin
 * **Schakelt hij de groepspomp van boven:** zet hem op 19,5–20 °C als begrenzer en maak de slaapkamers
   koeler door hun groepen op de verdeler terug te regelen (§6). Zo blijft de pomp gewoon draaien.
   Een pomp die steeds stopt, verkleint het afgifte-oppervlak en is juist een pendeloorzaak.
+* **Schakelt hij allebei** (de warmtepomp én de pomp van boven, via een relais in het aansluitkastje):
+  dan regelt hij de hele bovenverdieping, **inclusief de zolder**, want die hangt aan dezelfde pomp.
+  Volgens de simulator werkt dat zonder extra pendelen. Bij 18,5 °C staat de pomp boven ≈ 45–60 % van
+  de tijd uit en kost het ≈ 0,5–1 kWh per dag minder dan alles open. De keerzijde: de zolder wordt dan
+  ook ≈ 18,5 °C.
+  - Zolder als werk- of speelruimte warm houden: zet de slaapkamer-DT4 op **20 °C** en regel alleen de
+    slaapkamergroepen op de verdieping terug naar ≈ 50–60 %. De zoldergroepen blijven open.
+  - Zolder mag koeler: laat de slaapkamer-DT4 op **18,5 °C** staan. Beneden krijgt in deze opstelling
+    iets minder warmte via de trap en het plafond (simulator: ≈ 0,5 °C). Stel de stooklijn daarom een
+    halve graad minder ver omlaag bij (bijv. AI −2,5 in plaats van −3). In de simulator: kies
+    "Slaapkamer-DT4 schakelt: Allebei" en druk op "Stooklijn afstemmen".
 
 ---
 
@@ -469,6 +480,8 @@ slaapkamer-DT4 op 25 °C en wacht 5 minuten.
   de LG**. Zet de slaapkamer-DT4 op **18,5 °C**.
 * Gaat alleen de bovenste groepspomp aan of uit, en de LG niet? Dan **schakelt hij de pomp van boven**.
   Zet de slaapkamer-DT4 op **20 °C** en regel de slaapkamergroepen terug (§6, punt 2).
+* Start de warmtepomp **én** gaat de pomp van boven aan (en bij 15 °C weer uit)? Dan schakelt hij
+  **allebei**. Kies dan tussen 20 °C (zolder warm) en 18,5 °C (zolder koeler), zie §5.
 
 Zet daarna de woonkamer-DT4 terug op 21,5 °C.
 

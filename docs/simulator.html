@@ -331,8 +331,8 @@ function simulate(p, opt = {}) {
       lastDay = rec && t >= recEnd - 86400;
       const demA = statStep(sA, TA, t, dt);
       const demB = statStep(sB, TB, t, dt);
-      const demand = demA || (p.wiringB === 'parallel' && demB);
-      const pumpBOn = !(p.wiringB === 'pomp' && !demB);
+      const demand = demA || ((p.wiringB === 'parallel' || p.wiringB === 'beide') && demB);
+      const pumpBOn = !((p.wiringB === 'pomp' || p.wiringB === 'beide') && !demB);
 
       let sampleNow, lgPump;
       if (comp) { sampleNow = true; lgPump = true; }
@@ -526,7 +526,7 @@ const C = [
   { id: 'setB', g: 'dt4', l: 'DT4 slaapkamer', min: 15, max: 24, step: 0.5, u: '°C', d: 1 },
   { id: 'cr', g: 'dt4', l: 'Schakelfrequentie (2:CR)', type: 'sel', opts: [[3, '3 per uur'], [6, '6 per uur (standaard)'], [9, '9 per uur'], [12, '12 per uur']] },
   { id: 'ot', g: 'dt4', l: 'Minimale aan-tijd (3:OT)', min: 1, max: 5, step: 1, u: 'min', d: 0 },
-  { id: 'wiringB', g: 'dt4', l: 'Slaapkamer-DT4 schakelt', type: 'sel', opts: [['parallel', 'De warmtepomp (parallel)'], ['pomp', 'De groepspomp boven']] },
+  { id: 'wiringB', g: 'dt4', l: 'Slaapkamer-DT4 schakelt', type: 'sel', opts: [['parallel', 'De warmtepomp (parallel)'], ['pomp', 'De groepspomp boven'], ['beide', 'Allebei (warmtepomp én pomp boven)']] },
   { id: 'mA', g: 'vloer', l: 'Debiet groepen beneden', min: 5, max: 40, step: 1, u: 'L/min', d: 0 },
   { id: 'mB', g: 'vloer', l: 'Debiet groepen boven (slaapkamers, zolder)', min: 0, max: 30, step: 1, u: 'L/min', d: 0 },
   { id: 'berg', g: 'vloer', l: 'Berginggroepen open', min: 0, max: 100, step: 5, u: '%', d: 0 },
@@ -902,7 +902,7 @@ function renderDiag() {
   if (P.pvKWh >= 3 && (fullDay || !inWin(13))) add('info', `Laat de boiler opwarmen tussen ±11 en 16 uur. Dan gebruikt hij je eigen zonnestroom en draait hij bij de warmste buitenlucht. Na het einde van salderen (1-1-2027) scheelt dat direct geld.`);
   if (P.dhwSet < 48 && P.dhwUse >= 120) add('warn', `Bij ${nf(P.dhwUse, 0)} L warm water per dag (regendouche) is ${nf(P.dhwSet, 0)} °C in 180 L krap. Twee douchebeurten achter elkaar kunnen de boiler leegtrekken.`);
   if (r.elGP > 0.6) add('info', `De groepspompen gebruiken ${nf(r.elGP, 2)} kWh per dag, buiten de LG-teller om.`);
-  if (P.wiringB === 'pomp' && r.statBshare < 0.9) add('info', `De slaapkamer-DT4 zet de groepspomp boven ${nf((1 - r.statBshare) * 100, 0)} % van de tijd uit. Dat verkleint het afgifte-oppervlak.`);
+  if ((P.wiringB === 'pomp' || P.wiringB === 'beide') && r.statBshare < 0.9) add(r.statBshare < 0.5 ? 'warn' : 'info', `De slaapkamer-DT4 zet de groepspomp boven ${nf((1 - r.statBshare) * 100, 0)} % van de tijd uit. Verdieping én zolder krijgen dan geen warmte. Zet de slaapkamer-DT4 als begrenzer op ≈ 20 °C en regel de slaapkamergroepen op de verdeler terug.`);
   $('diag').innerHTML = items.join('');
 }
 
