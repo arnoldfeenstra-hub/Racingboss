@@ -28,8 +28,10 @@ roomsensor) stilgezet.
 Daarnaast: de **berging** (3 groepen, staat nu op 21 °C) en de **slaapkamergroepen** waterzijdig
 terugregelen in plaats van via de thermostaat, en de **twee groepspompen** zo laag mogelijk zetten.
 
-Verwachte winst (indicatief, zie §8): minder dan de helft van het aantal starts, en in de orde van
-**300–700 kWh per jaar** minder stroom bij gelijk comfort.
+**Gemeten COP (Samenvatting Energie ÷ Warmteafgifte):** dit jaar **2,2**, november **3,1**,
+vandaag **2,7**. Voor deze unit bij vloerverwarming met ≈ 25 °C aanvoer is **4–4,5 of hoger**
+haalbaar. Er valt dus veel te winnen. Bij een jaar-COP van 3,5–4 had dezelfde warmte (5.382 kWh)
+dit jaar ≈ **850–1.050 kWh minder stroom** gekost (zie §3.3 en §8).
 
 > **Let op garantie:** LG schrijft voor dat installateursinstellingen door een erkende installateur
 > worden gewijzigd. Bespreek de wijzigingen in het installateursmenu met je installateur of laat
@@ -90,8 +92,9 @@ Werkelijk: het huis blijft op 20–21 °C met een retour van **21–22 °C** en 
 dus genoeg. Extrapolatie naar −10 °C geeft ≈ 24 °C retour. Voor een A++-woning met veel
 vloerverwarmingsoppervlak is dat heel normaal.
 
-Grove schatting van de warmtevraag (uit verbruik vandaag en debiet × ΔT): ≈ 3 kW bij 3 °C, dus
-≈ 5 kW bij −10 °C. **De 9 kW-unit is ruim bemeten.** Lang en laag moduleren is daarom extra belangrijk.
+Warmtevraag volgens de warmteafgifte van vandaag: ≈ 40 kWh voor verwarming tot de avond, dus
+gemiddeld **≈ 2 kW bij 3 °C buiten**. Doorgetrokken is dat ≈ **3,5–4 kW bij −10 °C**. De 9 kW-unit is
+voor dit huis **ruim 2× te groot**. Lang en laag moduleren is daarom extra belangrijk.
 
 ### 3.3 Verbruik
 
@@ -101,11 +104,36 @@ Grove schatting van de warmtevraag (uit verbruik vandaag en debiet × ΔT): ≈ 
 | November (11 dagen) | 86,4 kWh | 8,9 kWh | 95,4 kWh |
 | Dit jaar | 1.879,5 kWh | 524,7 kWh | 2.404,2 kWh |
 
-Een betrouwbare **COP** is hier nog niet uit te halen. Daarvoor is het tabblad
-**Samenvatting → Warmteafgifte** nodig (COP = Warmteafgifte ÷ Energie, per kolom). Een grove schatting
-op basis van debiet × ΔT × looptijd geeft voor vandaag ergens tussen 3,5 en 5, maar met de afgeronde
-displaywaarden is dat te onzeker om op te sturen. Richtwaarden na optimalisatie bij 0–5 °C buiten:
-verwarming **≥ 4,5**, warm water **2,5–3**.
+**Warmteafgifte en COP** (tabblad Warmteafgifte geeft één totaal voor verwarming + warm water):
+
+| | Warmteafgifte | Stroom totaal | **COP totaal** | COP alleen verwarming* |
+|---|---|---|---|---|
+| Vandaag | 42,6 kWh | 15,8 kWh | **2,7** | ≈ 2,75 |
+| November (11 dagen) | 298,9 kWh | 95,4 kWh | **3,1** | ≈ 3,2 |
+| Dit jaar | 5.381,8 kWh | 2.404,2 kWh | **2,2** | ≈ 2,2–2,3 |
+
+\* Geschat door voor warm water een COP van 2,0–2,5 aan te nemen.
+
+De dagwaarde is gevoelig voor het tijdstip waarop beide tabbladen zijn gefotografeerd. Het
+maandcijfer is het betrouwbaarst.
+
+**Beoordeling:** bij 3–8 °C buiten en een aanvoer van ≈ 25 °C hoort deze unit voor verwarming
+een COP van **4–5** te halen. De gemeten 2,7–3,2 ligt daar 30–40 % onder. Het jaargemiddelde van 2,2 is
+voor een A++-woning met vloerverwarming zwak. LG berekent de warmteafgifte uit debiet × ΔT en het
+verbruik intern. Bij een kleine ΔT van 2–3 K zitten daar meetfouten in, maar een verschil van deze
+omvang is daarmee niet te verklaren. De waarschijnlijke oorzaken, in volgorde:
+
+1. **Pendelen.** Elke start kost opstartverlies, en bij 3 °C komt er geregeld een ontdooicyclus bij.
+2. **De compressor jaagt elke cyclus een onhaalbaar doel na** (≈ 34 °C retour) en draait daardoor op
+   een hoger, minder efficiënt toerental dan nodig.
+3. **Vaste verbruikers wegen zwaar bij een kleine warmtevraag.** Denk aan de elektronica en de
+   carterverwarming van het buitendeel, en aan de interne pomp. Bij ≈ 40 kWh warmte per dag is
+   1–1,5 kWh stand-by al een merkbaar deel.
+4. **Mogelijk inzet van het elektrisch element** (verwarming of ontsmetting op 67 °C). Controleer de
+   *Verwarmer aan-temperatuur* (§4.2).
+
+Richtwaarden na optimalisatie bij 0–5 °C buiten: verwarming **≥ 4–4,5**, warm water **2,5–3**,
+jaargemiddelde **≥ 3,5**.
 
 ---
 
@@ -248,15 +276,22 @@ onnodig veel ventileert en dat de bypass in de winter dicht blijft.
 
 | Maatregel | Effect |
 |---|---|
-| Lagere stooklijn + hysterese + DT4 als begrenzer | Van ≈ 50 naar ≈ 10–20 starts per etmaal bij 3 °C; compressor draait laag en lang. ≈ 5–15 % minder stroom voor verwarming (≈ 100–350 kWh/jaar). |
+| Lagere stooklijn + hysterese + DT4 als begrenzer | Van ≈ 50 naar ≈ 10–20 starts per etmaal bij 3 °C; compressor draait laag en lang. Dit is de grootste post: de COP van verwarming moet van ≈ 3 naar ≥ 4. |
 | Ontsmetting 67 → 60 °C | ≈ 60–90 kWh/jaar |
 | DHW 48 → 45/46 °C + hysterese 4 | ≈ 20–50 kWh/jaar |
 | Berging terugregelen | ≈ 50–150 kWh/jaar (afhankelijk van isolatie) |
 | Groepspompen lager + 's zomers uit | ≈ 50–200 kWh/jaar (buiten de LG-teller) |
 | Stille modus alleen 's nachts | Voorkomt elementgebruik bij vorst; klein maar positief |
 
-Totaal in de orde van **300–700 kWh per jaar**. De bandbreedte is groot, omdat de COP-gegevens
-(Warmteafgifte) en de pompgegevens nog ontbreken.
+**Op basis van de gemeten COP:** dit jaar is tot nu toe 5.382 kWh warmte geleverd voor 2.404 kWh stroom
+(COP 2,2). Dezelfde warmte kost bij een jaar-COP van **3,5** ≈ 1.540 kWh en bij **4,0** ≈ 1.345 kWh.
+Dat is ≈ **850–1.050 kWh minder** over de eerste 10½ maand. Over een heel jaar komt dat neer op
+≈ 1.000 kWh of meer (≈ € 250+ bij € 0,25/kWh). De groepspompen komen daar nog bij, want die zitten niet
+in de LG-teller.
+
+Dit is een bovengrens voor het geval dat de oorzaken uit §3.3 vooral in de regeling zitten. Blijkt een
+deel uit stand-byverbruik of meetonnauwkeurigheid te komen, dan is de winst kleiner. De meting na
+48 uur (§13) laat zien waar je uitkomt.
 
 ---
 
@@ -328,8 +363,9 @@ anode laten controleren.
 
 ## 11. Nog te controleren / aan te leveren
 
-* Tabblad **Warmteafgifte** (Samenvatting), voor de echte COP van verwarming en warm water.
-* Waarde van **Temperatuursensor selecteren** en **Verwarmer aan-temperatuur**.
+* ~~Tabblad Warmteafgifte~~ ontvangen: COP verwerkt in §3.3.
+* Waarde van **Temperatuursensor selecteren** en **Verwarmer aan-temperatuur**. Die laatste is nu
+  belangrijker, gezien de lage jaar-COP.
 * De **AI-correctie** die nu op het AI-icoon staat.
 * **Bedrading van de DT4's:** wat schakelt welke thermostaat (LG-ingang en/of groepspomp)?
 * **Type en stand van de twee groepspompen**, en de **flowmeterstanden** per verdeler.
@@ -414,7 +450,7 @@ Laat de nieuwe instellingen **48 uur** ongemoeid. Controleer daarna dit:
 | Starts per uur (bij ≤ 5 °C buiten) | Gegevensregistratie: tel de "Auto"-regels per uur (3 regels met dezelfde tijd = 1 start) | **≤ 1**, met draaitijden van ≥ 60 min | Hysterese Uit → **4,0**. Daarna controleren of de woonkamer-DT4 tussentijds afschakelt. |
 | Woonkamertemperatuur | DT4 woonkamer | **20,0 ± 0,5 °C**, en de DT4 vraagt vrijwel continu | Te koud: AI **+1**. Te warm: AI **−1**. |
 | Slaapkamers | thermometer/DT4 | **18,5–19 °C** | Groepen op de verdeler bijregelen |
-| COP verwarming (dag) | Samenvatting: Warmteafgifte ÷ Energie, kolom Warmte, tabblad "Vandaag" | **≥ 4,5** bij 0–5 °C buiten | Stuur de cijfers op; dan zoeken we verder (debiet, buffer, ontdooien) |
+| COP (dag) | Samenvatting: Warmteafgifte ÷ Energie (Totaal), beide tabbladen **direct na elkaar** fotograferen | **≥ 4** bij 0–5 °C buiten (nulmeting: 2,7 vandaag, 3,1 november) | Stuur de cijfers op; dan zoeken we verder (debiet, buffer, ontdooien, stand-by) |
 | COP warm water (week) | idem, kolom DHW | **≥ 2,5** | Meestal ligt het dan aan de ontsmetting of het element |
 | Element | Energie, kolom Warmte, op een dag boven 0 °C | geen sprongen van ≥ 3 kWh in een uur | *Verwarmer aan-temperatuur* controleren |
 
