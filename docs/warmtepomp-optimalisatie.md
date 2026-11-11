@@ -335,6 +335,93 @@ anode laten controleren.
 * **Type en stand van de twee groepspompen**, en de **flowmeterstanden** per verdeler.
 * Is de **berging** binnen de geïsoleerde schil, en moet die warm zijn?
 
+De optimale instellingen hangen **niet** af van deze punten. In de instelkaart (§12) staat bij elk punt
+de waarde die in alle gevallen goed is. De gegevens zijn alleen nodig om het resultaat te controleren (§13).
+
+---
+
+## 12. Instelkaart: alles in één keer invoeren (± 20 minuten)
+
+**Installateursmenu openen (LG):** op het hoofdscherm naar het menu-icoon (4 vakjes) → OK →
+naar **Instellingen** (tandwiel). Rechtsonder staat de softwareversie: dat is de code. Houd **▲ 5 seconden**
+ingedrukt en voer die code in. Wijzigen met ◀ ▶ / ▲ ▼ en bevestigen met **OK**.
+
+Vink af wat je gedaan hebt:
+
+**A. Kamerverwarming / Configuratie**
+
+- [ ] Configuratie → *Temperatuursensor selecteren* → **Water** (welke waarde er nu ook staat)
+- [ ] Kamerverwarming → *Verwarming temp. instelling* → **Invoer** laten staan
+- [ ] Kamerverwarming → *Waterverwarming temp. inst.* → **15 / 35**
+- [ ] Kamerverwarming → *Hysteresis Verwarmingswater* → **Aan −1,0 / Uit 3,0**
+- [ ] Kamerverwarming → *Verwarmer aan-temperatuur* → **laagst mogelijke buitentemperatuur** (welke waarde er nu ook staat)
+- [ ] Kamerverwarming → *Pompinstelling in verwarming* → Tijdsinstelling **1 / 10** laten staan
+
+**B. Seizoensgebonden auto temp (stooklijn)**
+
+- [ ] Mode **Warmte** → *Buitentemp.* → punt 1 **−10**, punt 2 **18**
+- [ ] *Target Temp.* → punt 1 **25**, punt 2 **22**
+- [ ] Menu verlaten. Op het hoofdscherm het **AI**-icoon selecteren → correctie op **0**
+
+**C. Warm water**
+
+- [ ] *Tank ontsmettingsinstelling 2* → **60** / 10 / 1
+- [ ] *Tank instelling 2* → hysterese **4**
+- [ ] Hoofdscherm, douche-icoon → **46 °C** (bij te weinig warm water terug naar 48)
+
+**D. Gebruikersmenu**
+
+- [ ] Stille modus **uit**, of alleen via schema van bijv. 23:00 tot 07:00
+
+**E. Honeywell DT4 (beide)**
+
+Geavanceerd menu: houd de twee knoppen uit de DT4-handleiding (hoofdstuk *Configure the System*)
+± 3 seconden samen ingedrukt tot het display verandert. Blader naar de parameter, wijzig hem, sla op en
+verlaat het menu.
+
+- [ ] **2:CR → 3** (beide thermostaten)
+- [ ] **3:OT → 5** (beide thermostaten)
+- [ ] Tijdprogramma: alle perioden **dezelfde temperatuur** (geen nachtverlaging)
+- [ ] Woonkamer: **21,5 °C**
+- [ ] Slaapkamer: eerst de test hieronder doen, dan instellen
+
+**Test: wat schakelt de slaapkamerthermostaat?** Zet de woonkamer-DT4 even op 5 °C en de
+slaapkamer-DT4 op 25 °C en wacht 5 minuten.
+
+* Gaat de warmtepomp aan (op de LG staat "Thermostaat" en de unit start)? Dan zit hij **parallel op
+  de LG**. Zet de slaapkamer-DT4 op **18,5 °C**.
+* Gaat alleen de bovenste groepspomp aan of uit, en de LG niet? Dan **schakelt hij de pomp van boven**.
+  Zet de slaapkamer-DT4 op **20 °C** en regel de slaapkamergroepen terug (§6, punt 2).
+
+Zet daarna de woonkamer-DT4 terug op 21,5 °C.
+
+**F. Met de installateur (hoeft niet op dag 1)**
+
+- [ ] Berging: 3 groepen terugregelen naar ± 16–18 °C (als de ruimte niet warm hoeft)
+- [ ] Slaapkamergroepen ± 50–60 % van het debiet van de woonkamergroepen
+- [ ] Groepspompen op de laagste stand die de debieten nog haalt; buiten het stookseizoen uit
+- [ ] Energiebewaking → elektrische verwarming afstemmen op het interne 3 kW-element
+- [ ] WTW: bypassdrempel ≥ 23–24 °C, filters, luchtbalans
+
+---
+
+## 13. Controle: is het geoptimaliseerd?
+
+Laat de nieuwe instellingen **48 uur** ongemoeid. Controleer daarna dit:
+
+| Criterium | Waar aflezen | Doel | Zo niet |
+|---|---|---|---|
+| Starts per uur (bij ≤ 5 °C buiten) | Gegevensregistratie: tel de "Auto"-regels per uur (3 regels met dezelfde tijd = 1 start) | **≤ 1**, met draaitijden van ≥ 60 min | Hysterese Uit → **4,0**. Daarna controleren of de woonkamer-DT4 tussentijds afschakelt. |
+| Woonkamertemperatuur | DT4 woonkamer | **20,0 ± 0,5 °C**, en de DT4 vraagt vrijwel continu | Te koud: AI **+1**. Te warm: AI **−1**. |
+| Slaapkamers | thermometer/DT4 | **18,5–19 °C** | Groepen op de verdeler bijregelen |
+| COP verwarming (dag) | Samenvatting: Warmteafgifte ÷ Energie, kolom Warmte, tabblad "Vandaag" | **≥ 4,5** bij 0–5 °C buiten | Stuur de cijfers op; dan zoeken we verder (debiet, buffer, ontdooien) |
+| COP warm water (week) | idem, kolom DHW | **≥ 2,5** | Meestal ligt het dan aan de ontsmetting of het element |
+| Element | Energie, kolom Warmte, op een dag boven 0 °C | geen sprongen van ≥ 3 kWh in een uur | *Verwarmer aan-temperatuur* controleren |
+
+**Om de optimalisatie af te ronden:** maak na 48 uur een foto van de Samenvatting (**Energie** en
+**Warmteafgifte**) en van twee schermen Gegevensregistratie. Noteer ook de gemiddelde buitentemperatuur.
+Dan kan ik de COP berekenen en de stooklijn in één keer definitief maken.
+
 ---
 
 ### Bronnen
