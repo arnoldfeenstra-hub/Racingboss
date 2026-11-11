@@ -25,7 +25,8 @@ roomsensor) stilgezet.
 | 5 | Legionella-ontsmetting | 67 °C, vrijdag 12:00 | **60 °C**, vrijdag 12:00, 10 min |
 | 6 | Stille modus | continu aan | **Alleen 's nachts** (schema) of uit |
 
-Interactieve simulator van deze installatie, geijkt op de meting: `docs/simulator.html`.
+Interactieve simulator van deze installatie, geijkt op de meting: `docs/simulator.html`. Daarin zitten
+ook je zonnepanelen, het dynamische tarief en het warmwatergebruik van het gezin.
 
 Daarnaast: de **berging** (3 groepen, staat nu op 21 °C) en de **slaapkamergroepen** waterzijdig
 terugregelen in plaats van via de thermostaat, en de **twee groepspompen** zo laag mogelijk zetten.
@@ -184,14 +185,14 @@ Bereiken komen uit de LG-installatiehandleiding van de HN0913T.
 
 | Menu | Nu | Advies | Waarom |
 |---|---|---|---|
-| DHW-temperatuur (gebruiker) | 48 °C | **45–46 °C proberen**, terug naar 48 als het tekortschiet | Per graad lager ≈ 2 % betere COP en minder stilstandsverlies; 180 L op 45 °C is ruim voor een normaal huishouden. |
+| DHW-temperatuur (gebruiker) | 48 °C | **48 °C laten** | Met een regendouche (≈ 10–12 L/min) en twee volwassenen is 180 L op 46 °C krap bij twee douchebeurten achter elkaar. De winst haal je met het tijdvenster hieronder. |
 | Tank instelling 2 → Hysterese | 3 | **4** (maximum) | Minder korte naverwarmingsbeurten. "Verwarming voorrang" staat bij IWT altijd op DHW. |
 | Tank instelling 1 | Min 5 / Comp.limiet 58 | laten | Warmtepomp mag tot 58 °C. |
 | DHW tijdsinstelling | 45 / 30 | laten | |
 | Gebruik de tankverwarmer | Gebruik, Cyclus, 60 min | laten | Element pas na 60 min warmtepompbedrijf. |
 | Tank ontsmetting 1 | Gebruik, vrijdag, 12 uur | **laten** | Midden op de dag = warmste buitenlucht (en eventueel zonnestroom). |
 | Tank ontsmetting 2 | 67 °C / 10 min / eind 1 | **60 °C / 10 min / 1** | De warmtepomp doet tot 58 °C; alleen 58 → 60 °C gaat elektrisch in plaats van 58 → 67 °C. Bespaart ≈ 60–90 kWh/jaar. 60 °C blijft de gangbare desinfectietemperatuur; niet uitzetten. |
-| DHW-schema (optioneel) | – | Naverwarmen bij voorkeur tussen 12:00 en 17:00 | Hogere buitentemperatuur = hogere COP; past bij zon-PV of een dynamisch tarief. |
+| DHW-schema | – | **Opwarmen tussen 11:00 en 16:00** (LG-schema) | Eigen zonnestroom (18 panelen), de warmste buitenlucht en meestal de goedkope middaguren van je dynamische tarief. Na het einde van salderen (1-1-2027) scheelt dat direct geld. De boiler houdt 180 L op 48 °C voor de avond en ochtend; zakt hij onder ±38 °C, dan warmt hij alsnog bij. |
 | Hercirculatietijd | Niet gebruiken | laten | |
 
 ### 4.4 Koelen (zomer, optioneel)
@@ -240,12 +241,14 @@ willen voorkomen. Een nachtverlaging levert bij vloerverwarming in een A++-wonin
 2. **Slaapkamers (verdeler verdieping):** wil je daar 18,5 °C, zet die groepen dan op ≈ 50–60 % van het
    debiet van de woonkamergroepen. Zo komen ze vanzelf op temperatuur, zonder thermostaat-geschakel.
 3. **Badkamer (groep 1 van de BG-verdeler) en woonkamer/keuken (groepen 5–13):** volledig open.
-4. **Zolder (6 groepen):** afhankelijk van het gebruik. Bij opslag of weinig gebruik terugregelen.
+4. **Zolder (6 groepen):** is in gebruik, dus volledig open laten.
 5. **Geen thermische motoren:** op de BG-verdeler zie ik handdoppen; laat alle groepen open. Een
    warmtepomp wil een zo groot mogelijk, constant afgifte-oppervlak.
-6. **Groepspompen:** zet ze op de **laagste stand die de gewenste debieten nog haalt** (controleer de
-   flowmeters). Hun stroom zit **niet** in de LG-teller. Twee pompen die 24/7 draaien op 10–25 W kosten
-   samen ≈ 175–440 kWh per jaar. Zet ze buiten het stookseizoen uit. Optioneel: laat de installateur één pomp
+6. **Groepspompen (OEG CPA-E 25-7.5 PWM, max. 60 W):** de gefotografeerde pomp staat op **HD2**
+   (lampjes II + Auto: constante druk, middelste curve). Zet hem op **HD1** (lampjes II + III: laagste
+   constante druk) en controleer na een dag of de flowmeters en de kamers nog goed zijn. Zo niet, terug
+   naar HD2. Controleer de tweede pomp op dezelfde manier. Hun stroom zit **niet** in de LG-teller. Twee
+   pompen die 24/7 draaien op 10–25 W kosten samen ≈ 175–440 kWh per jaar. Zet ze buiten het stookseizoen uit. Optioneel: laat de installateur één pomp
    via de LG aansturen ("Externe pomp gebruiken"), zodat ze vanzelf stoppen als er geen vraag is.
 7. **Debietverhouding primair/secundair:** tel de flowmeters van alle verdelers op en vergelijk die
    som met de 28,9 L/min van de LG. Bij een parallel buffer werkt het het best als het primaire debiet
@@ -274,13 +277,30 @@ onnodig veel ventileert en dat de bypass in de winter dicht blijft.
 
 ---
 
+## 7b. Zonnepanelen (18) en dynamisch tarief
+
+* **Warm water in de middag.** Laat de boiler alleen tussen 11:00 en 16:00 opwarmen (§4.3). Dan draait
+  het zwaarste deel van de dag (≈ 1–1,5 kWh stroom) op eigen zonnestroom of goedkope middaguren, bij de
+  warmste buitenlucht. De ontsmetting op vrijdag 12:00 valt daar al in.
+* **Salderen stopt op 1 januari 2027.** Daarna levert elke kWh eigen zonnestroom die je zelf gebruikt
+  het verschil op tussen de inkoopprijs en de terugleververgoeding. Het tijdvenster wordt dan meer waard.
+* **Verwarming verschuiven heeft weinig zin.** Met de lage stooklijn draait de compressor bijna continu
+  op minimumvermogen. De vloer is een grote warmtebuffer, maar extra laden op zonnige middagen verlaagt
+  de COP en geeft in november–februari weinig zonnestroom om te benutten. In het voor- en najaar kun je
+  op zonnige dagen eventueel AI +1 geven tussen 11 en 16 uur, als het LG-schema dat toestaat.
+* **Optioneel, later:** de LG heeft een ingang voor *Energy State* (SG-ready). Met een energiemanager
+  die zonne-overschot of lage prijzen meldt, kan de warmtepomp dan zelf het warmwaterdoel verhogen.
+  Dat is pas zinvol na 2027 en met een geschikte energiemanager; bespreek het met de installateur.
+
+---
+
 ## 8. Verwachte effecten (indicatief)
 
 | Maatregel | Effect |
 |---|---|
 | Lagere stooklijn + hysterese + DT4 als begrenzer | Van ≈ 50 naar ≈ 10–20 starts per etmaal bij 3 °C; compressor draait laag en lang. Dit is de grootste post: de COP van verwarming moet van ≈ 3 naar ≥ 4. |
 | Ontsmetting 67 → 60 °C | ≈ 60–90 kWh/jaar |
-| DHW 48 → 45/46 °C + hysterese 4 | ≈ 20–50 kWh/jaar |
+| Warm water in het zonvenster 11–16 u + hysterese 4 | Hogere warmwater-COP (simulator: 1,8 → 2,2) en ≈ 2–3 kWh per dag eigen zonnestroom in plaats van netstroom |
 | Berging terugregelen | ≈ 50–150 kWh/jaar (afhankelijk van isolatie) |
 | Groepspompen lager + 's zomers uit | ≈ 50–200 kWh/jaar (buiten de LG-teller) |
 | Stille modus alleen 's nachts | Voorkomt elementgebruik bij vorst; klein maar positief |
@@ -295,15 +315,17 @@ in de LG-teller.
 
 | | Huidige instellingen | Advies, stooklijn afgestemd (AI −3) |
 |---|---|---|
-| Stroom LG per jaar | ≈ 2.690 kWh | ≈ 2.180 kWh (**≈ −520 kWh**) |
-| SCOP | ≈ 2,6 | ≈ 3,0 |
-| Starts per jaar | ≈ 11.300 | ≈ 650 |
-| Bij 3 °C | 64 starts, 16,5 kWh/dag | 2 starts, 14,2 kWh/dag |
+| Stroom LG per jaar | ≈ 2.700 kWh | ≈ 2.150 kWh (**≈ −560 kWh**) |
+| SCOP | ≈ 2,55 | ≈ 3,0 |
+| Starts per jaar | ≈ 11.300 | ≈ 350 |
+| Bij 3 °C | 64 starts, 17,1 kWh/dag | 1–2 starts, 14,3 kWh/dag |
+| Kosten bij 3 °C (voorbeeldtarief € 0,27, 5 kWh zon) | € 4,43 per dag | € 3,45 per dag |
 
 Het model reproduceert de meting goed. Bij 3 °C komt het uit op 64 starts tegen ≈ 54 gemeten, en
-pauzes van 11 minuten. Van 1 januari tot en met 11 november rekent het 1.989 kWh stroom en 4.964 kWh
-warmte, tegen 2.404 en 5.382 kWh gemeten. De ≈ 520 kWh is de voorzichtige schatting, omdat de
-onverklaarde verliezen (ijkfactor 0,81) in alle scenario's gelijk blijven.
+pauzes van 11 minuten. Van 1 januari tot en met 11 november rekent het 2.006 kWh stroom en 4.978 kWh
+warmte, tegen 2.404 en 5.382 kWh gemeten. Het gemeten warmwaterverbruik (524,7 kWh) past precies bij
+≈ 60 L warm water van 40 °C per dag. De ≈ 560 kWh is de voorzichtige schatting, omdat de
+onverklaarde verliezen (ijkfactor ≈ 0,8) in alle scenario's gelijk blijven.
 
 De bovengrens van 850–1.050 kWh geldt alleen als de oorzaken uit §3.3 vooral in de regeling zitten. Blijkt een
 deel uit stand-byverbruik of meetonnauwkeurigheid te komen, dan is de winst kleiner. De meting na
@@ -421,7 +443,8 @@ Vink af wat je gedaan hebt:
 
 - [ ] *Tank ontsmettingsinstelling 2* → **60** / 10 / 1
 - [ ] *Tank instelling 2* → hysterese **4**
-- [ ] Hoofdscherm, douche-icoon → **46 °C** (bij te weinig warm water terug naar 48)
+- [ ] Hoofdscherm, douche-icoon → **48 °C** laten staan
+- [ ] Schema → warm water (DHW) **aan van 11:00 tot 16:00** (iedere dag)
 
 **D. Gebruikersmenu**
 
@@ -453,7 +476,7 @@ Zet daarna de woonkamer-DT4 terug op 21,5 °C.
 
 - [ ] Berging: 3 groepen terugregelen naar ± 16–18 °C (als de ruimte niet warm hoeft)
 - [ ] Slaapkamergroepen ± 50–60 % van het debiet van de woonkamergroepen
-- [ ] Groepspompen op de laagste stand die de debieten nog haalt; buiten het stookseizoen uit
+- [ ] Groepspompen (OEG): knop indrukken tot de lampjes **II + III** branden (= HD1); na een dag de kamers en flowmeters controleren. Buiten het stookseizoen uit
 - [ ] Energiebewaking → elektrische verwarming afstemmen op het interne 3 kW-element
 - [ ] WTW: bypassdrempel ≥ 23–24 °C, filters, luchtbalans
 

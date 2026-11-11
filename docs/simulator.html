@@ -320,8 +320,10 @@ function simulate(p, opt = {}) {
   }
   const startF = ct => ct < 360 ? 0.45 + 0.55 * ct / 360 : 1;
 
+  let snap = null;
   for (const [dur, dt, recPh] of phases) {
     rec = recPh;
+    if (rec && !snap) snap = { TA, TB, FA, FB, Tbuf, Td };
     const tEnd = t + dur;
     if (rec) recEnd = tEnd;
     for (; t < tEnd - 1e-9; t += dt) {
@@ -343,7 +345,8 @@ function simulate(p, opt = {}) {
         lgPump = offT < 60 || inOn;
       }
 
-      if (!dhw && Td < p.dhwSet - p.dhwHyst && sinceDhw >= p.dhwStop * 60 && (comp || offT >= 180)) {
+      const inWin = p.dhwFrom <= p.dhwTo ? (tod >= p.dhwFrom * 3600 && tod < p.dhwTo * 3600) : (tod >= p.dhwFrom * 3600 || tod < p.dhwTo * 3600);
+      if (!dhw && (inWin || Td < 38) && Td < p.dhwSet - p.dhwHyst && sinceDhw >= p.dhwStop * 60 && (comp || offT >= 180)) {
         dhw = true; dhwT = 0;
         if (!comp) { comp = true; compT = 0; startEvt(); }
       }
@@ -411,14 +414,16 @@ function simulate(p, opt = {}) {
       if (!comp) { offT += dt; if (lgPump) mp = mpOf(p, 3); }
       sinceDhw += dt;
 
+      const pumpP = lgPump ? 0.008 + 0.05 * Math.pow((mp || 28.9) / 29, 2) : 0;
+      const standbyP = 0.015 + (!comp && To < 10 ? 0.035 : 0);
       if (rec) {
         const h = dt / 3600;
         if (state === 1 || (state === 3 && !dhw)) R.heatSH += Qhp * h;
         if (state === 2 || (state === 3 && dhw)) { R.heatDHW += Qtank * h; R.elCompDHW += Pel * h; }
         else R.elComp += Pel * h;
         R.heatElem += Qel * h; R.elElem += Qel * h;
-        R.elPump += (lgPump ? 0.008 + 0.05 * Math.pow((mp || 28.9) / 29, 2) : 0) * h;
-        R.elStandby += (0.015 + (!comp && To < 10 ? 0.035 : 0)) * h;
+        R.elPump += pumpP * h;
+        R.elStandby += standbyP * h;
         R.elGP += ((mA > 0 ? p.gpW : 0) + (mB > 0 ? p.gpW : 0)) / 1000 * h;
         R.elWTW += (8 + 0.12 * p.wtwQ + 0.00025 * p.wtwQ * p.wtwQ) / 1000 * h;
         R.TAsum += TA * dt; R.TBsum += TB * dt; R.Tbergsum += Tberg * dt;
@@ -433,7 +438,7 @@ function simulate(p, opt = {}) {
         if (demB) R.statBsec += dt;
         R.n += dt;
         if (lastDay && Math.round(tod) % 120 === 0) R.series.push({ t: tod, TA, TB, Tbuf, Tlgout: state === 1 ? Tlgout : null,
-          Q: Qhp + Qtank + Qel, Qhp, Qtank, Pel: Pel + Qel, state, demA, demB, Td, FA, FB, mp: lgPump || comp ? (mp || 28.9) : 0,
+          Q: Qhp + Qtank + Qel, Qhp, Qtank, Pel: Pel + Qel, Ptot: Pel + Qel + pumpP + standbyP, state, demA, demB, Td, FA, FB, mp: lgPump || comp ? (mp || 28.9) : 0,
           elem, Tberg, QwfA, QwfB, mA, mB, frost });
       }
     }
@@ -448,6 +453,12 @@ function simulate(p, opt = {}) {
     disEl = ((hpPart + extraLoss) / copD + elPart) / 7;
   }
   const d = recDays;
+  // correctie voor warmte die in het meetvenster in vloer, lucht, buffer of boiler is opgeslagen
+  const dEsh = (CA * (TA - snap.TA) + CB * (TB - snap.TB) + CFA * (FA - snap.FA) + CFB * (FB - snap.FB) + Cbuf * (Tbuf - snap.Tbuf)) / 3600;
+  const dEdhw = Cd * (Td - snap.Td) / 3600;
+  if (R.heatSH > 0.5) { const f = Math.max(0.2, (R.heatSH - dEsh) / R.heatSH); R.heatSH *= f; R.elComp *= f; }
+  if (R.heatDHW > 0.2) { const f = Math.max(0.2, (R.heatDHW - dEdhw) / R.heatDHW); R.heatDHW *= f; R.elCompDHW *= f; }
+  R.dEsh = dEsh / d;
   for (const key of ['heatSH', 'heatDHW', 'heatElem', 'elComp', 'elCompDHW', 'elElem', 'elPump', 'elStandby', 'elGP', 'elWTW',
     'starts', 'defrosts', 'lossTrans', 'lossVent', 'gain']) R[key] /= d;
   R.disHeat = disHeat; R.disEl = disEl;
@@ -480,16 +491,16 @@ const HOUSE_KEYS = ['H', 'gains', 'wtwQ', 'wtwEta', 'bypass', 'inf', 'dhwUse', '
 const HUIDIG = { c1o: -10, c1t: 45, c2o: 20, c2t: 19, ai: 0, ctrl: 'invoer', hOn: -2, hOff: 2, wMin: 15, wMax: 45,
   silent: true, flowMode: 'opt', mpFix: 26, dT: 5, pumpMode: 'interval', pumpOn: 1, pumpOff: 10, heaterOn: -10,
   setA: 20, setB: 18.5, cr: 3, ot: 1, wiringB: 'parallel', mA: 18, mB: 12, berg: 100, gpW: 20,
-  dhwSet: 48, dhwHyst: 3, compLim: 58, disOn: true, disT: 67, dhwActive: 45, dhwStop: 30 };
+  dhwSet: 48, dhwHyst: 3, compLim: 58, disOn: true, disT: 67, dhwActive: 45, dhwStop: 30, dhwFrom: 0, dhwTo: 24 };
 const ADVIES = { ...HUIDIG, c1t: 25, c2o: 18, c2t: 22, hOn: -1, hOff: 3, wMax: 35, silent: false, setA: 21.5, ot: 5,
-  mB: 8, berg: 50, gpW: 10, dhwSet: 46, dhwHyst: 4, disT: 60 };
+  mB: 10, berg: 50, gpW: 10, dhwSet: 48, dhwHyst: 4, disT: 60, dhwFrom: 11, dhwTo: 16 };
 const BASE = { Tout: 3, RH: 90, sun: 0, H: 90, gains: 350, wtwQ: 150, wtwEta: 90, bypass: false, inf: 50, dhwUse: 60,
-  pMinNom: 2.5, pNom: 9, calib: true };
+  pMinNom: 2.5, pNom: 9, calib: true, pvKWh: 5, baseLoad: 300, price: 0.27, feedIn: 0.05 };
 
 const GROUPS = [
   ['buiten', 'Buiten', true], ['lijn', 'Stooklijn en regeling', true], ['wp', 'Warmtepomp', false],
   ['dt4', 'Thermostaten DT4', true], ['vloer', 'Vloerverwarming en pompen', false], ['ww', 'Warm water', false],
-  ['woning', 'Woning en WTW', false], ['model', 'Model', false]];
+  ['zon', 'Zonnestroom en tarief', false], ['woning', 'Woning en WTW', false], ['model', 'Model', false]];
 const C = [
   { id: 'Tout', g: 'buiten', l: 'Buitentemperatuur', min: -15, max: 20, step: 0.5, u: '°C', d: 1 },
   { id: 'RH', g: 'buiten', l: 'Relatieve luchtvochtigheid', min: 30, max: 100, step: 1, u: '%', d: 0, h: 'Hoge vochtigheid rond 0–7 °C geeft rijp op de verdamper en dus ontdooicycli.' },
@@ -519,15 +530,21 @@ const C = [
   { id: 'mA', g: 'vloer', l: 'Debiet groepen beneden', min: 5, max: 40, step: 1, u: 'L/min', d: 0 },
   { id: 'mB', g: 'vloer', l: 'Debiet groepen boven (slaapkamers, zolder)', min: 0, max: 30, step: 1, u: 'L/min', d: 0 },
   { id: 'berg', g: 'vloer', l: 'Berginggroepen open', min: 0, max: 100, step: 5, u: '%', d: 0 },
-  { id: 'gpW', g: 'vloer', l: 'Vermogen per groepspomp', min: 3, max: 45, step: 1, u: 'W', d: 0 },
+  { id: 'gpW', g: 'vloer', l: 'Vermogen per groepspomp', min: 3, max: 45, step: 1, u: 'W', d: 0, h: 'OEG CPA-E 25-7.5 PWM (max. 60 W). Stand HD2 ≈ 20 W, HD1 ≈ 10–12 W (schatting).' },
   { id: 'dhwSet', g: 'ww', l: 'Boilertemperatuur', min: 40, max: 55, step: 1, u: '°C', d: 0 },
   { id: 'dhwHyst', g: 'ww', l: 'Hysterese (Tank instelling 2)', min: 2, max: 4, step: 1, u: 'K', d: 0 },
   { id: 'dhwUse', g: 'ww', l: 'Warmwatergebruik (bij 40 °C)', min: 0, max: 250, step: 10, u: 'L/dag', d: 0 },
   { id: 'compLim', g: 'ww', l: 'Comp. limiettemperatuur', min: 45, max: 58, step: 1, u: '°C', d: 0 },
   { id: 'disOn', g: 'ww', l: 'Wekelijkse ontsmetting', type: 'chk' },
   { id: 'disT', g: 'ww', l: 'Ontsmettingstemperatuur', min: 55, max: 70, step: 1, u: '°C', d: 0, show: p => p.disOn },
+  { id: 'dhwFrom', g: 'ww', l: 'Opwarmen vanaf', min: 0, max: 23, step: 1, u: 'uur', d: 0, h: 'Buiten het venster alleen bijwarmen als de boiler onder 38 °C komt.' },
+  { id: 'dhwTo', g: 'ww', l: 'Opwarmen tot', min: 1, max: 24, step: 1, u: 'uur', d: 0 },
   { id: 'dhwActive', g: 'ww', l: 'DHW tijd actief', min: 5, max: 95, step: 5, u: 'min', d: 0 },
   { id: 'dhwStop', g: 'ww', l: 'DHW stoptijd', min: 0, max: 120, step: 5, u: 'min', d: 0 },
+  { id: 'pvKWh', g: 'zon', l: 'Zonnestroom vandaag (18 panelen)', min: 0, max: 50, step: 1, u: 'kWh', d: 0, h: 'Grijze novemberdag ≈ 3–6 kWh, zonnige junidag ≈ 40 kWh.' },
+  { id: 'baseLoad', g: 'zon', l: 'Overig huishoudverbruik', min: 100, max: 1000, step: 50, u: 'W', d: 0 },
+  { id: 'price', g: 'zon', l: 'Gemiddelde all-in stroomprijs', min: 0.15, max: 0.45, step: 0.01, u: '€/kWh', d: 2, h: 'Dynamisch: het model volgt een voorbeeldprofiel met goedkope nacht en middag en een dure ochtend- en avondpiek.' },
+  { id: 'feedIn', g: 'zon', l: 'Waarde teruggeleverde stroom', min: 0, max: 0.30, step: 0.01, u: '€/kWh', d: 2, h: 'Na het einde van salderen (1-1-2027) alleen de terugleververgoeding.' },
   { id: 'H', g: 'woning', l: 'Transmissieverlies woning', min: 50, max: 200, step: 5, u: 'W/K', d: 0, h: 'Geijkt op 42,6 kWh warmte bij 3 °C op 11-11.' },
   { id: 'gains', g: 'woning', l: 'Interne warmte (personen, apparaten)', min: 0, max: 1000, step: 50, u: 'W', d: 0 },
   { id: 'wtwQ', g: 'woning', l: 'WTW-debiet', min: 50, max: 400, step: 10, u: 'm³/h', d: 0 },
@@ -623,6 +640,7 @@ function delta(v, base, d, invert = false, unit = '') {
 }
 function renderKPIs() {
   const r = RES, b = BASE_RES;
+  const cc = costCalc(r), cb = costCalc(b);
   const sPill = r.starts > 48 ? 'bad' : r.starts > 24 ? 'warn' : 'good';
   const sTxt = r.starts > 48 ? 'pendelt' : r.starts > 24 ? 'veel starts' : 'rustig';
   const tA = r.TAavg;
@@ -635,8 +653,34 @@ function renderKPIs() {
     ['Woonkamer', nf(tA, 1), '°C', `<span class="pill ${cPill[0]}">${cPill[1]}</span>`, `${nf(r.TAmin, 1)}–${nf(r.TAmax, 1)} °C over de dag`],
     ['Slaapkamers', nf(r.TBavg, 1), '°C', '', `berging ${nf(r.Tberg, 1)} °C`],
     ['Aanvoer / retour', r.supAvg ? `${nf(r.supAvg, 1)}<small>/</small>${nf(r.retAvg, 1)}` : '–', '°C', '', `stooklijndoel ${nf(r.target, 1)} °C (${P.ctrl})`],
-    ['Ontdooicycli', nf(r.defrosts, 0), 'per dag', '', r.FI > 0.4 ? 'veel rijpvorming' : r.FI > 0.1 ? 'enige rijpvorming' : 'geen rijpvorming']];
+    ['Ontdooicycli', nf(r.defrosts, 0), 'per dag', '', r.FI > 0.4 ? 'veel rijpvorming' : r.FI > 0.1 ? 'enige rijpvorming' : 'geen rijpvorming'],
+    ['Kosten warmtepomp', '€ ' + nf(cc.cost, 2), 'per dag', delta(cc.cost, cb.cost, 2, true, ' €'), `${nf(cc.pvUsed, 1)} kWh uit eigen zonnestroom (${nf(cc.share * 100, 0)} %)`]];
   $('kpis').innerHTML = tiles.map(([l, v, u, dlt, sub]) => `<div class="kpi"><span class="k-lab">${l}</span><span class="k-val">${v}${u ? `<small>${u}</small>` : ''}</span>${dlt ? `<span>${dlt}</span>` : ''}<span class="k-sub">${sub}</span></div>`).join('');
+}
+
+/* ---------- kosten en zonnestroom ---------- */
+const PRICE_SHAPE = (() => {
+  const m = [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 1.0, 1.15, 1.15, 1.15, 0.92, 0.92, 0.92, 0.92, 0.92, 0.92, 1.05, 1.22, 1.22, 1.22, 1.22, 0.98, 0.98, 0.98];
+  const avg = m.reduce((a, b) => a + b, 0) / 24;
+  return m.map(x => x / avg);
+})();
+function pvAt(hr) {
+  const W = clamp(8 + P.pvKWh / 5, 8, 16), h0 = 13 - W / 2;
+  if (hr < h0 || hr > h0 + W || P.pvKWh <= 0) return 0;
+  return P.pvKWh * Math.PI / (2 * W) * Math.sin(Math.PI * (hr - h0) / W);
+}
+function costCalc(r) {
+  let cost = 0, pvUsed = 0, el = 0, elDay = 0;
+  const dtH = 120 / 3600;
+  for (const smp of r.series) {
+    const hr = smp.t / 3600, e = smp.Ptot * dtH;
+    const avail = Math.max(0, pvAt(hr) - P.baseLoad / 1000);
+    const cov = Math.min(smp.Ptot, avail) * dtH;
+    cost += (e - cov) * P.price * PRICE_SHAPE[Math.floor(hr) % 24] + cov * P.feedIn;
+    pvUsed += cov; el += e; if (hr >= 10 && hr < 16) elDay += e;
+  }
+  const scale = el > 0 ? r.elLG / el : 1;
+  return { cost: cost * scale, pvUsed: pvUsed * scale, share: el > 0 ? pvUsed / el : 0, dayShare: el > 0 ? elDay / el : 0 };
 }
 
 /* ---------- isometrisch schema ---------- */
@@ -853,6 +897,10 @@ function renderDiag() {
   if (P.bypass) add('bad', 'De WTW-bypass staat open: de warmteterugwinning valt weg en de warmtevraag stijgt.');
   if (r.defrosts > 0.5) add('info', `${nf(r.defrosts, 0)} ontdooicycli per dag door rijpvorming (${nf(P.Tout, 1)} °C, RV ${nf(P.RH, 0)} %). Elke cyclus haalt kort warmte uit de buffer.`);
   if (P.disOn && P.disT > P.compLim) add('info', `Ontsmetting op ${nf(P.disT, 0)} °C: alles boven ${nf(P.compLim, 0)} °C gaat via het element (${nf(r.disEl * 7, 1)} kWh per week).`);
+  const inWin = h => P.dhwFrom <= P.dhwTo ? (h >= P.dhwFrom && h < P.dhwTo) : (h >= P.dhwFrom || h < P.dhwTo);
+  const fullDay = P.dhwFrom === 0 && P.dhwTo === 24;
+  if (P.pvKWh >= 3 && (fullDay || !inWin(13))) add('info', `Laat de boiler opwarmen tussen ±11 en 16 uur. Dan gebruikt hij je eigen zonnestroom en draait hij bij de warmste buitenlucht. Na het einde van salderen (1-1-2027) scheelt dat direct geld.`);
+  if (P.dhwSet < 48 && P.dhwUse >= 120) add('warn', `Bij ${nf(P.dhwUse, 0)} L warm water per dag (regendouche) is ${nf(P.dhwSet, 0)} °C in 180 L krap. Twee douchebeurten achter elkaar kunnen de boiler leegtrekken.`);
   if (r.elGP > 0.6) add('info', `De groepspompen gebruiken ${nf(r.elGP, 2)} kWh per dag, buiten de LG-teller om.`);
   if (P.wiringB === 'pomp' && r.statBshare < 0.9) add('info', `De slaapkamer-DT4 zet de groepspomp boven ${nf((1 - r.statBshare) * 100, 0)} % van de tijd uit. Dat verkleint het afgifte-oppervlak.`);
   $('diag').innerHTML = items.join('');
@@ -905,7 +953,10 @@ function renderAssume() {
     'DT4: TPI-regeling met de ingestelde schakelfrequentie en minimale aan-tijd. Na een stop wacht de LG tot het volgende meetmoment van de pomp (bij interval 1/10 min dus ≈ 11 min). Dat verklaart de gemeten pauzes van 11–12 min.',
     'Warm water: 180 L boiler, tappen om 07:00, 12:30 en 19:30. Wekelijkse ontsmetting als dagaandeel: tot de comp.-limiet met de warmtepomp, daarboven met het element.',
     'Jaarschatting: maandgemiddelden van KNMI-station Eelde (benadering), drie temperaturen per maand (−4, 0, +4 °C) en een gemiddelde nuttige zoninstraling per maand.',
-    'Nog onzeker en welkom om het model te verbeteren: type en stand van de groepspompen, hoe de DT4’s bedraad zijn, vloerafwerking per verdieping, warmwatergebruik, de waarde van ‘Temperatuursensor selecteren’ en ‘Verwarmer aan-temperatuur’.'
+    'Warm water: 60 L per dag bij 40 °C reproduceert precies het gemeten warmwaterverbruik van dit jaar (524,7 kWh). Voor 2 volwassenen en een kind met regendouche is 150–200 L gebruikelijk; het meetresultaat ligt dus laag.',
+    'Zonnestroom: 18 panelen, een dagopbrengst die je zelf instelt, verdeeld over een zonneboog rond 13:00. Eerst gaat ' + nf(P.baseLoad, 0) + ' W naar het overige huishouden. Kosten: voorbeeldprofiel voor een dynamisch tarief (nacht en middag goedkoper, ochtend- en avondpiek duurder) rond de ingestelde gemiddelde prijs. Eigen zonnestroom telt tegen de terugleverwaarde.',
+    'Vloeren: pvc op alle verdiepingen (lage warmteweerstand, vergelijkbaar met tegels). Groepspompen: OEG CPA-E 25-7.5 PWM, stand HD2 (constante druk, middelste curve).',
+    'Nog onzeker en welkom om het model te verbeteren: het opgenomen vermogen van de groepspompen, hoe de DT4’s bedraad zijn, de waarde van ‘Temperatuursensor selecteren’ en ‘Verwarmer aan-temperatuur’.'
   ].map(x => `<li>${x}</li>`).join('');
 }
 
@@ -922,7 +973,11 @@ function init() {
       let lo = -8, hi = 8;
       const f = ai => simulate({ ...P, ai }, { k, fast: true }).TAavg - 20;
       if (f(lo) > 0) P.ai = lo; else if (f(hi) < 0) P.ai = hi;
-      else { for (let i = 0; i < 7; i++) { const mid = (lo + hi) / 2; if (f(mid) > 0) hi = mid; else lo = mid; } P.ai = Math.round((lo + hi)) / 2; }
+      else {
+        for (let i = 0; i < 7; i++) { const mid = (lo + hi) / 2; if (f(mid) > 0) hi = mid; else lo = mid; }
+        const c1 = Math.floor((lo + hi)) / 2, c2 = c1 + 0.5;
+        P.ai = Math.abs(f(c1)) <= Math.abs(f(c2)) ? c1 : c2;
+      }
       syncControls(); run();
     }, 20);
   });
