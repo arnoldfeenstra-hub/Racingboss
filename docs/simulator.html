@@ -350,7 +350,7 @@ function simulate(p, opt = {}) {
       }
 
       const inWin = p.dhwFrom <= p.dhwTo ? (tod >= p.dhwFrom * 3600 && tod < p.dhwTo * 3600) : (tod >= p.dhwFrom * 3600 || tod < p.dhwTo * 3600);
-      if (!dhw && (inWin || Td < 38) && Td < p.dhwSet - p.dhwHyst && sinceDhw >= p.dhwStop * 60 && (comp || offT >= 180)) {
+      if (!dhw && (inWin || Td < 40 - p.dhwHyst) && Td < p.dhwSet - p.dhwHyst && sinceDhw >= p.dhwStop * 60 && (comp || offT >= 180)) {
         dhw = true; dhwT = 0;
         if (!comp) { comp = true; compT = 0; startEvt(); }
       }
@@ -546,7 +546,7 @@ const C = [
   { id: 'compLim', g: 'ww', l: 'Comp. limiettemperatuur', min: 45, max: 58, step: 1, u: '°C', d: 0 },
   { id: 'disOn', g: 'ww', l: 'Wekelijkse ontsmetting', type: 'chk' },
   { id: 'disT', g: 'ww', l: 'Ontsmettingstemperatuur', min: 55, max: 70, step: 1, u: '°C', d: 0, show: p => p.disOn },
-  { id: 'dhwFrom', g: 'ww', l: 'Opwarmen vanaf', min: 0, max: 23, step: 1, u: 'uur', d: 0, h: 'Buiten het venster alleen bijwarmen als de boiler onder 38 °C komt.' },
+  { id: 'dhwFrom', g: 'ww', l: 'Opwarmen vanaf', min: 0, max: 23, step: 1, u: 'uur', d: 0, h: 'LG: Roosters → DHW, bijv. 11:00 → 48 °C en 16:00 → 40 °C. Buiten het venster warmt hij alleen bij onder 40 °C min de hysterese.' },
   { id: 'dhwTo', g: 'ww', l: 'Opwarmen tot', min: 1, max: 24, step: 1, u: 'uur', d: 0 },
   { id: 'dhwActive', g: 'ww', l: 'DHW tijd actief', min: 5, max: 95, step: 5, u: 'min', d: 0 },
   { id: 'dhwStop', g: 'ww', l: 'DHW stoptijd', min: 0, max: 120, step: 5, u: 'min', d: 0 },

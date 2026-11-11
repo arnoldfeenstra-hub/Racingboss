@@ -233,7 +233,7 @@ Bereiken komen uit de LG-installatiehandleiding van de HN0913T.
 | Gebruik de tankverwarmer | Gebruik, Cyclus, 60 min | laten | Element pas na 60 min warmtepompbedrijf. |
 | Tank ontsmetting 1 | Gebruik, vrijdag, 12 uur | **laten** | Midden op de dag = warmste buitenlucht (en eventueel zonnestroom). |
 | Tank ontsmetting 2 | 67 °C / 10 min / eind 1 | **60 °C / 10 min / 1** | De warmtepomp doet tot 58 °C; alleen 58 → 60 °C gaat elektrisch in plaats van 58 → 67 °C. Bespaart ≈ 60–90 kWh/jaar. 60 °C blijft de gangbare desinfectietemperatuur; niet uitzetten. |
-| DHW-schema | – | **Opwarmen tussen 11:00 en 16:00** (LG-schema) | Eigen zonnestroom (18 panelen), de warmste buitenlucht en meestal de goedkope middaguren van je dynamische tarief. Na het einde van salderen (1-1-2027) scheelt dat direct geld. De boiler houdt 180 L op 48 °C voor de avond en ochtend; zakt hij onder ±38 °C, dan warmt hij alsnog bij. |
+| DHW-schema | – | **Roosters → DHW** (niet "DHW verwarming"): elke dag **11:00 → 48 °C** en **16:00 → 40 °C** | Opwarmen naar 48 °C gebeurt dan in de middag: eigen zonnestroom (18 panelen), de warmste buitenlucht en meestal de goedkope middaguren van je dynamische tarief. Na het einde van salderen (1-1-2027) scheelt dat direct geld. Buiten het venster staat het doel op 40 °C (de laagste waarde), zodat hij alleen bijwarmt als de boiler echt leeg raakt (onder ≈ 36 °C). Zet het schema 's avonds niet op "uit": dan warmt hij helemaal niet meer bij. |
 | Hercirculatietijd | Niet gebruiken | laten | |
 
 ### 4.4 Koelen (zomer, optioneel)
@@ -496,7 +496,8 @@ Vink af wat je gedaan hebt:
 - [ ] *Tank ontsmettingsinstelling 2* → **60** / 10 / 1
 - [ ] *Tank instelling 2* → hysterese **4**
 - [ ] Hoofdscherm, douche-icoon → **48 °C** laten staan
-- [ ] Schema → warm water (DHW) **aan van 11:00 tot 16:00** (iedere dag)
+- [ ] Roosters en bewerken → **DHW** (niet "DHW verwarming"): elke dag **11:00 → 48 °C** en **16:00 → 40 °C**
+- [ ] Roosters en bewerken → **DHW verwarming**: leeg laten (dit is het elektrische element)
 
 **D. Gebruikersmenu**
 
