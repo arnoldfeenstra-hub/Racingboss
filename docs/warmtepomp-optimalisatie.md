@@ -25,6 +25,8 @@ roomsensor) stilgezet.
 | 5 | Legionella-ontsmetting | 67 °C, vrijdag 12:00 | **60 °C**, vrijdag 12:00, 10 min |
 | 6 | Stille modus | continu aan | **Alleen 's nachts** (schema) of uit |
 
+Interactieve simulator van deze installatie, geijkt op de meting: `docs/simulator.html`.
+
 Daarnaast: de **berging** (3 groepen, staat nu op 21 °C) en de **slaapkamergroepen** waterzijdig
 terugregelen in plaats van via de thermostaat, en de **twee groepspompen** zo laag mogelijk zetten.
 
@@ -289,7 +291,21 @@ Dat is ≈ **850–1.050 kWh minder** over de eerste 10½ maand. Over een heel j
 ≈ 1.000 kWh of meer (≈ € 250+ bij € 0,25/kWh). De groepspompen komen daar nog bij, want die zitten niet
 in de LG-teller.
 
-Dit is een bovengrens voor het geval dat de oorzaken uit §3.3 vooral in de regeling zitten. Blijkt een
+**Simulator (geijkt op de meting, zie `docs/simulator.html`):**
+
+| | Huidige instellingen | Advies, stooklijn afgestemd (AI −3) |
+|---|---|---|
+| Stroom LG per jaar | ≈ 2.690 kWh | ≈ 2.180 kWh (**≈ −520 kWh**) |
+| SCOP | ≈ 2,6 | ≈ 3,0 |
+| Starts per jaar | ≈ 11.300 | ≈ 650 |
+| Bij 3 °C | 64 starts, 16,5 kWh/dag | 2 starts, 14,2 kWh/dag |
+
+Het model reproduceert de meting goed. Bij 3 °C komt het uit op 64 starts tegen ≈ 54 gemeten, en
+pauzes van 11 minuten. Van 1 januari tot en met 11 november rekent het 1.989 kWh stroom en 4.964 kWh
+warmte, tegen 2.404 en 5.382 kWh gemeten. De ≈ 520 kWh is de voorzichtige schatting, omdat de
+onverklaarde verliezen (ijkfactor 0,81) in alle scenario's gelijk blijven.
+
+De bovengrens van 850–1.050 kWh geldt alleen als de oorzaken uit §3.3 vooral in de regeling zitten. Blijkt een
 deel uit stand-byverbruik of meetonnauwkeurigheid te komen, dan is de winst kleiner. De meting na
 48 uur (§13) laat zien waar je uitkomt.
 
@@ -315,7 +331,9 @@ Wacht daarna 2–3 dagen; vloerverwarming reageert traag.
 | Alleen te warm bij zacht weer | Alleen het +18 °C-punt −1 °C (niet lager dan ≈ 21,5 °C: met hysterese Aan −1 moet de herstartdrempel boven kamertemperatuur blijven) |
 
 Is de AI-correctie na een paar weken structureel ±2 of meer, verwerk die dan in de stooklijnpunten en
-zet de correctie terug op 0. Controleer de lijn opnieuw bij de eerste echte vorst.
+zet de correctie terug op 0. De simulator verwacht dat bij 3 °C buiten ongeveer **AI −3** nodig is voor
+20 °C in de woonkamer. Begin toch met 0 en ga in stappen omlaag; de knop "Stooklijn afstemmen op
+20 °C" in de simulator laat zien waar je ongeveer uitkomt. Controleer de lijn opnieuw bij de eerste echte vorst.
 
 **Bijhouden (dagelijks, zelfde tijdstip):**
 

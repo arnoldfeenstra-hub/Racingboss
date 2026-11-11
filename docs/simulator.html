@@ -1,0 +1,949 @@
+<title>Therma V Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: technisch installatieschema. Links instellingen, rechts KPI's, isometrisch schema, 24-uursgrafiek en analyse. Koper = accent (leidingen), blauw→rood = watertemperatuur. */
+:root {
+  --bg: #e9eeef; --panel: #f7f9f9; --panel-2: #eef2f3; --ink: #15242b; --muted: #5a6a71; --line: #c6d0d3;
+  --copper: #b05f2c; --copper-soft: #e9cdb9; --cold: #2c71b0; --warm: #cf452d; --refr: #7a59b0;
+  --good: #2a8455; --warn: #b07a0c; --bad: #bb3628;
+  --slab-t: #dfe5e7; --slab-l: #c9d2d5; --slab-r: #b8c3c7; --dev-t: #f4f6f6; --dev-l: #dbe1e3; --dev-r: #cdd5d8;
+  --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f171b; --panel: #162127; --panel-2: #1b2930; --ink: #e2e9eb; --muted: #94a4ab; --line: #2b3b42;
+  --copper: #d98a55; --copper-soft: #4a3122; --cold: #5ea4e6; --warm: #f0694f; --refr: #a98ae0;
+  --good: #4fbf84; --warn: #e0b03e; --bad: #ee6a5b;
+  --slab-t: #26343b; --slab-l: #1d292f; --slab-r: #18232a; --dev-t: #34444c; --dev-l: #2a3940; --dev-r: #233138;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0f171b; --panel: #162127; --panel-2: #1b2930; --ink: #e2e9eb; --muted: #94a4ab; --line: #2b3b42;
+  --copper: #d98a55; --copper-soft: #4a3122; --cold: #5ea4e6; --warm: #f0694f; --refr: #a98ae0;
+  --good: #4fbf84; --warn: #e0b03e; --bad: #ee6a5b;
+  --slab-t: #26343b; --slab-l: #1d292f; --slab-r: #18232a; --dev-t: #34444c; --dev-l: #2a3940; --dev-r: #233138;
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.45; }
+.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 18px 40px; max-width: 1480px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.01em; text-wrap: balance; margin: 0; }
+h1 { font-size: 2rem; line-height: 1.05; }
+h2 { font-size: 1.25rem; }
+h3 { font-size: 1.02rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.num, .mono { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+button { font: inherit; }
+
+header.top { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: end; justify-content: space-between; margin-bottom: 16px; }
+.plate { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.plate .sub { color: var(--muted); font-size: 0.93rem; }
+.plate .tag { font-family: var(--font-data); font-size: 0.78rem; color: var(--copper); letter-spacing: 0.04em; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { border: 1px solid var(--line); background: var(--panel); color: var(--ink); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; }
+.btn:hover { border-color: var(--copper); }
+.btn:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+.btn.primary { background: var(--copper); border-color: var(--copper); color: var(--panel); }
+.btn[aria-pressed="true"] { border-color: var(--copper); box-shadow: inset 0 0 0 1px var(--copper); }
+.preset-state { font-size: 0.82rem; color: var(--muted); align-self: center; }
+
+.app { display: grid; grid-template-columns: minmax(0, 330px) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 980px) { .app { grid-template-columns: minmax(0, 1fr); } .controls { order: 2; } .stage { order: 1; } }
+
+.controls { display: flex; flex-direction: column; gap: 10px; position: sticky; top: env(safe-area-inset-top, 0px); max-height: calc(100vh - 20px); overflow-y: auto; padding-right: 4px; }
+@media (max-width: 980px) { .controls { position: static; max-height: none; overflow: visible; padding-right: 0; } }
+details.grp { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+details.grp > summary { cursor: pointer; list-style: none; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+details.grp > summary::-webkit-details-marker { display: none; }
+details.grp > summary h2 { font-size: 1.08rem; }
+details.grp > summary .chev { color: var(--muted); font-family: var(--font-data); transition: transform 0.15s; }
+details.grp[open] > summary .chev { transform: rotate(90deg); }
+.grp-body { padding: 2px 12px 12px; display: flex; flex-direction: column; gap: 10px; }
+.ctl { display: flex; flex-direction: column; gap: 3px; }
+.ctl label { display: flex; justify-content: space-between; gap: 10px; font-size: 0.86rem; }
+.ctl label .val { font-family: var(--font-data); color: var(--copper); white-space: nowrap; }
+.ctl .help { font-size: 0.76rem; color: var(--muted); }
+.ctl input[type="range"] { width: 100%; accent-color: var(--copper); }
+.ctl select { width: 100%; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); font: inherit; }
+.ctl.check label { justify-content: flex-start; align-items: center; gap: 8px; cursor: pointer; }
+.ctl.check input { accent-color: var(--copper); width: 16px; height: 16px; }
+.ctl .chg { width: 7px; height: 7px; border-radius: 50%; background: var(--copper); display: inline-block; margin-right: 6px; vertical-align: middle; }
+
+.stage { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.kpi .k-lab { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.kpi .k-val { font-family: var(--font-display); font-size: 1.9rem; font-weight: 600; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.kpi .k-val small { font-family: var(--font-body); font-size: 0.8rem; font-weight: 500; color: var(--muted); margin-left: 3px; }
+.kpi .k-sub { font-size: 0.78rem; color: var(--muted); }
+.delta { font-family: var(--font-data); font-size: 0.76rem; }
+.delta.up { color: var(--good); } .delta.down { color: var(--bad); } .delta.flat { color: var(--muted); }
+.pill { display: inline-block; font-size: 0.7rem; font-weight: 600; padding: 1px 7px; border-radius: 999px; letter-spacing: 0.03em; border: 1px solid currentColor; }
+.pill.good { color: var(--good); } .pill.warn { color: var(--warn); } .pill.bad { color: var(--bad); } .pill.info { color: var(--muted); }
+
+.scene-head { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.timebar { display: flex; align-items: center; gap: 10px; flex: 1 1 280px; min-width: 0; }
+.timebar input { flex: 1; accent-color: var(--copper); min-width: 0; }
+.timebar .clock { font-family: var(--font-data); font-size: 1.05rem; min-width: 3.4em; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.78rem; color: var(--muted); }
+.legend i { display: inline-block; width: 22px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+.scene-wrap { overflow-x: auto; }
+#scene { width: 100%; height: auto; display: block; min-width: 520px; }
+@media (max-width: 700px) { #scene .callout { display: none; } #scene { min-width: 0; } }
+
+.live { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 6px 14px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.live div { display: flex; justify-content: space-between; gap: 8px; font-size: 0.84rem; border-bottom: 1px solid var(--panel-2); padding-bottom: 3px; }
+.live span:first-child { color: var(--muted); }
+.live span:last-child { font-family: var(--font-data); text-align: right; }
+
+/* SVG schema */
+.f-t { fill: var(--slab-t); } .f-l { fill: var(--slab-l); } .f-r { fill: var(--slab-r); }
+.slab polygon { stroke: var(--line); stroke-width: 0.6; }
+.dev polygon { stroke: var(--muted); stroke-width: 0.7; }
+.dev .f-t { fill: var(--dev-t); } .dev .f-l { fill: var(--dev-l); } .dev .f-r { fill: var(--dev-r); }
+.wall { fill: none; stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 4; }
+.pipe { fill: none; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.pipe-thin { fill: none; stroke-width: 1.6; stroke-linecap: round; }
+.flow { stroke-dasharray: 7 7; animation: dash 0.9s linear infinite; }
+.refr { stroke: var(--refr); }
+.loop { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.95; }
+.sv-text { fill: var(--ink); font-family: var(--font-body); font-size: 12px; }
+.sv-mono { fill: var(--ink); font-family: var(--font-data); font-size: 11.5px; }
+.sv-muted { fill: var(--muted); }
+.sv-title { font-family: var(--font-display); font-weight: 600; font-size: 14px; fill: var(--ink); letter-spacing: 0.03em; }
+.callout rect { fill: var(--panel); stroke: var(--line); }
+.callout line { stroke: var(--muted); stroke-width: 0.8; }
+.callout circle { fill: var(--muted); }
+.fan { fill: none; stroke: var(--muted); stroke-width: 1.4; }
+.fan.on { stroke: var(--cold); stroke-dasharray: 5 4; animation: dash 0.6s linear infinite; }
+.pump { stroke: var(--ink); stroke-width: 1; }
+@keyframes dash { to { stroke-dashoffset: -14; } }
+@media (prefers-reduced-motion: reduce) { .flow, .fan.on { animation: none; } }
+
+.chart-wrap { width: 100%; }
+.chart-wrap svg { display: block; width: 100%; }
+.ax { stroke: var(--line); stroke-width: 1; }
+.gridl { stroke: var(--line); stroke-width: 0.6; stroke-dasharray: 2 4; }
+.ax-t { fill: var(--muted); font-family: var(--font-data); font-size: 10.5px; }
+
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+table.bal { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+table.bal td, table.bal th { padding: 4px 4px; border-bottom: 1px solid var(--panel-2); text-align: left; }
+table.bal th { font-weight: 600; color: var(--muted); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; }
+table.bal td.r, table.bal th.r { text-align: right; font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+table.bal tr.sum td { font-weight: 600; border-top: 1px solid var(--line); }
+.diag { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 8px; }
+.diag li { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; font-size: 0.88rem; }
+.year-wrap { overflow-x: auto; }
+.year-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.bar { height: 6px; border-radius: 3px; background: var(--copper); display: block; min-width: 1px; }
+.bar.alt { background: var(--muted); opacity: 0.6; }
+.note { font-size: 0.82rem; color: var(--muted); max-width: 75ch; }
+details.assume summary { cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
+details.assume ul { padding-left: 18px; margin: 8px 0 0; display: flex; flex-direction: column; gap: 4px; font-size: 0.86rem; max-width: 95ch; }
+.busy { font-size: 0.8rem; color: var(--copper); font-family: var(--font-data); }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="plate">
+      <span class="tag">LG THERMA V · HN0913T · 9 kW · R32 SPLIT IWT</span>
+      <h1>Therma V Simulator</h1>
+      <span class="sub">Woning Eelderwolde (A++) · 50 L parallelbuffer · 4 verdelers vloerverwarming · 2× Honeywell DT4 · Itho HRU 400</span>
+    </div>
+    <div class="actions">
+      <button class="btn" id="pre-huidig" type="button">Huidige instellingen</button>
+      <button class="btn" id="pre-advies" type="button">Advies</button>
+      <button class="btn primary" id="tune" type="button">Stooklijn afstemmen op 20 °C</button>
+      <span class="preset-state" id="preset-state"></span>
+    </div>
+  </header>
+
+  <main class="app">
+    <aside class="controls" id="controls" aria-label="Instellingen"></aside>
+
+    <section class="stage">
+      <div class="kpis" id="kpis" aria-live="polite"></div>
+
+      <div class="card">
+        <div class="scene-head">
+          <h2>Installatie op <span id="clock-title" class="num">18:00</span></h2>
+          <div class="timebar">
+            <button class="btn" id="play" type="button" aria-label="Dag afspelen">▶</button>
+            <input type="range" id="time" min="0" max="719" step="1" value="540" aria-label="Tijdstip in het etmaal">
+            <span class="clock" id="clock">18:00</span>
+          </div>
+        </div>
+        <div class="legend">
+          <span><i style="background: var(--cold)"></i>koud water</span>
+          <span><i style="background: var(--warm)"></i>warm water</span>
+          <span><i style="background: var(--refr)"></i>koudemiddel R32</span>
+          <span><i style="background: var(--copper)"></i>warm tapwater</span>
+          <span class="busy" id="busy"></span>
+        </div>
+        <div class="scene-wrap"><svg id="scene" viewBox="0 0 960 640" role="img" aria-label="Isometrisch schema van de installatie"></svg></div>
+        <div class="live" id="live"></div>
+      </div>
+
+      <div class="card">
+        <div class="scene-head">
+          <h2>Etmaalverloop</h2>
+          <div class="legend" id="chart-legend"></div>
+        </div>
+        <div class="chart-wrap" id="chart"></div>
+      </div>
+
+      <div class="cols">
+        <div class="card">
+          <h2>Energiebalans per etmaal</h2>
+          <div id="balance"></div>
+        </div>
+        <div class="card">
+          <h2>Diagnose</h2>
+          <ul class="diag" id="diag"></ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="year-head">
+          <h2>Jaarschatting (klimaat Eelde)</h2>
+          <button class="btn" id="year-btn" type="button">Bereken jaar</button>
+        </div>
+        <div id="year"><p class="note">Rekent elke maand door met de gemiddelde buitentemperatuur en luchtvochtigheid van KNMI-station Eelde (±4 °C spreiding) en de zoninstraling per maand. Vergelijkt de huidige instellingen met jouw instellingen en met de meting van dit jaar.</p></div>
+      </div>
+
+      <details class="card assume">
+        <summary>Modelaannames en ijking</summary>
+        <ul id="assume"></ul>
+      </details>
+    </section>
+  </main>
+</div>
+
+<script>
+/* ===================== REKENMODEL ===================== */
+const CP = 4.186;
+const flowKW = lpm => (lpm / 60) * CP;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const EELDE = [
+  ['jan', 31, 3.0, 88, 150], ['feb', 28, 3.3, 85, 300], ['mrt', 31, 5.9, 81, 500],
+  ['apr', 30, 9.2, 74, 700], ['mei', 31, 12.9, 74, 800], ['jun', 30, 15.6, 76, 800],
+  ['jul', 31, 17.7, 77, 800], ['aug', 31, 17.4, 79, 700], ['sep', 30, 14.3, 83, 550],
+  ['okt', 31, 10.4, 87, 350], ['nov', 30, 6.4, 90, 150], ['dec', 31, 3.6, 90, 100]];
+
+function curveTarget(p, To) {
+  let t;
+  if (To <= p.c1o) t = p.c1t;
+  else if (To >= p.c2o) t = p.c2t;
+  else t = p.c1t + (p.c2t - p.c1t) * (To - p.c1o) / (p.c2o - p.c1o);
+  return clamp(t + p.ai, p.wMin, p.wMax);
+}
+const pMaxAt = (p, To) => clamp(p.pNom * (1 + 0.018 * (To - 7)), 3.5, 11);
+const pMinAt = (p, To) => clamp(p.pMinNom * (1 + 0.012 * (To - 7)), 1.2, 5);
+function copInst(p, To, Tw, Q, Pm) {
+  const f = clamp(Q / Pm, 0.05, 1);
+  const Tc = Tw + 1.5 + 2.5 * f;
+  const Te = To - (2 + 5 * f);
+  let eta = 0.55 * (1 - 0.3 * (1 - f) * (1 - f));
+  if (p.silent) eta *= 0.97;
+  return Math.min(8, eta * (Tc + 273.15) / Math.max(8, Tc - Te));
+}
+function frostIndex(To, RH) {
+  if (To > 8 || To < -20) return 0;
+  return Math.exp(-Math.pow((To - 1) / 5.5, 2)) * clamp((RH - 55) / 40, 0, 1);
+}
+function mpOf(p, Q) {
+  if (p.flowMode === 'vast') return p.mpFix;
+  if (p.flowMode === 'dt') return clamp(Q / (CP * p.dT) * 60, 10, 30);
+  return 28.9;
+}
+function makeStat(set, cr, ot) { return { set, period: 3600 / cr, ot: ot * 60, tStart: -1e9, until: 0, I: 0, closed: false }; }
+function statStep(st, T, t, dt) {
+  st.I = clamp(st.I + (st.set - T) * 0.25 * dt / 3600, -0.6, 0.6);
+  if (t - st.tStart >= st.period - 1e-6) {
+    st.tStart = t;
+    const duty = clamp(0.5 + (st.set - T) / 1.0 + st.I, 0, 1);
+    let on = duty * st.period;
+    if (duty < 0.05) on = 0; else if (on < st.ot) on = st.ot;
+    if (duty >= 0.97) on = st.period + 1;
+    st.until = t + on;
+  }
+  st.closed = t < st.until;
+  return st.closed;
+}
+
+function simulate(p, opt = {}) {
+  const k = opt.k ?? 1;
+  const To = p.Tout, RH = p.RH;
+  const H_A = p.H * 0.58 / 1000, H_B = p.H * 0.42 / 1000, H_AB = 0.025;
+  const H_berg = 0.015, bergDrop = (1 - p.berg / 100) * 5;
+  let etaW = p.bypass ? 0 : p.wtwEta / 100;
+  if (To < -2) etaW *= 0.8;
+  const Hv = 0.335 * (p.wtwQ * (1 - etaW) + p.inf) / 1000;
+  const sun = opt.sun ?? p.sun;
+  const gA = (p.gains * 0.7 + sun * 0.6) / 1000, gB = (p.gains * 0.3 + sun * 0.4) / 1000;
+  const CA = 4.5 * 3600, CB = 3 * 3600, CFA = 3 * 3600, CFB = 2 * 3600;
+  const Cbuf = 72 * CP, Cd = 180 * CP;
+  const UAwfA = 1.08, UAwfB = 0.72, hfrA = 1.14, hfrB = 0.76, UAtank = 0.0016;
+  const PmFull = pMaxAt(p, To);
+  const Pm = PmFull * (p.silent ? 0.7 : 1);
+  const Pmin = Math.min(pMinAt(p, To), Pm);
+  const target = curveTarget(p, To);
+  const FI = frostIndex(To, RH);
+
+  let TA = clamp(p.setA - 0.3, 15, 23), TB = TA - 0.5, FA = TA + 1, FB = TB + 1, Tbuf = FA + 1;
+  let Td = p.dhwSet - 1;
+  const sA = makeStat(p.setA, p.cr, p.ot), sB = makeStat(p.setB, p.cr, p.ot);
+  let comp = false, compT = 0, offT = 1e6, dhw = false, dhwT = 0, sinceDhw = 1e6;
+  let frost = 0, defrostT = 0, elem = false, lowT = 0, lastOut = null;
+  const draws = [[7 * 3600, 0.4], [12.5 * 3600, 0.15], [19.5 * 3600, 0.45]];
+  const drawE = p.dhwUse * (40 - 10) * CP;
+
+  const phases = opt.fast
+    ? [[6 * 86400, 60, false], [86400, 20, true]]
+    : [[10 * 86400, 60, false], [86400, 15, false], [2 * 86400, 15, true]];
+  const recDays = opt.fast ? 1 : 2;
+  const R = { heatSH: 0, heatDHW: 0, heatElem: 0, elComp: 0, elCompDHW: 0, elElem: 0, elPump: 0, elStandby: 0,
+    elGP: 0, elWTW: 0, starts: 0, defrosts: 0, runs: [], offs: [], TAsum: 0, TBsum: 0, TAmin: 99, TAmax: -99,
+    TBmin: 99, TBmax: -99, supSum: 0, retSum: 0, runSec: 0, dhwSec: 0, lossTrans: 0, lossVent: 0, gain: 0,
+    n: 0, statAsec: 0, statBsec: 0, series: [], Tbergsum: 0, QmaxSeen: 0 };
+  let lastStart = null, lastStop = null, rec = false, t = 0, lastDay = false, recEnd = 0;
+  function startEvt() { if (rec) { R.starts++; if (lastStop !== null) R.offs.push(t - lastStop); } lastStart = t; }
+  function stopEvt() {
+    if (!comp) return;
+    comp = false; offT = 0; elem = false;
+    if (rec && lastStart !== null) R.runs.push(t - lastStart);
+    lastStop = t;
+  }
+  const startF = ct => ct < 360 ? 0.45 + 0.55 * ct / 360 : 1;
+
+  for (const [dur, dt, recPh] of phases) {
+    rec = recPh;
+    const tEnd = t + dur;
+    if (rec) recEnd = tEnd;
+    for (; t < tEnd - 1e-9; t += dt) {
+      const tod = t % 86400;
+      lastDay = rec && t >= recEnd - 86400;
+      const demA = statStep(sA, TA, t, dt);
+      const demB = statStep(sB, TB, t, dt);
+      const demand = demA || (p.wiringB === 'parallel' && demB);
+      const pumpBOn = !(p.wiringB === 'pomp' && !demB);
+
+      let sampleNow, lgPump;
+      if (comp) { sampleNow = true; lgPump = true; }
+      else if (p.pumpMode === 'continu') { sampleNow = offT >= 180; lgPump = demand || offT < 60; }
+      else {
+        const cyc = (p.pumpOn + p.pumpOff) * 60;
+        const ph = (offT - 60) % cyc;
+        const inOn = offT >= 60 && ph >= p.pumpOff * 60 - 1e-6;
+        sampleNow = offT >= 180 && inOn;
+        lgPump = offT < 60 || inOn;
+      }
+
+      if (!dhw && Td < p.dhwSet - p.dhwHyst && sinceDhw >= p.dhwStop * 60 && (comp || offT >= 180)) {
+        dhw = true; dhwT = 0;
+        if (!comp) { comp = true; compT = 0; startEvt(); }
+      }
+
+      let Qhp = 0, Pel = 0, mp = 0, Tlgout = Tbuf, Qtank = 0, state = 0;
+      const mA = p.mA * (0.85 + 0.15 * p.berg / 100), mB = pumpBOn ? p.mB : 0;
+      const cpA = flowKW(mA), cpB = flowKW(mB);
+      const QwfA = cpA > 0 ? cpA * (1 - Math.exp(-UAwfA / cpA)) * (Tbuf - FA) : 0;
+      const QwfB = cpB > 0 ? cpB * (1 - Math.exp(-UAwfB / cpB)) * (Tbuf - FB) : 0;
+
+      if (!dhw) {
+        if (comp) {
+          if (!demand) stopEvt();
+          else if (compT >= 180 && (p.ctrl === 'invoer' ? Tbuf : (lastOut ?? Tbuf)) > target + p.hOff) stopEvt();
+        } else if (demand && sampleNow && Tbuf < target + p.hOn) { comp = true; compT = 0; startEvt(); }
+      }
+      if (comp && defrostT <= 0 && frost >= 1) { defrostT = 240; frost = 0; if (rec) R.defrosts++; }
+
+      if (comp) {
+        const ramp = Pmin + (Pm - Pmin) * Math.min(1, compT / 1080);
+        if (defrostT > 0) {
+          Qhp = -1.5; Pel = 1.0; state = 3; defrostT -= dt; mp = mpOf(p, 3);
+          if (dhw) { Qtank = Qhp; Qhp = 0; }
+        } else if (dhw) {
+          const Qd = Math.min(Math.min(0.9 * Pm, 6.5), Math.max(Pmin, ramp));
+          const cop = copInst(p, To, Td + 7, Qd, PmFull) * startF(compT) * (1 - 0.08 * frost) * k;
+          Qtank = Qd; Pel = Qd / cop; state = 2; mp = mpOf(p, Qd); dhwT += dt;
+        } else {
+          const Qdraw = QwfA + QwfB;
+          const Qreq = p.ctrl === 'invoer' ? Qdraw + 2.0 * (target - Tbuf) : flowKW(mpOf(p, Pm)) * (target - Tbuf);
+          Qhp = clamp(Qreq, Pmin, ramp);
+          mp = mpOf(p, Qhp);
+          Tlgout = Tbuf + Qhp / flowKW(mp);
+          const cop = copInst(p, To, Tlgout, Qhp, PmFull) * startF(compT) * (1 - 0.08 * frost) * k;
+          Pel = Qhp / cop; state = 1;
+          if (To <= p.heaterOn && Qhp >= 0.98 * Pm && Tbuf < target - 2) lowT += dt; else lowT = 0;
+          if (lowT > 1800) elem = true;
+        }
+        if (defrostT <= 0) frost += 1.4 * FI * (0.5 + 0.5 * clamp((Qhp + Qtank) / PmFull, 0, 1)) * dt / 3600;
+        compT += dt;
+      }
+      if (elem && (!demand || Tbuf >= target - 0.5 || dhw || !comp)) elem = false;
+      const Qel = elem ? 3 : 0;
+      if (comp && defrostT <= 0 && !dhw) lastOut = Tlgout; else if (!comp) lastOut = Tbuf;
+
+      if (dhw && (Td >= Math.min(p.dhwSet, p.compLim) || dhwT >= p.dhwActive * 60)) {
+        dhw = false; sinceDhw = 0;
+        if (!(demand && Tbuf < target + p.hOff)) stopEvt();
+      }
+
+      let Qdrawd = 0;
+      for (const [ts, sh] of draws) if (tod >= ts && tod < ts + 600) Qdrawd += drawE * sh / 600;
+      const QlossTank = UAtank * (Td - TA);
+      const Tberg = TA - bergDrop;
+      const lossA = H_A * (TA - To) + H_berg * (Tberg - To) + Hv * 0.6 * (TA - To) + H_AB * (TA - TB);
+      const lossB = H_B * (TB - To) + Hv * 0.4 * (TB - To) - H_AB * (TA - TB);
+      const QfrA = hfrA * (FA - TA), QfrB = hfrB * (FB - TB);
+      Tbuf += (Qhp + Qel - QwfA - QwfB) * dt / Cbuf;
+      FA += (QwfA - QfrA) * dt / CFA;
+      FB += (QwfB - QfrB) * dt / CFB;
+      TA += (QfrA + gA + QlossTank - lossA) * dt / CA;
+      TB += (QfrB + gB - lossB) * dt / CB;
+      Td = Math.max(10, Td + (Qtank - Qdrawd - QlossTank) * dt / Cd);
+
+      if (!comp) { offT += dt; if (lgPump) mp = mpOf(p, 3); }
+      sinceDhw += dt;
+
+      if (rec) {
+        const h = dt / 3600;
+        if (state === 1 || (state === 3 && !dhw)) R.heatSH += Qhp * h;
+        if (state === 2 || (state === 3 && dhw)) { R.heatDHW += Qtank * h; R.elCompDHW += Pel * h; }
+        else R.elComp += Pel * h;
+        R.heatElem += Qel * h; R.elElem += Qel * h;
+        R.elPump += (lgPump ? 0.008 + 0.05 * Math.pow((mp || 28.9) / 29, 2) : 0) * h;
+        R.elStandby += (0.015 + (!comp && To < 10 ? 0.035 : 0)) * h;
+        R.elGP += ((mA > 0 ? p.gpW : 0) + (mB > 0 ? p.gpW : 0)) / 1000 * h;
+        R.elWTW += (8 + 0.12 * p.wtwQ + 0.00025 * p.wtwQ * p.wtwQ) / 1000 * h;
+        R.TAsum += TA * dt; R.TBsum += TB * dt; R.Tbergsum += Tberg * dt;
+        R.TAmin = Math.min(R.TAmin, TA); R.TAmax = Math.max(R.TAmax, TA);
+        R.TBmin = Math.min(R.TBmin, TB); R.TBmax = Math.max(R.TBmax, TB);
+        if (state === 1) { R.supSum += Tlgout * dt; R.retSum += Tbuf * dt; R.runSec += dt; R.QmaxSeen = Math.max(R.QmaxSeen, Qhp); }
+        if (state === 2) R.dhwSec += dt;
+        R.lossTrans += (H_A * (TA - To) + H_B * (TB - To) + H_berg * (Tberg - To)) * h;
+        R.lossVent += Hv * (0.6 * (TA - To) + 0.4 * (TB - To)) * h;
+        R.gain += (gA + gB) * h;
+        if (demA) R.statAsec += dt;
+        if (demB) R.statBsec += dt;
+        R.n += dt;
+        if (lastDay && Math.round(tod) % 120 === 0) R.series.push({ t: tod, TA, TB, Tbuf, Tlgout: state === 1 ? Tlgout : null,
+          Q: Qhp + Qtank + Qel, Qhp, Qtank, Pel: Pel + Qel, state, demA, demB, Td, FA, FB, mp: lgPump || comp ? (mp || 28.9) : 0,
+          elem, Tberg, QwfA, QwfB, mA, mB, frost });
+      }
+    }
+  }
+  let disHeat = 0, disEl = 0;
+  if (p.disOn && p.disT > p.dhwSet) {
+    const hpPart = Math.max(0, Math.min(p.disT, p.compLim) - p.dhwSet) * 180 * CP / 3600;
+    const elPart = Math.max(0, p.disT - Math.max(p.compLim, p.dhwSet)) * 180 * CP / 3600;
+    const extraLoss = UAtank * (p.disT - p.dhwSet) / 2 * 12;
+    const copD = copInst(p, To, Math.min(p.disT, p.compLim) + 5, 0.8 * PmFull, PmFull) * k;
+    disHeat = (hpPart + elPart + extraLoss) / 7;
+    disEl = ((hpPart + extraLoss) / copD + elPart) / 7;
+  }
+  const d = recDays;
+  for (const key of ['heatSH', 'heatDHW', 'heatElem', 'elComp', 'elCompDHW', 'elElem', 'elPump', 'elStandby', 'elGP', 'elWTW',
+    'starts', 'defrosts', 'lossTrans', 'lossVent', 'gain']) R[key] /= d;
+  R.disHeat = disHeat; R.disEl = disEl;
+  R.TAavg = R.TAsum / R.n; R.TBavg = R.TBsum / R.n; R.Tberg = R.Tbergsum / R.n;
+  R.supAvg = R.runSec ? R.supSum / R.runSec : null; R.retAvg = R.runSec ? R.retSum / R.runSec : null;
+  R.heatTotal = R.heatSH + R.heatDHW + R.heatElem + disHeat;
+  R.elLG = R.elComp + R.elCompDHW + R.elElem + R.elPump + R.elStandby + disEl;
+  R.copLG = R.heatTotal / R.elLG;
+  R.copSH = (R.heatSH + R.heatElem) / Math.max(1e-6, R.elComp + R.elElem + R.elPump + R.elStandby);
+  R.copDHW = (R.heatDHW + disHeat) / Math.max(1e-6, R.elCompDHW + disEl);
+  R.runAvg = R.runs.length ? R.runs.reduce((a, b) => a + b, 0) / R.runs.length / 60 : null;
+  R.offAvg = R.offs.length ? R.offs.reduce((a, b) => a + b, 0) / R.offs.length / 60 : null;
+  R.target = target; R.Pm = Pm; R.PmFull = PmFull; R.Pmin = Pmin; R.FI = FI; R.k = k;
+  R.statAshare = R.statAsec / R.n; R.statBshare = R.statBsec / R.n;
+  R.runShare = R.runSec / R.n;
+  return R;
+}
+function calibrate(pBase, goal = 2.7) {
+  let k = 1;
+  for (let i = 0; i < 5; i++) {
+    const r = simulate(pBase, { k });
+    k = clamp(k * Math.pow(goal / r.copLG, 1.15), 0.3, 1.5);
+  }
+  return k;
+}
+
+/* ===================== INSTELLINGEN ===================== */
+const WEATHER_KEYS = ['Tout', 'RH', 'sun'];
+const HOUSE_KEYS = ['H', 'gains', 'wtwQ', 'wtwEta', 'bypass', 'inf', 'dhwUse', 'pMinNom', 'pNom', 'calib'];
+const HUIDIG = { c1o: -10, c1t: 45, c2o: 20, c2t: 19, ai: 0, ctrl: 'invoer', hOn: -2, hOff: 2, wMin: 15, wMax: 45,
+  silent: true, flowMode: 'opt', mpFix: 26, dT: 5, pumpMode: 'interval', pumpOn: 1, pumpOff: 10, heaterOn: -10,
+  setA: 20, setB: 18.5, cr: 3, ot: 1, wiringB: 'parallel', mA: 18, mB: 12, berg: 100, gpW: 20,
+  dhwSet: 48, dhwHyst: 3, compLim: 58, disOn: true, disT: 67, dhwActive: 45, dhwStop: 30 };
+const ADVIES = { ...HUIDIG, c1t: 25, c2o: 18, c2t: 22, hOn: -1, hOff: 3, wMax: 35, silent: false, setA: 21.5, ot: 5,
+  mB: 8, berg: 50, gpW: 10, dhwSet: 46, dhwHyst: 4, disT: 60 };
+const BASE = { Tout: 3, RH: 90, sun: 0, H: 90, gains: 350, wtwQ: 150, wtwEta: 90, bypass: false, inf: 50, dhwUse: 60,
+  pMinNom: 2.5, pNom: 9, calib: true };
+
+const GROUPS = [
+  ['buiten', 'Buiten', true], ['lijn', 'Stooklijn en regeling', true], ['wp', 'Warmtepomp', false],
+  ['dt4', 'Thermostaten DT4', true], ['vloer', 'Vloerverwarming en pompen', false], ['ww', 'Warm water', false],
+  ['woning', 'Woning en WTW', false], ['model', 'Model', false]];
+const C = [
+  { id: 'Tout', g: 'buiten', l: 'Buitentemperatuur', min: -15, max: 20, step: 0.5, u: '°C', d: 1 },
+  { id: 'RH', g: 'buiten', l: 'Relatieve luchtvochtigheid', min: 30, max: 100, step: 1, u: '%', d: 0, h: 'Hoge vochtigheid rond 0–7 °C geeft rijp op de verdamper en dus ontdooicycli.' },
+  { id: 'sun', g: 'buiten', l: 'Zoninstraling (nuttig, gemiddeld)', min: 0, max: 2000, step: 50, u: 'W', d: 0 },
+  { id: 'c1o', g: 'lijn', l: 'Stooklijn punt 1 · buiten', min: -20, max: 5, step: 1, u: '°C', d: 0 },
+  { id: 'c1t', g: 'lijn', l: 'Stooklijn punt 1 · water', min: 15, max: 45, step: 0.5, u: '°C', d: 1 },
+  { id: 'c2o', g: 'lijn', l: 'Stooklijn punt 2 · buiten', min: 10, max: 25, step: 1, u: '°C', d: 0 },
+  { id: 'c2t', g: 'lijn', l: 'Stooklijn punt 2 · water', min: 15, max: 35, step: 0.5, u: '°C', d: 1 },
+  { id: 'ai', g: 'lijn', l: 'AI-correctie', min: -8, max: 8, step: 0.5, u: 'K', d: 1, sign: true },
+  { id: 'ctrl', g: 'lijn', l: 'Regelen op', type: 'sel', opts: [['invoer', 'Invoer (retour)'], ['uitvoer', 'Uitvoer (aanvoer)']] },
+  { id: 'hOn', g: 'lijn', l: 'Hysterese verwarmingswater · aan', min: -9, max: 0, step: 0.5, u: 'K', d: 1, sign: true },
+  { id: 'hOff', g: 'lijn', l: 'Hysterese verwarmingswater · uit', min: 0, max: 4, step: 0.5, u: 'K', d: 1, sign: true },
+  { id: 'wMax', g: 'lijn', l: 'Max. watertemperatuur', min: 25, max: 45, step: 1, u: '°C', d: 0 },
+  { id: 'silent', g: 'wp', l: 'Stille modus (max. ≈ 70 % vermogen)', type: 'chk' },
+  { id: 'flowMode', g: 'wp', l: 'Waterdebiet LG', type: 'sel', opts: [['opt', 'Optimale debiet (28,9 L/min)'], ['vast', 'Vast debiet'], ['dt', 'Vaste ΔT']] },
+  { id: 'mpFix', g: 'wp', l: 'Vast debiet', min: 10, max: 30, step: 0.5, u: 'L/min', d: 1, show: p => p.flowMode === 'vast' },
+  { id: 'dT', g: 'wp', l: 'Vaste ΔT', min: 3, max: 8, step: 0.5, u: 'K', d: 1, show: p => p.flowMode === 'dt' },
+  { id: 'pumpMode', g: 'wp', l: 'Pomp bij thermo-uit', type: 'sel', opts: [['interval', 'Tijdsinstelling (interval)'], ['continu', 'Doorlopende werking']] },
+  { id: 'pumpOn', g: 'wp', l: 'Interval · pomp aan', min: 1, max: 10, step: 1, u: 'min', d: 0, show: p => p.pumpMode === 'interval' },
+  { id: 'pumpOff', g: 'wp', l: 'Interval · pomp uit', min: 1, max: 30, step: 1, u: 'min', d: 0, show: p => p.pumpMode === 'interval' },
+  { id: 'heaterOn', g: 'wp', l: 'Element toegestaan onder', min: -25, max: 5, step: 1, u: '°C', d: 0, h: 'Verwarmer aan-temperatuur: het 3 kW-element springt alleen bij onder deze buitentemperatuur.' },
+  { id: 'setA', g: 'dt4', l: 'DT4 woonkamer', min: 15, max: 24, step: 0.5, u: '°C', d: 1 },
+  { id: 'setB', g: 'dt4', l: 'DT4 slaapkamer', min: 15, max: 24, step: 0.5, u: '°C', d: 1 },
+  { id: 'cr', g: 'dt4', l: 'Schakelfrequentie (2:CR)', type: 'sel', opts: [[3, '3 per uur'], [6, '6 per uur (standaard)'], [9, '9 per uur'], [12, '12 per uur']] },
+  { id: 'ot', g: 'dt4', l: 'Minimale aan-tijd (3:OT)', min: 1, max: 5, step: 1, u: 'min', d: 0 },
+  { id: 'wiringB', g: 'dt4', l: 'Slaapkamer-DT4 schakelt', type: 'sel', opts: [['parallel', 'De warmtepomp (parallel)'], ['pomp', 'De groepspomp boven']] },
+  { id: 'mA', g: 'vloer', l: 'Debiet groepen beneden', min: 5, max: 40, step: 1, u: 'L/min', d: 0 },
+  { id: 'mB', g: 'vloer', l: 'Debiet groepen boven (slaapkamers, zolder)', min: 0, max: 30, step: 1, u: 'L/min', d: 0 },
+  { id: 'berg', g: 'vloer', l: 'Berginggroepen open', min: 0, max: 100, step: 5, u: '%', d: 0 },
+  { id: 'gpW', g: 'vloer', l: 'Vermogen per groepspomp', min: 3, max: 45, step: 1, u: 'W', d: 0 },
+  { id: 'dhwSet', g: 'ww', l: 'Boilertemperatuur', min: 40, max: 55, step: 1, u: '°C', d: 0 },
+  { id: 'dhwHyst', g: 'ww', l: 'Hysterese (Tank instelling 2)', min: 2, max: 4, step: 1, u: 'K', d: 0 },
+  { id: 'dhwUse', g: 'ww', l: 'Warmwatergebruik (bij 40 °C)', min: 0, max: 250, step: 10, u: 'L/dag', d: 0 },
+  { id: 'compLim', g: 'ww', l: 'Comp. limiettemperatuur', min: 45, max: 58, step: 1, u: '°C', d: 0 },
+  { id: 'disOn', g: 'ww', l: 'Wekelijkse ontsmetting', type: 'chk' },
+  { id: 'disT', g: 'ww', l: 'Ontsmettingstemperatuur', min: 55, max: 70, step: 1, u: '°C', d: 0, show: p => p.disOn },
+  { id: 'dhwActive', g: 'ww', l: 'DHW tijd actief', min: 5, max: 95, step: 5, u: 'min', d: 0 },
+  { id: 'dhwStop', g: 'ww', l: 'DHW stoptijd', min: 0, max: 120, step: 5, u: 'min', d: 0 },
+  { id: 'H', g: 'woning', l: 'Transmissieverlies woning', min: 50, max: 200, step: 5, u: 'W/K', d: 0, h: 'Geijkt op 42,6 kWh warmte bij 3 °C op 11-11.' },
+  { id: 'gains', g: 'woning', l: 'Interne warmte (personen, apparaten)', min: 0, max: 1000, step: 50, u: 'W', d: 0 },
+  { id: 'wtwQ', g: 'woning', l: 'WTW-debiet', min: 50, max: 400, step: 10, u: 'm³/h', d: 0 },
+  { id: 'wtwEta', g: 'woning', l: 'WTW-rendement in de praktijk', min: 50, max: 95.5, step: 0.5, u: '%', d: 1 },
+  { id: 'bypass', g: 'woning', l: 'WTW-bypass open', type: 'chk' },
+  { id: 'inf', g: 'woning', l: 'Infiltratie (kieren)', min: 0, max: 200, step: 10, u: 'm³/h', d: 0 },
+  { id: 'calib', g: 'model', l: 'IJken op meting 11-11 (COP 2,7 bij 3 °C)', type: 'chk' },
+  { id: 'pMinNom', g: 'model', l: 'Minimaal compressorvermogen (bij 7 °C)', min: 1.5, max: 4, step: 0.1, u: 'kW', d: 1, h: 'Aanname; LG publiceert dit niet. De meting wijst op ruim 2 kW.' },
+  { id: 'pNom', g: 'model', l: 'Nominaal vermogen (A7/W35)', min: 7, max: 10, step: 0.5, u: 'kW', d: 1 }];
+
+/* ===================== UI ===================== */
+const $ = id => document.getElementById(id);
+const nf = (v, d = 1) => v == null || !isFinite(v) ? '–' : v.toLocaleString('nl-NL', { minimumFractionDigits: d, maximumFractionDigits: d });
+const sg = (v, d = 1) => (v > 0 ? '+' : '') + nf(v, d);
+const hhmm = s => { const m = Math.round(s / 60); return String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+
+let P = { ...BASE, ...HUIDIG };
+try { const s = JSON.parse(localStorage.getItem('thermav-sim') || 'null'); if (s && typeof s === 'object') P = { ...P, ...s }; } catch (e) { /* geen opslag */ }
+let K = 1, RES = null, BASE_RES = null, baseKey = '', timeIdx = 540, playing = null;
+
+function buildControls() {
+  const root = $('controls');
+  root.innerHTML = GROUPS.map(([g, title, open]) => `<details class="grp" id="grp-${g}" ${open ? 'open' : ''}><summary><h2>${title}</h2><span class="chev">›</span></summary><div class="grp-body">${
+    C.filter(c => c.g === g).map(c => {
+      if (c.type === 'sel') return `<div class="ctl" id="w-${c.id}"><label for="${c.id}"><span><span class="chg" id="d-${c.id}" hidden></span>${c.l}</span></label><select id="${c.id}">${c.opts.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div>`;
+      if (c.type === 'chk') return `<div class="ctl check" id="w-${c.id}"><label for="${c.id}"><input type="checkbox" id="${c.id}"><span><span class="chg" id="d-${c.id}" hidden></span>${c.l}</span></label></div>`;
+      return `<div class="ctl" id="w-${c.id}"><label for="${c.id}"><span><span class="chg" id="d-${c.id}" hidden></span>${c.l}</span><span class="val" id="v-${c.id}"></span></label><input type="range" id="${c.id}" min="${c.min}" max="${c.max}" step="${c.step}">${c.h ? `<span class="help">${c.h}</span>` : ''}</div>`;
+    }).join('')}</div></details>`).join('');
+  for (const c of C) {
+    const el = $(c.id);
+    el.addEventListener('input', () => {
+      if (c.type === 'chk') P[c.id] = el.checked;
+      else if (c.type === 'sel') P[c.id] = isNaN(+el.value) ? el.value : +el.value;
+      else P[c.id] = +el.value;
+      syncControls(); schedule();
+    });
+  }
+}
+function syncControls() {
+  for (const c of C) {
+    const el = $(c.id);
+    if (c.type === 'chk') el.checked = !!P[c.id];
+    else el.value = P[c.id];
+    if (!c.type) $('v-' + c.id).textContent = (c.sign ? sg(P[c.id], c.d) : nf(P[c.id], c.d)) + ' ' + c.u;
+    $('w-' + c.id).hidden = c.show ? !c.show(P) : false;
+    const ref = c.id in HUIDIG ? HUIDIG[c.id] : BASE[c.id];
+    $('d-' + c.id).hidden = String(P[c.id]) === String(ref);
+  }
+  const isH = Object.keys(HUIDIG).every(k => String(P[k]) === String(HUIDIG[k]));
+  const isA = Object.keys(ADVIES).every(k => k === 'ai' || String(P[k]) === String(ADVIES[k]));
+  $('pre-huidig').setAttribute('aria-pressed', isH);
+  $('pre-advies').setAttribute('aria-pressed', isA && !isH);
+  $('preset-state').textContent = isH ? 'Huidige instellingen actief' : isA ? 'Advies actief' + (P.ai ? ` (AI ${sg(P.ai)})` : '') : 'Aangepaste instellingen';
+}
+
+let timer = null;
+function schedule() {
+  clearTimeout(timer);
+  $('busy').textContent = 'rekent…';
+  timer = setTimeout(run, 140);
+}
+function run() {
+  try { localStorage.setItem('thermav-sim', JSON.stringify(P)); } catch (e) { /* geen opslag */ }
+  const k = P.calib ? K : 1;
+  RES = simulate(P, { k });
+  const key = JSON.stringify([...WEATHER_KEYS, ...HOUSE_KEYS].map(x => P[x]));
+  if (key !== baseKey) {
+    const bp = { ...P, ...HUIDIG };
+    BASE_RES = simulate(bp, { k });
+    baseKey = key;
+  }
+  $('busy').textContent = '';
+  if (!playing) timeIdx = pickTime(RES);
+  $('time').value = timeIdx;
+  renderAll();
+}
+function pickTime(r) {
+  const s = r.series;
+  let best = 540;
+  for (let i = 520; i < 600 && i < s.length; i++) if (s[i].state === 1) { best = i; break; }
+  return best;
+}
+function renderAll() {
+  renderKPIs(); renderScene(); renderLive(); renderChart(); renderBalance(); renderDiag();
+}
+
+function delta(v, base, d, invert = false, unit = '') {
+  if (base == null || v == null) return '';
+  const dv = v - base;
+  if (Math.abs(dv) < Math.pow(10, -d) / 2) return `<span class="delta flat">gelijk aan huidig</span>`;
+  const good = invert ? dv < 0 : dv > 0;
+  return `<span class="delta ${good ? 'up' : 'down'}">${sg(dv, d)}${unit} t.o.v. huidig</span>`;
+}
+function renderKPIs() {
+  const r = RES, b = BASE_RES;
+  const sPill = r.starts > 48 ? 'bad' : r.starts > 24 ? 'warn' : 'good';
+  const sTxt = r.starts > 48 ? 'pendelt' : r.starts > 24 ? 'veel starts' : 'rustig';
+  const tA = r.TAavg;
+  const cPill = tA < 19.5 ? ['warn', 'te koud'] : tA > 20.8 ? ['warn', 'te warm'] : ['good', 'comfortabel'];
+  const tiles = [
+    ['COP (zoals LG-display)', nf(r.copLG, 2), '', delta(r.copLG, b.copLG, 2), `verwarming ${nf(r.copSH, 2)} · warm water ${nf(r.copDHW, 2)}`],
+    ['Stroom LG', nf(r.elLG, 1), 'kWh/dag', delta(r.elLG, b.elLG, 1, true, ' kWh'), `+ ${nf(r.elGP + r.elWTW, 1)} kWh pompen en WTW`],
+    ['Warmte geleverd', nf(r.heatTotal, 1), 'kWh/dag', '', `verwarming ${nf(r.heatSH + r.heatElem, 1)} · warm water ${nf(r.heatDHW + r.disHeat, 1)}`],
+    ['Starts', nf(r.starts, 0), 'per dag', `<span class="pill ${sPill}">${sTxt}</span>`, `looptijd ${nf(r.runAvg, 0)} min · pauze ${nf(r.offAvg, 0)} min`],
+    ['Woonkamer', nf(tA, 1), '°C', `<span class="pill ${cPill[0]}">${cPill[1]}</span>`, `${nf(r.TAmin, 1)}–${nf(r.TAmax, 1)} °C over de dag`],
+    ['Slaapkamers', nf(r.TBavg, 1), '°C', '', `berging ${nf(r.Tberg, 1)} °C`],
+    ['Aanvoer / retour', r.supAvg ? `${nf(r.supAvg, 1)}<small>/</small>${nf(r.retAvg, 1)}` : '–', '°C', '', `stooklijndoel ${nf(r.target, 1)} °C (${P.ctrl})`],
+    ['Ontdooicycli', nf(r.defrosts, 0), 'per dag', '', r.FI > 0.4 ? 'veel rijpvorming' : r.FI > 0.1 ? 'enige rijpvorming' : 'geen rijpvorming']];
+  $('kpis').innerHTML = tiles.map(([l, v, u, dlt, sub]) => `<div class="kpi"><span class="k-lab">${l}</span><span class="k-val">${v}${u ? `<small>${u}</small>` : ''}</span>${dlt ? `<span>${dlt}</span>` : ''}<span class="k-sub">${sub}</span></div>`).join('');
+}
+
+/* ---------- isometrisch schema ---------- */
+const S = 30, OX = 468, OY = 410;
+const iso = (x, y, z = 0) => [OX + (x - y) * 0.866 * S, OY + (x + y) * 0.5 * S - z * S];
+const pt = a => a[0].toFixed(1) + ',' + a[1].toFixed(1);
+const poly = (pts, cls) => `<polygon points="${pts.map(pt).join(' ')}" class="${cls}"/>`;
+const pline = (pts, cls, style = '') => `<polyline points="${pts.map(a => pt(iso(...a))).join(' ')}" class="${cls}" style="${style}"/>`;
+function box(x, y, z, w, d, h, cls = '') {
+  const top = [iso(x, y, z + h), iso(x + w, y, z + h), iso(x + w, y + d, z + h), iso(x, y + d, z + h)];
+  const right = [iso(x + w, y, z), iso(x + w, y + d, z), iso(x + w, y + d, z + h), iso(x + w, y, z + h)];
+  const left = [iso(x, y + d, z), iso(x + w, y + d, z), iso(x + w, y + d, z + h), iso(x, y + d, z + h)];
+  return `<g class="${cls}">${poly(left, 'f-l')}${poly(right, 'f-r')}${poly(top, 'f-t')}</g>`;
+}
+function cyl(cx, cy, z, r, h, fill) {
+  const rx = r * 1.2247 * S, ry = r * 0.7071 * S;
+  const b = iso(cx, cy, z), t = iso(cx, cy, z + h);
+  return `<path d="M${b[0] - rx},${b[1]} A${rx},${ry} 0 0 0 ${b[0] + rx},${b[1]} L${t[0] + rx},${t[1]} L${t[0] - rx},${t[1]} Z" style="fill: ${fill}; stroke: var(--muted); stroke-width: 0.7"/><ellipse cx="${t[0]}" cy="${t[1]}" rx="${rx}" ry="${ry}" style="fill: var(--dev-t); stroke: var(--muted); stroke-width: 0.7"/>`;
+}
+function tcol(T, lo = 18, hi = 34) {
+  const f = clamp((T - lo) / (hi - lo), 0, 1);
+  return `color-mix(in oklab, var(--warm) ${Math.round(f * 100)}%, var(--cold))`;
+}
+function serp(x0, x1, y0, y1, z, n) {
+  const pts = [];
+  for (let i = 0; i < n; i++) {
+    const y = y0 + (y1 - y0) * i / (n - 1);
+    if (i % 2 === 0) pts.push([x0, y, z], [x1, y, z]); else pts.push([x1, y, z], [x0, y, z]);
+  }
+  return pts;
+}
+function callout(a, bx, by, w, lines, right = false) {
+  const h = 8 + lines.length * 15;
+  const x = right ? bx - w : bx;
+  const lx = right ? bx - w : bx + w;
+  const rows = lines.map((l, i) => `<text x="${x + 8}" y="${by + 17 + i * 15}" class="${i === 0 ? 'sv-title' : 'sv-mono'}">${l}</text>`).join('');
+  return `<g class="callout"><line x1="${a[0]}" y1="${a[1]}" x2="${lx}" y2="${by + h / 2}"/><circle cx="${a[0]}" cy="${a[1]}" r="2.2"/><rect x="${x}" y="${by}" width="${w}" height="${h}" rx="5"/>${rows}</g>`;
+}
+function slabLabel(x, y, z, txt) { const c = iso(x, y, z); return `<text x="${c[0]}" y="${c[1] + 16}" class="sv-text sv-muted" style="font-size: 11px">${txt}</text>`; }
+function renderScene() {
+  const s = RES.series[timeIdx] || RES.series[0];
+  const zV = 4.9, zZ = 9.8;
+  const run = s.state === 1 || s.state === 2;
+  const pumpsOn = s.mA > 0, upOn = s.mB > 0;
+  const supC = tcol(s.Tlgout ?? s.Tbuf), retC = tcol(s.Tbuf - 1.5), bufC = tcol(s.Tbuf);
+  const lgF = s.mp > 0 && s.state !== 2 ? ' flow' : '';
+  let o = '';
+  // achterwanden
+  o += pline([[-4.3, 0, 0], [-4.3, 0, 2.5], [7.2, 0, 2.5]], 'wall') + pline([[-4.3, 0, 2.5], [-4.3, 3.6, 2.5]], 'wall') + pline([[0.7, 0, 0], [0.7, 0, 2.5]], 'wall');
+  // vloeren + vloerverwarming
+  o += box(-4.3, 0, -0.25, 4.9, 3.6, 0.25, 'slab');
+  o += box(0.8, 0, -0.25, 6.4, 3.6, 0.25, 'slab');
+  o += pline(serp(-1.7, 0.3, 1.75, 3.3, 0.02, 5), 'loop', `stroke: ${tcol(s.Tberg + (P.berg / 100) * 1.5)}; opacity: ${0.3 + 0.65 * P.berg / 100}`);
+  o += pline(serp(1.3, 6.8, 0.4, 3.25, 0.02, 11), 'loop', `stroke: ${tcol(s.FA)}`);
+  o += box(0.8, 0, zV - 0.25, 6.4, 3.6, 0.25, 'slab');
+  o += pline(serp(1.3, 6.8, 0.4, 3.25, zV + 0.02, 7), 'loop', `stroke: ${tcol(s.FB)}; opacity: ${upOn ? 0.95 : 0.35}`);
+  // buitendeel + koudemiddel
+  o += box(-7.7, 0.6, 0, 1.3, 0.45, 1.0, 'dev');
+  const fan = [];
+  for (let i = 0; i <= 28; i++) { const t = i / 28 * Math.PI * 2; fan.push(iso(-7.05 + 0.36 * Math.cos(t), 1.05, 0.5 + 0.36 * Math.sin(t))); }
+  o += `<polyline points="${fan.map(pt).join(' ')}" class="fan${run || s.state === 3 ? ' on' : ''}"/>`;
+  o += pline([[-6.4, 0.72, 0.4], [-3.95, 0.72, 0.4]], 'pipe-thin refr' + (run ? ' flow' : ''));
+  o += pline([[-6.4, 0.9, 0.28], [-3.95, 0.9, 0.28]], 'pipe-thin refr' + (run ? ' flow' : ''));
+  // binnenunit met boiler
+  o += box(-3.95, 0.3, 0, 0.85, 0.85, 1.95, 'dev');
+  const tk = iso(-3.95 + 0.42, 0.3 + 0.85, 0.12), tf = clamp((s.Td - 30) / 30, 0, 1);
+  o += `<rect x="${tk[0] - 5}" y="${tk[1] - 44}" width="9" height="40" rx="2" style="fill: var(--panel-2); stroke: var(--muted); stroke-width: 0.6"/><rect x="${tk[0] - 4}" y="${tk[1] - 5 - 38 * tf}" width="7" height="${38 * tf}" rx="1.5" style="fill: var(--copper)"/>`;
+  // primair naar buffer
+  o += pline([[-3.1, 0.55, 1.55], [-2.45, 0.55, 1.55]], 'pipe' + lgF, `stroke: ${supC}`);
+  o += pline([[-2.45, 0.95, 0.5], [-3.1, 0.95, 0.5]], 'pipe' + lgF, `stroke: ${retC}`);
+  o += cyl(-2.1, 0.75, 0.3, 0.33, 1.4, bufC);
+  // secundair beneden
+  const f1 = pumpsOn ? ' flow' : '';
+  o += pline([[-1.75, 0.55, 1.5], [-1.1, 0.55, 1.5], [-1.1, 0.55, 0.42], [0.85, 0.55, 0.42]], 'pipe' + f1, `stroke: ${bufC}`);
+  o += pline([[0.85, 1.25, 0.25], [-1.85, 1.25, 0.25], [-1.85, 1.0, 0.3]], 'pipe' + f1, `stroke: ${retC}`);
+  o += pline([[-1.1, 1.25, 0.25], [-1.1, 2.3, 0.12], [-0.45, 2.3, 0.12]], 'pipe-thin' + (pumpsOn && P.berg > 0 ? ' flow' : ''), `stroke: ${bufC}`);
+  // stijgleiding naar boven
+  const f2 = upOn ? ' flow' : '';
+  o += pline([[-0.55, 0.3, 1.5], [-0.55, 0.3, zV + 0.4], [0.85, 0.3, zV + 0.4]], 'pipe' + f2, `stroke: ${bufC}`);
+  o += pline([[0.85, 0.75, zV + 0.25], [-0.3, 0.75, zV + 0.25], [-0.3, 0.75, 0.25]], 'pipe' + f2, `stroke: ${retC}; opacity: 0.85`);
+  o += pline([[-0.55, 0.3, zV + 0.4], [-0.55, 0.3, zZ + 0.4], [0.85, 0.7, zZ + 0.4]], 'pipe' + f2, `stroke: ${bufC}; opacity: 0.85`);
+  // pompen
+  const p1 = iso(-1.1, 0.55, 1.0), p2 = iso(-0.55, 0.3, 2.6);
+  o += `<circle cx="${p1[0]}" cy="${p1[1]}" r="6.5" class="pump" style="fill: ${pumpsOn ? 'var(--good)' : 'var(--panel)'}"/><circle cx="${p2[0]}" cy="${p2[1]}" r="6.5" class="pump" style="fill: ${upOn ? 'var(--good)' : 'var(--panel)'}"/>`;
+  // verdelers
+  o += box(0.85, 0.35, 0.12, 0.25, 1.1, 0.35, 'dev');
+  o += box(-0.45, 1.9, 0.08, 0.22, 0.9, 0.28, 'dev');
+  o += box(0.85, 0.15, zV + 0.12, 0.25, 0.9, 0.3, 'dev');
+  // zolder
+  o += box(0.8, 0.35, zZ - 0.25, 6.4, 2.9, 0.25, 'slab');
+  o += pline(serp(1.3, 4.6, 0.75, 3.0, zZ + 0.02, 6), 'loop', `stroke: ${tcol(s.FB)}; opacity: ${upOn ? 0.95 : 0.35}`);
+  o += box(0.85, 0.55, zZ + 0.12, 0.25, 0.8, 0.3, 'dev');
+  o += box(5.2, 1.0, zZ, 1.3, 0.9, 0.7, 'dev');
+  o += pline([[5.7, 1.4, zZ + 0.7], [5.7, 1.4, zZ + 1.5]], 'pipe-thin', 'stroke: var(--muted)') + pline([[6.1, 1.2, zZ + 0.7], [6.1, 1.2, zZ + 1.5]], 'pipe-thin', 'stroke: var(--muted)');
+  // thermostaten
+  const dt4 = (x, y, z, on, set) => {
+    const c = iso(x, y, z);
+    return `<g><rect x="${c[0] - 16}" y="${c[1] - 20}" width="32" height="22" rx="4" style="fill: var(--panel); stroke: ${on ? 'var(--warm)' : 'var(--muted)'}; stroke-width: 1.4"/><text x="${c[0] - 3}" y="${c[1] - 5}" text-anchor="middle" class="sv-mono" style="font-size: 10px">${nf(set, 1)}</text><circle cx="${c[0] + 11}" cy="${c[1] - 14}" r="3" style="fill: ${on ? 'var(--warm)' : 'var(--line)'}"/></g>`;
+  };
+  o += dt4(6.4, 0, 1.7, s.demA, P.setA) + dt4(6.4, 0, zV + 1.6, s.demB, P.setB);
+  // toelichting
+  const st = ['stand-by', 'verwarmen', 'warm water', 'ontdooien'][s.state];
+  const copNow = s.Pel > 0.05 && s.state !== 3 ? s.Q / s.Pel : null;
+  o += callout(iso(-7.05, 0.6, 1.0), 16, 300, 180, ['Buitendeel', `${nf(P.Tout, 1)} °C · RV ${nf(P.RH, 0)} %`, `rijp ${nf((s.frost || 0) * 100, 0)} %`, st]);
+  o += callout(iso(-3.5, 0.3, 1.95), 16, 130, 215, ['HN0913T + boiler 180 L', `${nf(s.state ? s.Q : 0, 1)} kW warmte · ${nf(s.Pel, 2)} kW`, `COP nu ${copNow ? nf(copNow, 2) : '–'}`, `boiler ${nf(s.Td, 1)} °C`]);
+  o += callout(iso(-2.1, 0.42, 1.72), 16, 30, 190, ['Buffer 50 L', `${nf(s.Tbuf, 1)} °C`, s.Tlgout ? `LG-aanvoer ${nf(s.Tlgout, 1)} °C` : `LG-debiet ${nf(s.mp, 1)} L/min`]);
+  o += callout(iso(-1.0, 3.3, 0.02), 16, 470, 190, ['Berging · 3 groepen', `${nf(s.Tberg, 1)} °C · ${nf(P.berg, 0)} % open`]);
+  o += callout(iso(5.5, 3.6, 0.02), 944, 520, 210, ['Begane grond · 13+1 groepen', `lucht ${nf(s.TA, 1)} °C`, `vloer ${nf(s.FA, 1)} °C`, `afgifte ${nf(s.QwfA, 2)} kW`], true);
+  o += callout(iso(6.2, 3.6, zV + 0.02), 944, 300, 210, ['Verdieping + zolder · 7+6', `lucht ${nf(s.TB, 1)} °C`, `vloer ${nf(s.FB, 1)} °C`, `afgifte ${nf(s.QwfB, 2)} kW`], true);
+  o += callout(iso(6.5, 1.45, zZ + 0.5), 944, 110, 200, ['WTW HRU 400', `${nf(P.wtwQ, 0)} m³/h`, P.bypass ? 'bypass open' : `rendement ${nf(P.wtwEta, 1)} %`], true);
+  const sv = $('scene');
+  sv.setAttribute('viewBox', (sv.clientWidth || 960) < 640 ? '222 84 452 512' : '0 0 960 640');
+  sv.innerHTML = o;
+}
+function renderLive() {
+  const s = RES.series[timeIdx] || RES.series[0];
+  const st = ['stand-by', 'verwarmen', 'warm water', 'ontdooien'][s.state];
+  const copNow = s.Pel > 0.05 && s.state !== 3 ? s.Q / s.Pel : null;
+  const rows = [['Status', st], ['Warmte / stroom', `${nf(s.Q, 2)} / ${nf(s.Pel, 2)} kW`], ['COP nu', copNow ? nf(copNow, 2) : '–'],
+    ['Aanvoer LG', s.Tlgout ? nf(s.Tlgout, 1) + ' °C' : '–'], ['Buffer / retour', nf(s.Tbuf, 1) + ' °C'], ['Debiet LG', nf(s.mp, 1) + ' L/min'],
+    ['Beneden lucht', nf(s.TA, 1) + ' °C'], ['Slaapkamers lucht', nf(s.TB, 1) + ' °C'], ['Boiler', nf(s.Td, 1) + ' °C'],
+    ['DT4 woonkamer', s.demA ? 'vraagt warmte' : 'rust'], ['DT4 slaapkamer', s.demB ? 'vraagt warmte' : 'rust'], ['Rijp verdamper', nf((s.frost || 0) * 100, 0) + ' %']];
+  $('live').innerHTML = rows.map(([a, b]) => `<div><span>${a}</span><span>${b}</span></div>`).join('');
+  $('clock').textContent = hhmm(s.t); $('clock-title').textContent = hhmm(s.t);
+}
+
+/* ---------- grafiek ---------- */
+function renderChart() {
+  const el = $('chart');
+  const W = Math.max(320, el.clientWidth || 800), H = 250;
+  const m = { l: 40, r: 44, t: 12, b: 26 };
+  const s = RES.series;
+  const temps = s.flatMap(p => [p.TA, p.TB, p.Tbuf, p.Tlgout ?? p.Tbuf]);
+  const lo = Math.floor(Math.min(...temps, P.setA) - 1), hi = Math.ceil(Math.max(...temps, P.setA) + 1);
+  const qMax = Math.max(4, Math.ceil(Math.max(...s.map(p => p.Q))));
+  const X = t => m.l + (W - m.l - m.r) * t / 86400;
+  const Y = v => m.t + (H - m.t - m.b) * (1 - (v - lo) / (hi - lo));
+  const Yq = v => m.t + (H - m.t - m.b) * (1 - Math.max(0, v) / qMax);
+  let o = '';
+  const step = hi - lo > 14 ? 4 : 2;
+  for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) o += `<line class="gridl" x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text class="ax-t" x="${m.l - 6}" y="${Y(v) + 3.5}" text-anchor="end">${v}°</text>`;
+  const hstep = W < 560 ? 6 : 3;
+  for (let hh = 0; hh <= 24; hh += hstep) o += `<text class="ax-t" x="${X(hh * 3600)}" y="${H - 8}" text-anchor="middle">${String(hh).padStart(2, '0')}:00</text>`;
+  for (let v = 0; v <= qMax; v += Math.max(1, Math.round(qMax / 4))) o += `<text class="ax-t" x="${W - m.r + 6}" y="${Yq(v) + 3.5}">${v} kW</text>`;
+  // banden voor warm water en ontdooien
+  for (let i = 0; i < s.length; i++) {
+    if (s[i].state === 2 || s[i].state === 3) {
+      const col = s[i].state === 2 ? 'var(--copper)' : 'var(--refr)';
+      o += `<rect x="${X(s[i].t)}" y="${m.t}" width="${Math.max(1.5, X(120) - X(0))}" height="${H - m.t - m.b}" style="fill: ${col}; opacity: 0.3"/>`;
+    }
+  }
+  // warmteafgifte (vlak)
+  let area = `M${X(s[0].t)},${Yq(0)}`;
+  for (const p of s) area += ` L${X(p.t)},${Yq(p.state === 1 || p.state === 2 ? p.Q : 0)}`;
+  area += ` L${X(s[s.length - 1].t)},${Yq(0)} Z`;
+  o += `<path d="${area}" style="fill: var(--muted); opacity: 0.18"/>`;
+  const line = (f, col, extra = '') => {
+    let d = '', pen = false;
+    for (const p of s) { const v = f(p); if (v == null) { pen = false; continue; } d += (pen ? ' L' : ' M') + X(p.t).toFixed(1) + ',' + Y(v).toFixed(1); pen = true; }
+    return `<path d="${d}" style="fill: none; stroke: ${col}; stroke-width: ${extra.includes('2.2') ? 2.2 : 1.7}; ${extra.includes('4 3') ? 'stroke-dasharray: 4 3' : ''}"/>`;
+  };
+  o += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(P.setA)}" y2="${Y(P.setA)}" style="stroke: var(--muted); stroke-dasharray: 5 4; stroke-width: 1"/>`;
+  o += line(p => p.Tlgout, 'var(--warm)');
+  o += line(p => p.Tbuf, 'var(--cold)');
+  o += line(p => p.TB, 'var(--muted)', 'stroke-dasharray="4 3"');
+  o += line(p => p.TA, 'var(--ink)', 'stroke-width="2.2"');
+  o += `<line class="ax" x1="${m.l}" x2="${W - m.r}" y1="${H - m.b}" y2="${H - m.b}"/>`;
+  const cx = X(s[timeIdx].t);
+  o += `<line x1="${cx}" x2="${cx}" y1="${m.t}" y2="${H - m.b}" style="stroke: var(--copper); stroke-width: 1.5"/>`;
+  o += `<rect x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${H - m.t - m.b}" style="fill: transparent; cursor: crosshair" id="chart-hit"/>`;
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Temperaturen en warmteafgifte over 24 uur">${o}</svg>`;
+  $('chart-legend').innerHTML = `<span><i style="background: var(--ink)"></i>woonkamer</span><span><i style="background: var(--muted)"></i>slaapkamers</span><span><i style="background: var(--cold)"></i>buffer / retour</span><span><i style="background: var(--warm)"></i>aanvoer LG</span><span><i style="background: var(--muted); opacity: 0.4"></i>warmteafgifte (kW, rechteras)</span><span><i style="background: var(--copper); opacity: 0.6"></i>warm water</span><span><i style="background: var(--refr); opacity: 0.6"></i>ontdooien</span>`;
+  const hit = $('chart-hit');
+  const pick = e => { const rc = hit.getBoundingClientRect(); const f = clamp((e.clientX - rc.left) / rc.width, 0, 1); setTime(Math.round(f * (s.length - 1))); };
+  hit.addEventListener('pointerdown', e => { pick(e); hit.setPointerCapture(e.pointerId); });
+  hit.addEventListener('pointermove', e => { if (e.buttons) pick(e); });
+}
+function setTime(i) { timeIdx = clamp(i, 0, RES.series.length - 1); $('time').value = timeIdx; renderScene(); renderLive(); renderChart(); }
+
+/* ---------- balans en diagnose ---------- */
+function renderBalance() {
+  const r = RES, b = BASE_RES;
+  const row = (l, v, bv, cls = '') => `<tr class="${cls}"><td>${l}</td><td class="r">${nf(v, 2)}</td><td class="r">${bv == null ? '' : nf(bv, 2)}</td></tr>`;
+  $('balance').innerHTML = `<table class="bal"><thead><tr><th>kWh per etmaal</th><th class="r">Deze instellingen</th><th class="r">Huidig</th></tr></thead><tbody>
+    ${row('Warmteverlies transmissie', r.lossTrans, b.lossTrans)}
+    ${row('Warmteverlies ventilatie + kieren', r.lossVent, b.lossVent)}
+    ${row('Interne warmte en zon', -r.gain, -b.gain)}
+    ${row('Warmte WP → verwarming', r.heatSH, b.heatSH)}
+    ${row('Warmte WP → warm water (incl. ontsmetting)', r.heatDHW + r.disHeat, b.heatDHW + b.disHeat)}
+    ${row('Warmte element 3 kW', r.heatElem, b.heatElem)}
+    ${row('Stroom compressor verwarming', r.elComp, b.elComp)}
+    ${row('Stroom compressor warm water + ontsmetting', r.elCompDHW + r.disEl, b.elCompDHW + b.disEl)}
+    ${row('Stroom element', r.elElem, b.elElem)}
+    ${row('Stroom interne pomp + stand-by', r.elPump + r.elStandby, b.elPump + b.elStandby)}
+    ${row('Totaal LG-teller', r.elLG, b.elLG, 'sum')}
+    ${row('Groepspompen (niet in LG-teller)', r.elGP, b.elGP)}
+    ${row('WTW-ventilatoren', r.elWTW, b.elWTW)}
+    ${row('Totaal stroom', r.elLG + r.elGP + r.elWTW, b.elLG + b.elGP + b.elWTW, 'sum')}
+  </tbody></table>
+  <p class="note">Meting 11-11 (3 °C, RV ≈ 90 %): 15,8 kWh stroom, 42,6 kWh warmte, COP 2,7, ≈ 54 starts. Model met huidige instellingen bij 3 °C: ${nf(simCache.h3?.elLG, 1)} kWh, ${nf(simCache.h3?.heatTotal, 1)} kWh, COP ${nf(simCache.h3?.copLG, 2)}, ${nf(simCache.h3?.starts, 0)} starts.</p>`;
+}
+function renderDiag() {
+  const r = RES, items = [];
+  const add = (lvl, txt) => items.push(`<li><span class="pill ${lvl}">${{ good: 'goed', warn: 'let op', bad: 'probleem', info: 'info' }[lvl]}</span><span>${txt}</span></li>`);
+  if (r.starts > 48) add('bad', `De warmtepomp pendelt: ${nf(r.starts, 0)} starts per dag, gemiddeld ${nf(r.runAvg, 0)} min draaien en ${nf(r.offAvg, 0)} min pauze. Elke start kost rendement en slijtage.`);
+  else if (r.starts > 24) add('warn', `${nf(r.starts, 0)} starts per dag. Doel is maximaal één per uur bij koud weer.`);
+  else add('good', `Rustig bedrijf: ${nf(r.starts, 0)} starts per dag${r.runAvg ? `, gemiddeld ${nf(r.runAvg, 0)} min per run` : ', de compressor draait continu'}.`);
+  if (r.statAshare < 0.93 && r.TAavg > P.setA - 0.4) add('warn', `De woonkamer-DT4 schakelt de warmtepomp ${nf((1 - r.statAshare) * 100, 0)} % van de tijd uit. De thermostaat regelt nu, niet de stooklijn. Verlaag de stooklijn (AI-correctie) of zet de DT4 hoger.`);
+  if (r.TAavg < 19.5) add('warn', `Woonkamer gemiddeld ${nf(r.TAavg, 1)} °C: te koud. Verhoog de AI-correctie met +1.`);
+  else if (r.TAavg > 20.8) add('warn', `Woonkamer gemiddeld ${nf(r.TAavg, 1)} °C: warmer dan nodig. Elke graad kost ≈ 6–7 % extra warmte. Verlaag de AI-correctie of gebruik ‘Stooklijn afstemmen’.`);
+  if (r.heatElem > 0.05) add('bad', `Het 3 kW-element springt bij: ${nf(r.heatElem, 1)} kWh per dag tegen COP 1. Oorzaak: stooklijn hoger dan de warmtepomp kan halen${P.silent ? ' (stille modus beperkt het vermogen)' : ''}.`);
+  if (r.target + P.hOn < r.TAavg + 0.3 && P.ctrl === 'invoer') add('warn', `Herstartdrempel (stooklijn ${nf(r.target, 1)} °C ${sg(P.hOn, 1)} K) ligt rond of onder de kamertemperatuur. De warmtepomp start dan pas als de vloer is afgekoeld.`);
+  if (P.silent) add('info', `Stille modus begrenst het vermogen op ≈ ${nf(r.Pm, 1)} kW. Bij vorst kan dat te weinig zijn.`);
+  if (P.bypass) add('bad', 'De WTW-bypass staat open: de warmteterugwinning valt weg en de warmtevraag stijgt.');
+  if (r.defrosts > 0.5) add('info', `${nf(r.defrosts, 0)} ontdooicycli per dag door rijpvorming (${nf(P.Tout, 1)} °C, RV ${nf(P.RH, 0)} %). Elke cyclus haalt kort warmte uit de buffer.`);
+  if (P.disOn && P.disT > P.compLim) add('info', `Ontsmetting op ${nf(P.disT, 0)} °C: alles boven ${nf(P.compLim, 0)} °C gaat via het element (${nf(r.disEl * 7, 1)} kWh per week).`);
+  if (r.elGP > 0.6) add('info', `De groepspompen gebruiken ${nf(r.elGP, 2)} kWh per dag, buiten de LG-teller om.`);
+  if (P.wiringB === 'pomp' && r.statBshare < 0.9) add('info', `De slaapkamer-DT4 zet de groepspomp boven ${nf((1 - r.statBshare) * 100, 0)} % van de tijd uit. Dat verkleint het afgifte-oppervlak.`);
+  $('diag').innerHTML = items.join('');
+}
+
+/* ---------- jaarschatting ---------- */
+async function runYear() {
+  const btn = $('year-btn'); btn.disabled = true;
+  const k = P.calib ? K : 1;
+  const scen = [['Huidig', { ...P, ...HUIDIG }], ['Deze instellingen', { ...P }]];
+  const out = {};
+  for (const [name, p] of scen) {
+    out[name] = [];
+    for (const [m, days, Tm, rh, sun] of EELDE) {
+      btn.textContent = `Rekent ${name.toLowerCase()} · ${m}…`;
+      await new Promise(res => setTimeout(res, 0));
+      const acc = { heat: 0, el: 0, starts: 0, other: 0 };
+      for (const [dT, w] of [[-4, 0.25], [0, 0.5], [4, 0.25]]) {
+        const r = simulate({ ...p, Tout: Tm + dT, RH: rh }, { k, sun, fast: true });
+        acc.heat += w * r.heatTotal; acc.el += w * r.elLG; acc.starts += w * r.starts; acc.other += w * (r.elGP + r.elWTW);
+      }
+      out[name].push({ m, days, Tm, heat: acc.heat * days, el: acc.el * days, starts: acc.starts * days, other: acc.other * days });
+    }
+  }
+  btn.disabled = false; btn.textContent = 'Opnieuw berekenen';
+  const H = out['Huidig'], N = out['Deze instellingen'];
+  const sum = (a, f) => a.reduce((s, x) => s + f(x), 0);
+  const ytd = (a, f) => sum(a.slice(0, 10), f) + f(a[10]) * 11 / 30;
+  const maxEl = Math.max(...H.map(x => x.el), ...N.map(x => x.el));
+  const rows = N.map((x, i) => `<tr><td>${x.m}</td><td class="r">${nf(x.Tm, 1)}</td><td class="r">${nf(H[i].el, 0)}</td><td class="r">${nf(x.el, 0)}</td><td style="min-width: 90px"><span class="bar alt" style="width: ${H[i].el / maxEl * 100}%"></span><span class="bar" style="width: ${x.el / maxEl * 100}%; margin-top: 2px"></span></td><td class="r">${nf(x.heat, 0)}</td><td class="r">${nf(x.heat / x.el, 2)}</td><td class="r">${nf(x.starts, 0)}</td></tr>`).join('');
+  const hE = sum(H, x => x.el), nE = sum(N, x => x.el), hQ = sum(H, x => x.heat), nQ = sum(N, x => x.heat);
+  $('year').innerHTML = `<div class="kpis" style="margin-bottom: 12px">
+      <div class="kpi"><span class="k-lab">Stroom LG per jaar</span><span class="k-val">${nf(nE, 0)}<small>kWh</small></span><span>${delta(nE, hE, 0, true, ' kWh')}</span></div>
+      <div class="kpi"><span class="k-lab">SCOP</span><span class="k-val">${nf(nQ / nE, 2)}</span><span>${delta(nQ / nE, hQ / hE, 2)}</span></div>
+      <div class="kpi"><span class="k-lab">Warmte per jaar</span><span class="k-val">${nf(nQ, 0)}<small>kWh</small></span><span class="k-sub">huidig ${nf(hQ, 0)} kWh</span></div>
+      <div class="kpi"><span class="k-lab">Starts per jaar</span><span class="k-val">${nf(sum(N, x => x.starts), 0)}</span><span class="k-sub">huidig ${nf(sum(H, x => x.starts), 0)}</span></div></div>
+    <div class="year-wrap"><table class="bal"><thead><tr><th>Maand</th><th class="r">T gem.</th><th class="r">kWh huidig</th><th class="r">kWh nu</th><th>grijs huidig · koper nu</th><th class="r">Warmte</th><th class="r">COP</th><th class="r">Starts</th></tr></thead><tbody>${rows}
+      <tr class="sum"><td>Jaar</td><td></td><td class="r">${nf(hE, 0)}</td><td class="r">${nf(nE, 0)}</td><td></td><td class="r">${nf(nQ, 0)}</td><td class="r">${nf(nQ / nE, 2)}</td><td class="r">${nf(sum(N, x => x.starts), 0)}</td></tr></tbody></table></div>
+    <p class="note">Controle tegen de meting: met de huidige instellingen rekent het model van 1 januari t/m 11 november ${nf(ytd(H, x => x.el), 0)} kWh stroom en ${nf(ytd(H, x => x.heat), 0)} kWh warmte. Gemeten: 2.404 kWh en 5.382 kWh. Groepspompen en WTW komen daar nog bij: ${nf(sum(N, x => x.other), 0)} kWh per jaar (huidig ${nf(sum(H, x => x.other), 0)} kWh).</p>`;
+}
+
+/* ---------- aannames ---------- */
+function renderAssume() {
+  $('assume').innerHTML = [
+    `IJking: de compressorrendementen zijn vermenigvuldigd met ${nf(K, 2)}, zodat de huidige instellingen bij 3 °C en RV 90 % precies de gemeten COP van 2,7 geven. Wat het model niet verklaart (meetonnauwkeurigheid van de LG, extra verliezen) zit in die factor en geldt voor alle scenario's. Verschillen tussen scenario's komen uit het fysische model.`,
+    'Compressor: rendement volgens Carnot met een deellastcorrectie, condensatie 1,5–4 K boven de aanvoer, verdamping 2–7 K onder de buitenlucht. Maximaal vermogen 9 kW bij A7/W35, minimaal ≈ 2,5 kW (aanname). Na een start bouwt de compressor in ≈ 18 min op naar vol vermogen en is het rendement de eerste 6 minuten lager.',
+    'Ontdooien: rijpvorming neemt toe met de luchtvochtigheid en is het sterkst rond +1 °C. Bij volledige rijp volgt een ontdooicyclus van 4 minuten die 1,5 kW uit de buffer haalt.',
+    'Buffer 50 L + ≈ 22 L in unit en leidingen, volledig gemengd. LG-retour = buffertemperatuur. Groepspompen draaien continu (tenzij de slaapkamer-DT4 de pomp boven schakelt).',
+    'Woning in twee zones: beneden (58 % van het verlies, woonkamer-DT4) en boven (42 %, slaapkamer-DT4), elk met vloermassa en luchtmassa. Transmissie 90 W/K, WTW 150 m³/h met 90 % rendement, 50 m³/h infiltratie, 350 W interne warmte. Geijkt op 42,6 kWh warmte op 11-11.',
+    'DT4: TPI-regeling met de ingestelde schakelfrequentie en minimale aan-tijd. Na een stop wacht de LG tot het volgende meetmoment van de pomp (bij interval 1/10 min dus ≈ 11 min). Dat verklaart de gemeten pauzes van 11–12 min.',
+    'Warm water: 180 L boiler, tappen om 07:00, 12:30 en 19:30. Wekelijkse ontsmetting als dagaandeel: tot de comp.-limiet met de warmtepomp, daarboven met het element.',
+    'Jaarschatting: maandgemiddelden van KNMI-station Eelde (benadering), drie temperaturen per maand (−4, 0, +4 °C) en een gemiddelde nuttige zoninstraling per maand.',
+    'Nog onzeker en welkom om het model te verbeteren: type en stand van de groepspompen, hoe de DT4’s bedraad zijn, vloerafwerking per verdieping, warmwatergebruik, de waarde van ‘Temperatuursensor selecteren’ en ‘Verwarmer aan-temperatuur’.'
+  ].map(x => `<li>${x}</li>`).join('');
+}
+
+/* ---------- start ---------- */
+const simCache = {};
+function init() {
+  buildControls(); syncControls();
+  $('pre-huidig').addEventListener('click', () => { P = { ...P, ...HUIDIG }; syncControls(); schedule(); });
+  $('pre-advies').addEventListener('click', () => { P = { ...P, ...ADVIES }; syncControls(); schedule(); });
+  $('tune').addEventListener('click', () => {
+    $('busy').textContent = 'stemt af…';
+    setTimeout(() => {
+      const k = P.calib ? K : 1;
+      let lo = -8, hi = 8;
+      const f = ai => simulate({ ...P, ai }, { k, fast: true }).TAavg - 20;
+      if (f(lo) > 0) P.ai = lo; else if (f(hi) < 0) P.ai = hi;
+      else { for (let i = 0; i < 7; i++) { const mid = (lo + hi) / 2; if (f(mid) > 0) hi = mid; else lo = mid; } P.ai = Math.round((lo + hi)) / 2; }
+      syncControls(); run();
+    }, 20);
+  });
+  $('time').addEventListener('input', e => setTime(+e.target.value));
+  $('play').addEventListener('click', () => {
+    if (playing) { clearInterval(playing); playing = null; $('play').textContent = '▶'; return; }
+    $('play').textContent = '❚❚';
+    playing = setInterval(() => setTime((timeIdx + 2) % RES.series.length), 70);
+  });
+  $('year-btn').addEventListener('click', runYear);
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(() => RES && renderChart()).observe($('chart'));
+    new ResizeObserver(() => RES && renderScene()).observe($('scene'));
+  }
+  $('busy').textContent = 'ijkt op meting…';
+  setTimeout(() => {
+    K = calibrate({ ...BASE, ...HUIDIG });
+    simCache.h3 = simulate({ ...BASE, ...HUIDIG }, { k: K });
+    renderAssume();
+    run();
+  }, 30);
+}
+init();
+</script>
