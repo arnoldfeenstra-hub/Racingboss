@@ -76,7 +76,7 @@ steeds ≈ 60 starts per dag. Bij 22 °C draait hij vrijwel continu.
 Zonder installateur haal je dus ≈ 375 kWh per jaar van de ≈ 560 kWh. Het nadeel: bij omslaand weer
 moet je de waarde zelf bijstellen. Doe je dat niet, dan wordt het bij vorst kouder in huis (bij 22 °C en
 −5 °C buiten ≈ 18,5 °C) en bij zacht weer begrenst de DT4. De stooklijn van de installateur doet dat
-automatisch; blijft daarom ook de beste eindoplossing.
+automatisch en blijft daarom de beste eindoplossing.
 
 **Op het display:** tijdens **Ontdooiing** is *Uitvoer* lager dan *Invoer* (bijv. 22 / 20 °C). Dat is
 normaal: de warmtepomp draait dan even omgekeerd en haalt warmte uit het water om het ijs op het
