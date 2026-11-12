@@ -50,32 +50,47 @@ is dat te weinig; effect komt pas rond −10 tot −12. Wat wel werkt zonder ins
 hoofdscherm van **AI (Auto)** naar **Verwarmen (zon)** met een **vaste watertemperatuur**. Omdat er op
 *Invoer* wordt geregeld, is dat de **retourtemperatuur**. Toegestaan bereik: 15–45 °C.
 
-**Stel deze vaste watertemperatuur in, afhankelijk van het weer:**
+**Stel deze vaste watertemperatuur in, afhankelijk van het weer** (gemiddelde buitentemperatuur van de
+komende dag(en), bijv. van de weerapp voor Eelde):
 
-| Buitentemperatuur (verwachting komende dagen) | Vaste watertemperatuur |
-|---|---|
-| boven 2 °C | **22 °C** |
-| −2 tot 2 °C | **23 °C** |
-| −6 tot −2 °C | **24 °C** |
-| kouder dan −6 °C | **25 °C** |
+| Buitentemperatuur | Woonkamer **20 °C** | Woonkamer **21 °C** |
+|---|---|---|
+| boven 2 °C | **22 °C** | **23 °C** |
+| −1 tot 2 °C | 23 °C | 24 °C |
+| −4 tot −1 °C | 24 °C | 25 °C |
+| −7 tot −4 °C | 24–25 °C | 26 °C |
+| kouder dan −7 °C | 25 °C | 27 °C |
+| **Woonkamer-DT4** (bovengrens) | **20,5 °C** | **21,5 °C** |
 
-Met daarbij: woonkamer-DT4 op **20,5 °C** (als bovengrens), 2:CR = 3, 3:OT = 5, geen nachtverlaging,
-stille modus uit, warm water 11–16 uur, groepspompen op HD1 en de berging teruggeregeld (§6).
+Verder: slaapkamer-DT4 op wat je daar wilt (nu 18,5 °C), geen nachtverlaging, stille modus uit, warm
+water via Roosters → DHW (11:00 → 48 °C, 16:00 → 40 °C), groepspompen op HD1 en eventueel de berging
+teruggeregeld (§6). De DT4-parameters (2:CR, 3:OT) hoeven dan niet te veranderen: omdat de DT4 een
+halve graad boven het doel staat, schakelt hij vrijwel nooit. Staat hij er precies op (bijv. 21,0 °C bij
+een doel van 21), dan gaat hij weer schakelen en pendelt de warmtepomp: bij 3 °C ≈ 24 starts per dag
+in plaats van 0–1.
+
+**Weer in Eelderwolde** (Open-Meteo, uurwaarden): 11-11 gemiddeld **3,0 °C** (0,4–5,0) met **94 %**
+luchtvochtigheid; 12-11 gemiddeld **5,2 °C** (−0,3–9,0) met **82 %**. Verwachting 13–19 november:
+gemiddeld 4,5–8 °C, 80–92 %. Voor 21 °C is de komende week dus **23 °C** water de juiste stand; ga naar
+24 °C als het een dag rond het vriespunt blijft.
 
 **25 °C, zoals nu ingesteld, is te hoog.** Bij 2–3 °C buiten gebruikt het huis maar ≈ 22 °C retour. Bij
 25 °C haalt de warmtepomp zijn doel nooit en blijft de DT4 hem uitzetten: volgens de simulator nog
 steeds ≈ 60 starts per dag. Bij 22 °C draait hij vrijwel continu.
 
-| Simulator (bijgewerkt 12-11, beide DT4's schakelen de groepspompen) | Stroom LG per jaar | SCOP | Starts per jaar | Woonkamer in de winter |
+| Simulator (bijgewerkt 12-11: echt weer, DT4's op fabrieksinstelling) | Stroom LG per jaar | SCOP | Starts per jaar | Woonkamer in de winter |
 |---|---|---|---|---|
-| Huidig (AI, stooklijn 45/19) | ≈ 2.590 kWh | 2,5 | ≈ 10.700 | 20,0 °C |
-| Vast 25 °C | ≈ 2.580 kWh | 2,5 | ≈ 10.800 | 20,0 °C |
-| Vast 23 °C het hele jaar (zoals op 12-11) | ≈ 2.475 kWh | 2,7 | ≈ 5.200 | 20,5 °C |
-| **Vast met het weer mee (tabel)** | **≈ 2.180 kWh** | **2,9** | **≈ 1.300** | **20,0 °C** |
-| Advies met installateur (stooklijn −10/10 → 25/21) | ≈ 2.150–2.220 kWh | 2,95 | ≈ 1.300–1.550 | 20,4–20,9 °C |
+| Oud (AI, stooklijn 45/19), DT4 20 °C | ≈ 3.080 kWh | 2,6 | ≈ 10.700 | 20,0 °C |
+| Oud, DT4 21 °C | ≈ 3.290 kWh | 2,6 | ≈ 10.500 | 21,0 °C |
+| **Vast volgens de tabel, 20 °C** | **≈ 2.650 kWh** | **2,95** | **≈ 800** | **20,1 °C** |
+| **Vast volgens de tabel, 21 °C** | **≈ 2.840 kWh** | **2,9** | **≈ 900** | **21,1 °C** |
+| Installateur (−10/10 → 25/21), 20 °C | ≈ 2.710 kWh | 3,0 | ≈ 1.000 | 20,9 °C |
+| Installateur, 21 °C (AI +1, DT4 22) | ≈ 2.870 kWh | 2,95 | ≈ 1.200 | 21,7 °C |
 
-Zonder installateur haal je dus ≈ 410 kWh per jaar. De stooklijn van de installateur levert ongeveer
-hetzelfde op; het verschil is dat die zich vanzelf aan het weer aanpast. Het nadeel van zelf doen: bij omslaand weer
+21 °C kost met de tabel ≈ 190 kWh per jaar (≈ 7 %) meer dan 20 °C, maar ≈ 450 kWh minder dan 21 °C met de
+oude instellingen. Bij het weer van deze week (5,5 °C, 86 %): oud bij 21 °C 16,1 kWh per dag, COP 2,8,
+46 starts; met de tabel 13,9 kWh per dag, COP 3,2, 4 starts. De stooklijn van de installateur levert
+ongeveer hetzelfde op; het verschil is dat die zich vanzelf aan het weer aanpast. Het nadeel van zelf doen: bij omslaand weer
 moet je de waarde zelf bijstellen. Doe je dat niet, dan wordt het bij vorst kouder in huis (bij 22 °C en
 −5 °C buiten ≈ 18,5 °C) en bij zacht weer begrenst de DT4. De stooklijn van de installateur doet dat
 automatisch en blijft daarom de beste eindoplossing.
@@ -97,6 +112,11 @@ warmte. De simulator voorspelde voor deze instellingen bij 3 °C een COP van 3,0
 dus dat klopt goed. Het warmwatervenster werkt: om 10:30 was de boiler 43 °C en werd hij pas na 11:00
 bijgewarmd. Om 18:35 warmde hij opnieuw bij van 41 naar 48 °C, omdat het doel na 16:00 nog op 48 °C
 stond (de regel 16:00 → 40 °C ontbreekt nog).
+
+**Weer meegerekend:** 12-11 was warmer en droger (5,2 °C en 82 % tegen 3,0 °C en 94 %). Volgens de
+simulator gaf het weer alleen al de oude instellingen een COP van ≈ 2,8 in plaats van 2,7. De rest van de
+stijging, naar 3,15, komt van de nieuwe instellingen. Met de nieuwe instellingen op het weer van 11-11
+zou de COP ≈ 3,0 zijn geweest.
 
 **Wat het logboek nog laat zien:** de stops om 11:04 en 15:24 gebeurden met *Uit* 28 °C en *In* 22–23 °C,
 door de woonkamer-DT4. De watertemperatuur van 23 °C is dus nog iets hoog: het huis wordt 20,5 °C en
@@ -394,18 +414,18 @@ in de LG-teller.
 
 **Simulator (geijkt op de meting, zie `docs/simulator.html`):**
 
-| | Huidige instellingen | Vast met het weer mee (zelf) | Advies installateur (−10/10 → 25/21) |
+| Woonkamer 20 °C | Oude instellingen | Vast met het weer mee (zelf) | Advies installateur (−10/10 → 25/21) |
 |---|---|---|---|
-| Stroom LG per jaar | ≈ 2.590 kWh | ≈ 2.180 kWh (**≈ −410**) | ≈ 2.150–2.220 kWh |
-| SCOP | ≈ 2,5 | ≈ 2,9 | ≈ 2,95 |
-| Starts per jaar | ≈ 10.700 | ≈ 1.300 | ≈ 1.300–1.550 |
-| Bij 3 °C | ≈ 60 starts, 16,4 kWh/dag | 3 starts, 13,8 kWh/dag | 6 starts, 14,8 kWh/dag |
+| Stroom LG per jaar | ≈ 3.080 kWh | ≈ 2.650 kWh (**≈ −430**) | ≈ 2.710 kWh |
+| SCOP | ≈ 2,6 | ≈ 2,95 | ≈ 3,0 |
+| Starts per jaar | ≈ 10.700 | ≈ 800 | ≈ 1.000 |
 
-Het model is geijkt op 11-11 (COP 2,7, ≈ 54 starts, pauzes van 11 minuten; model 62 starts en 12 min) en
-controleert op 12-11: vast 23 °C met DT4 20,5 °C geeft in het model COP 3,0 en ≈ 15 kWh per dag,
-gemeten COP 3,15 en ≈ 15 kWh per dag (geëxtrapoleerd). Van 1 januari tot en met 11 november rekent het
-≈ 1.900 kWh stroom tegen 2.404 kWh gemeten; het model schat het jaarverbruik dus wat laag, de
-verschillen tussen instellingen zijn betrouwbaarder dan de absolute getallen. Het gemeten
+Voor 21 °C: zie de tabel in §1b. Het model is geijkt op twee dagen met het echte weer van
+Eelderwolde: 11-11 (3,0 °C, RV 94 %; COP 2,7, ≈ 54 starts, pauzes van 11 minuten; model 48 starts en
+14 min) en 12-11 (5,0 °C, RV 84 %; gemeten COP 3,15, model 3,14). Daarvoor moest de warmtevraag
+omhoog: de dagwaarden liepen tot ≈ 19:50, over een hele dag is het ≈ 51 kWh (11-11) en ≈ 46 kWh (12-11).
+Van 1 januari tot en met 11 november rekent het model nu 2.287 kWh stroom en 5.755 kWh warmte, tegen
+2.404 en 5.382 kWh gemeten. Het gemeten
 warmwaterverbruik (524,7 kWh) past bij ≈ 60 L warm water van 40 °C per dag.
 
 De bovengrens van 850–1.050 kWh geldt alleen als de oorzaken uit §3.3 vooral in de regeling zitten. Blijkt een
