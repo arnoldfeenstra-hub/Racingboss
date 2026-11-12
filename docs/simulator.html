@@ -337,6 +337,7 @@ function simulate(p, opt = {}) {
       const demB = statStep(sB, TB, t, dt);
       const demand = demA || ((p.wiringB === 'parallel' || p.wiringB === 'beide') && demB);
       const pumpBOn = !((p.wiringB === 'pomp' || p.wiringB === 'beide') && !demB);
+      const pumpAOn = !(p.wiringA === 'beide' && !demA);
 
       let sampleNow, lgPump;
       if (comp) { sampleNow = true; lgPump = true; }
@@ -356,7 +357,7 @@ function simulate(p, opt = {}) {
       }
 
       let Qhp = 0, Pel = 0, mp = 0, Tlgout = Tbuf, Qtank = 0, state = 0;
-      const mA = p.mA * (0.85 + 0.15 * p.berg / 100), mB = pumpBOn ? p.mB : 0;
+      const mA = pumpAOn ? p.mA * (0.85 + 0.15 * p.berg / 100) : 0, mB = pumpBOn ? p.mB : 0;
       const cpA = flowKW(mA), cpB = flowKW(mB);
       const QwfA = cpA > 0 ? cpA * (1 - Math.exp(-UAwfA / cpA)) * (Tbuf - FA) : 0;
       const QwfB = cpB > 0 ? cpB * (1 - Math.exp(-UAwfB / cpB)) * (Tbuf - FB) : 0;
@@ -494,9 +495,9 @@ const WEATHER_KEYS = ['Tout', 'RH', 'sun'];
 const HOUSE_KEYS = ['H', 'gains', 'wtwQ', 'wtwEta', 'bypass', 'inf', 'dhwUse', 'pMinNom', 'pNom', 'calib'];
 const HUIDIG = { hmode: 'ai', fixT: 25, fixFollow: false, c1o: -10, c1t: 45, c2o: 20, c2t: 19, ai: 0, ctrl: 'invoer', hOn: -2, hOff: 2, wMin: 15, wMax: 45,
   silent: true, flowMode: 'opt', mpFix: 26, dT: 5, pumpMode: 'interval', pumpOn: 1, pumpOff: 10, heaterOn: -10,
-  setA: 20, setB: 18.5, cr: 3, ot: 1, wiringB: 'parallel', mA: 18, mB: 12, berg: 100, gpW: 20,
+  setA: 20, setB: 18.5, cr: 3, ot: 1, wiringA: 'beide', wiringB: 'beide', mA: 18, mB: 12, berg: 100, gpW: 20,
   dhwSet: 48, dhwHyst: 3, compLim: 58, disOn: true, disT: 67, dhwActive: 45, dhwStop: 30, dhwFrom: 0, dhwTo: 24 };
-const ADVIES = { ...HUIDIG, c1t: 25, c2o: 18, c2t: 22, hOn: -1, hOff: 3, wMax: 35, silent: false, setA: 21.5, ot: 5,
+const ADVIES = { ...HUIDIG, c1t: 25, c2o: 10, c2t: 21, ai: 0, hOn: -1, hOff: 3, wMax: 35, silent: false, setA: 21.5, ot: 5,
   mB: 10, berg: 50, gpW: 10, dhwSet: 48, dhwHyst: 4, disT: 60, dhwFrom: 11, dhwTo: 16 };
 const ZELF = { ...HUIDIG, hmode: 'vast', fixT: 22, fixFollow: true, silent: false, setA: 20.5, ot: 5,
   mB: 10, berg: 50, gpW: 10, dhwFrom: 11, dhwTo: 16 };
@@ -535,6 +536,7 @@ const C = [
   { id: 'setB', g: 'dt4', l: 'DT4 slaapkamer', min: 15, max: 24, step: 0.5, u: '°C', d: 1 },
   { id: 'cr', g: 'dt4', l: 'Schakelfrequentie (2:CR)', type: 'sel', opts: [[3, '3 per uur'], [6, '6 per uur (standaard)'], [9, '9 per uur'], [12, '12 per uur']] },
   { id: 'ot', g: 'dt4', l: 'Minimale aan-tijd (3:OT)', min: 1, max: 5, step: 1, u: 'min', d: 0 },
+  { id: 'wiringA', g: 'dt4', l: 'Woonkamer-DT4 schakelt', type: 'sel', opts: [['parallel', 'Alleen de warmtepomp'], ['beide', 'Warmtepomp én groepspomp beneden']] },
   { id: 'wiringB', g: 'dt4', l: 'Slaapkamer-DT4 schakelt', type: 'sel', opts: [['parallel', 'De warmtepomp (parallel)'], ['pomp', 'De groepspomp boven'], ['beide', 'Allebei (warmtepomp én pomp boven)']] },
   { id: 'mA', g: 'vloer', l: 'Debiet groepen beneden', min: 5, max: 40, step: 1, u: 'L/min', d: 0 },
   { id: 'mB', g: 'vloer', l: 'Debiet groepen boven (slaapkamers, zolder)', min: 0, max: 30, step: 1, u: 'L/min', d: 0 },
@@ -941,6 +943,7 @@ function renderDiag() {
   if (P.pvKWh >= 3 && (fullDay || !inWin(13))) add('info', `Laat de boiler opwarmen tussen ±11 en 16 uur. Dan gebruikt hij je eigen zonnestroom en draait hij bij de warmste buitenlucht. Na het einde van salderen (1-1-2027) scheelt dat direct geld.`);
   if (P.dhwSet < 48 && P.dhwUse >= 120) add('warn', `Bij ${nf(P.dhwUse, 0)} L warm water per dag (regendouche) is ${nf(P.dhwSet, 0)} °C in 180 L krap. Twee douchebeurten achter elkaar kunnen de boiler leegtrekken.`);
   if (r.elGP > 0.6) add('info', `De groepspompen gebruiken ${nf(r.elGP, 2)} kWh per dag, buiten de LG-teller om.`);
+  if (P.wiringA === 'beide' && r.statAshare < 0.9) add(r.statAshare < 0.6 ? 'warn' : 'info', `De woonkamer-DT4 zet de groepspomp beneden ${nf((1 - r.statAshare) * 100, 0)} % van de tijd uit. De vloer beneden krijgt dan geen water en de warmtepomp start daarna met een hogere aanvoer. Zet de DT4 hoger (bovengrens) of de watertemperatuur lager, zodat de pomp blijft draaien.`);
   if ((P.wiringB === 'pomp' || P.wiringB === 'beide') && r.statBshare < 0.9) add(r.statBshare < 0.5 ? 'warn' : 'info', `De slaapkamer-DT4 zet de groepspomp boven ${nf((1 - r.statBshare) * 100, 0)} % van de tijd uit. Verdieping én zolder krijgen dan geen warmte. Zet de slaapkamer-DT4 als begrenzer op ≈ 20 °C en regel de slaapkamergroepen op de verdeler terug.`);
   $('diag').innerHTML = items.join('');
 }
@@ -992,6 +995,7 @@ function renderAssume() {
     'DT4: TPI-regeling met de ingestelde schakelfrequentie en minimale aan-tijd. Na een stop wacht de LG tot het volgende meetmoment van de pomp (bij interval 1/10 min dus ≈ 11 min). Dat verklaart de gemeten pauzes van 11–12 min.',
     'Warm water: 180 L boiler, tappen om 07:00, 12:30 en 19:30. Wekelijkse ontsmetting als dagaandeel: tot de comp.-limiet met de warmtepomp, daarboven met het element.',
     'Jaarschatting: maandgemiddelden van KNMI-station Eelde (benadering), drie temperaturen per maand (−4, 0, +4 °C) en een gemiddelde nuttige zoninstraling per maand.',
+    'Controle 12-11: vaste watertemperatuur 23 °C, woonkamer-DT4 20,5 °C, pompen op HD1. Gemeten COP 3,15 (00:00–19:50), ≈ 15 kWh stroom per dag, ≈ 0,5 starts per uur. Model: COP 3,0, 15,2 kWh, 9 starts per dag. Beide DT4’s schakelen hun groepspomp én (via het relais) de warmtepomp.',
     'Warm water: 60 L per dag bij 40 °C reproduceert precies het gemeten warmwaterverbruik van dit jaar (524,7 kWh). Voor 2 volwassenen en een kind met regendouche is 150–200 L gebruikelijk; het meetresultaat ligt dus laag.',
     'Zonnestroom: 18 panelen, een dagopbrengst die je zelf instelt, verdeeld over een zonneboog rond 13:00. Eerst gaat ' + nf(P.baseLoad, 0) + ' W naar het overige huishouden. Kosten: voorbeeldprofiel voor een dynamisch tarief (nacht en middag goedkoper, ochtend- en avondpiek duurder) rond de ingestelde gemiddelde prijs. Eigen zonnestroom telt tegen de terugleverwaarde.',
     'Vloeren: pvc op alle verdiepingen (lage warmteweerstand, vergelijkbaar met tegels). Groepspompen: OEG CPA-E 25-7.5 PWM, stand HD2 (constante druk, middelste curve).',

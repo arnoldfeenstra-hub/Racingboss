@@ -18,7 +18,7 @@ roomsensor) stilgezet.
 
 | # | Wat | Nu | Advies |
 |---|-----|----|--------|
-| 1 | Stooklijn (Seizoensgeb. auto temp, op *Invoer*) | −10 °C → 45 °C / +20 °C → ≈19 °C | **−10 °C → 25 °C / +18 °C → 22 °C** |
+| 1 | Stooklijn (Seizoensgeb. auto temp, op *Invoer*) | −10 °C → 45 °C / +20 °C → ≈19 °C | **−10 °C → 25 °C / +10 °C → 21 °C** |
 | 2 | Hysterese verwarmingswater | Aan −2,0 / Uit +2,0 | **Aan −1,0 / Uit +3,0** |
 | 3 | Temperatuursensor selecteren | (niet gefotografeerd) | **Water** (de bediening hangt in de berging) |
 | 4 | Honeywell DT4 woonkamer | 20 °C, standaard schakelfrequentie | **21,5–22 °C als begrenzer**, CR = 3, OT = 5 min |
@@ -66,17 +66,42 @@ stille modus uit, warm water 11–16 uur, groepspompen op HD1 en de berging teru
 25 °C haalt de warmtepomp zijn doel nooit en blijft de DT4 hem uitzetten: volgens de simulator nog
 steeds ≈ 60 starts per dag. Bij 22 °C draait hij vrijwel continu.
 
-| Simulator | Stroom LG per jaar | SCOP | Starts per jaar | Woonkamer in de winter |
+| Simulator (bijgewerkt 12-11, beide DT4's schakelen de groepspompen) | Stroom LG per jaar | SCOP | Starts per jaar | Woonkamer in de winter |
 |---|---|---|---|---|
-| Huidig (AI, stooklijn 45/19) | ≈ 2.700 kWh | 2,55 | ≈ 11.300 | 20,0 °C |
-| Vast 25 °C (zoals nu) | ≈ 2.695 kWh | 2,55 | ≈ 11.200 | 19,9 °C |
-| **Vast met het weer mee (tabel)** | **≈ 2.325 kWh** | **2,95** | **≈ 390** | **20,0 °C** |
-| Advies met installateur (stooklijn 25/22, AI −3) | ≈ 2.150 kWh | 3,0 | ≈ 350 | 20,0 °C |
+| Huidig (AI, stooklijn 45/19) | ≈ 2.590 kWh | 2,5 | ≈ 10.700 | 20,0 °C |
+| Vast 25 °C | ≈ 2.580 kWh | 2,5 | ≈ 10.800 | 20,0 °C |
+| Vast 23 °C het hele jaar (zoals op 12-11) | ≈ 2.475 kWh | 2,7 | ≈ 5.200 | 20,5 °C |
+| **Vast met het weer mee (tabel)** | **≈ 2.180 kWh** | **2,9** | **≈ 1.300** | **20,0 °C** |
+| Advies met installateur (stooklijn −10/10 → 25/21) | ≈ 2.150–2.220 kWh | 2,95 | ≈ 1.300–1.550 | 20,4–20,9 °C |
 
-Zonder installateur haal je dus ≈ 375 kWh per jaar van de ≈ 560 kWh. Het nadeel: bij omslaand weer
+Zonder installateur haal je dus ≈ 410 kWh per jaar. De stooklijn van de installateur levert ongeveer
+hetzelfde op; het verschil is dat die zich vanzelf aan het weer aanpast. Het nadeel van zelf doen: bij omslaand weer
 moet je de waarde zelf bijstellen. Doe je dat niet, dan wordt het bij vorst kouder in huis (bij 22 °C en
 −5 °C buiten ≈ 18,5 °C) en bij zacht weer begrenst de DT4. De stooklijn van de installateur doet dat
 automatisch en blijft daarom de beste eindoplossing.
+
+### Meting 12-11: eerste dag met vaste watertemperatuur
+
+Ingesteld: vast **23 °C**, woonkamer-DT4 **20,5 °C**, groepspompen op **HD1**, warm water vanaf 11:00.
+
+| 00:00–19:50 | 11-11 (oud) | 12-11 (nieuw) | Verschil |
+|---|---|---|---|
+| Stroom | 15,8 kWh | 12,5 kWh | **−21 %** |
+| Warmte | 42,6 kWh | 39,4 kWh | −8 % |
+| **COP** | **2,70** | **3,15** | **+17 %** |
+| Starts | ≈ 2,3 per uur | ≈ 0,5 per uur (10:30–19:44: 5 starts) | |
+| Draaitijden | 13–18 min | 34, 3, 109 en 10 min | |
+
+Van de 3,3 kWh minder stroom komt ≈ 2,1 kWh door de hogere COP en ≈ 1,2 kWh door iets minder
+warmte. De simulator voorspelde voor deze instellingen bij 3 °C een COP van 3,0 en 15 kWh per dag,
+dus dat klopt goed. Het warmwatervenster werkt: om 10:30 was de boiler 43 °C en werd hij pas na 11:00
+bijgewarmd. Om 18:35 warmde hij opnieuw bij van 41 naar 48 °C, omdat het doel na 16:00 nog op 48 °C
+stond (de regel 16:00 → 40 °C ontbreekt nog).
+
+**Wat het logboek nog laat zien:** de stops om 11:04 en 15:24 gebeurden met *Uit* 28 °C en *In* 22–23 °C,
+door de woonkamer-DT4. De watertemperatuur van 23 °C is dus nog iets hoog: het huis wordt 20,5 °C en
+dan zet de DT4 de warmtepomp én de pomp beneden uit. Met **22 °C** (zolang het boven 2 °C is) draait hij
+langer en lager (simulator: COP 3,05 → 3,1, ≈ 1 kWh per dag minder, woonkamer ≈ 19,8–20 °C).
 
 **Op het display:** tijdens **Ontdooiing** is *Uitvoer* lager dan *Invoer* (bijv. 22 / 20 °C). Dat is
 normaal: de warmtepomp draait dan even omgekeerd en haalt warmte uit het water om het ijs op het
@@ -191,8 +216,8 @@ Bereiken komen uit de LG-installatiehandleiding van de HN0913T.
 |---|---|---|---|
 | Configuratie → **Temperatuursensor selecteren** | ? | **Water** | De bediening (en dus de "kamer"-sensor) hangt in de berging. Kamertemperatuur regel je met stooklijn + DT4, niet met deze sensor. |
 | Kamerverwarming → **Verwarming temp. instelling** | Invoer | **Invoer laten** | Retourregeling past goed bij een parallel buffer: de retour verandert langzaam, wat helpt tegen pendelen. De stooklijnwaarden hieronder zijn daarom **retourtemperaturen**. |
-| Seizoensgeb. auto temp → **Buitentemp.** | −10 / 20 | **−10 / 18** | LG-standaard tweede punt; boven 18 °C is geen warmte nodig. |
-| Seizoensgeb. auto temp → **Target temp.** | 45 / ≈19 | **25 / 22** | Zie tabel hieronder; startwaarde, daarna fijnregelen (§7). |
+| Seizoensgeb. auto temp → **Buitentemp.** | −10 / 20 | **−10 / 10** | Boven 10 °C blijft het doel 21 °C; meer is niet nodig. |
+| Seizoensgeb. auto temp → **Target temp.** | 45 / ≈19 | **25 / 21** | Zie tabel hieronder. Afgeleid van de meting van 12-11 (23 °C vast bij ≈ 3 °C was net te warm) en de simulator; daarna fijnregelen (§9). |
 | Hysteresis Verwarmingswater | Aan −2,0 / Uit +2,0 | **Aan −1,0 / Uit +3,0** | Bereik: Aan 0…−9, Uit 0…+4. Een grotere bovenmarge geeft langere runs en de vloer buffert de warmte. Aan klein houden zorgt dat de herstartdrempel boven kamertemperatuur blijft (anders start hij bij zacht weer niet meer). |
 | Waterverwarming temp. inst. (bereik) | 15 / 45 | **15 / 35** | Veiligheidsplafond voor vloerverwarming; voorkomt dat een AI-correctie of fout de aanvoer onnodig hoog maakt. |
 | AI-correctie (±, op het AI-icoon) | ? | **0** | Na het invoeren van de nieuwe lijn op 0 zetten. Fijnregelen in stappen van ±1 (bereik op de LG: −5 tot +5). Hoofdscherm daarna terug op **AI**, als je tijdelijk de vaste watertemperatuur (§1b) gebruikte. |
@@ -208,12 +233,11 @@ Bereiken komen uit de LG-installatiehandleiding van de HN0913T.
 | Buiten | Doel retour | ≈ Aanvoer | Huidige lijn (retour) |
 |---|---|---|---|
 | −10 °C | 25,0 °C | 27–28 °C | 45 °C |
-| −5 °C | 24,5 °C | 27 °C | 41 °C |
-| 0 °C | 23,9 °C | 26 °C | 36 °C |
-| 3 °C | 23,6 °C | 26 °C | ≈ 34 °C |
-| 5 °C | 23,4 °C | 25–26 °C | ≈ 32 °C |
-| 10 °C | 22,9 °C | 25 °C | ≈ 28 °C |
-| 15 °C | 22,3 °C | 24 °C | ≈ 23 °C |
+| −5 °C | 24,0 °C | 26–27 °C | 41 °C |
+| 0 °C | 23,0 °C | 25–26 °C | 36 °C |
+| 3 °C | 22,4 °C | 24–25 °C | ≈ 34 °C |
+| 5 °C | 22,0 °C | 24 °C | ≈ 32 °C |
+| 10 °C en warmer | 21,0 °C | 23 °C | ≈ 28 °C |
 
 ### 4.2 Back-up element en energiemeting
 
@@ -265,6 +289,11 @@ willen voorkomen. Een nachtverlaging levert bij vloerverwarming in een A++-wonin
 
 **Slaapkamer-DT4 (18,5 °C): eerst controleren wat hij schakelt** (aansluitkastje bij de pompen):
 
+> **Bevestigd op 12-11:** beide DT4's schakelen hun groepspomp (woonkamer → pomp beneden, slaapkamer →
+> pomp boven). Het logboek ("Oper. Off" als de DT4 uitschakelt) laat zien dat ze via het relais ook de
+> warmtepomp aan- en uitzetten. Zet de woonkamer-DT4 daarom als bovengrens (20,5–21 °C) en laat de
+> watertemperatuur het werk doen; elke keer dat de DT4 uitschakelt, stopt ook de vloer beneden.
+
 * **Parallel op de warmtepomp** (beide thermostaten kunnen de LG aanzetten): laat hem op 18,5 °C of zet
   hem lager. Hij hoort vrijwel nooit te vragen; de slaapkamers volgen via de vloer mee.
 * **Schakelt hij de groepspomp van boven:** zet hem op 19,5–20 °C als begrenzer en maak de slaapkamers
@@ -279,7 +308,7 @@ willen voorkomen. Een nachtverlaging levert bij vloerverwarming in een A++-wonin
     slaapkamergroepen op de verdieping terug naar ≈ 50–60 %. De zoldergroepen blijven open.
   - Zolder mag koeler: laat de slaapkamer-DT4 op **18,5 °C** staan. Beneden krijgt in deze opstelling
     iets minder warmte via de trap en het plafond (simulator: ≈ 0,5 °C). Stel de stooklijn daarom een
-    halve graad minder ver omlaag bij (bijv. AI −2,5 in plaats van −3). In de simulator: kies
+    halve graad hoger af (bijv. AI +0,5). In de simulator: kies
     "Slaapkamer-DT4 schakelt: Allebei" en druk op "Stooklijn afstemmen".
 
 ---
@@ -365,19 +394,19 @@ in de LG-teller.
 
 **Simulator (geijkt op de meting, zie `docs/simulator.html`):**
 
-| | Huidige instellingen | Advies, stooklijn afgestemd (AI −3) |
-|---|---|---|
-| Stroom LG per jaar | ≈ 2.700 kWh | ≈ 2.150 kWh (**≈ −560 kWh**) |
-| SCOP | ≈ 2,55 | ≈ 3,0 |
-| Starts per jaar | ≈ 11.300 | ≈ 350 |
-| Bij 3 °C | 64 starts, 17,1 kWh/dag | 1–2 starts, 14,3 kWh/dag |
-| Kosten bij 3 °C (voorbeeldtarief € 0,27, 5 kWh zon) | € 4,43 per dag | € 3,45 per dag |
+| | Huidige instellingen | Vast met het weer mee (zelf) | Advies installateur (−10/10 → 25/21) |
+|---|---|---|---|
+| Stroom LG per jaar | ≈ 2.590 kWh | ≈ 2.180 kWh (**≈ −410**) | ≈ 2.150–2.220 kWh |
+| SCOP | ≈ 2,5 | ≈ 2,9 | ≈ 2,95 |
+| Starts per jaar | ≈ 10.700 | ≈ 1.300 | ≈ 1.300–1.550 |
+| Bij 3 °C | ≈ 60 starts, 16,4 kWh/dag | 3 starts, 13,8 kWh/dag | 6 starts, 14,8 kWh/dag |
 
-Het model reproduceert de meting goed. Bij 3 °C komt het uit op 64 starts tegen ≈ 54 gemeten, en
-pauzes van 11 minuten. Van 1 januari tot en met 11 november rekent het 2.006 kWh stroom en 4.978 kWh
-warmte, tegen 2.404 en 5.382 kWh gemeten. Het gemeten warmwaterverbruik (524,7 kWh) past precies bij
-≈ 60 L warm water van 40 °C per dag. De ≈ 560 kWh is de voorzichtige schatting, omdat de
-onverklaarde verliezen (ijkfactor ≈ 0,8) in alle scenario's gelijk blijven.
+Het model is geijkt op 11-11 (COP 2,7, ≈ 54 starts, pauzes van 11 minuten; model 62 starts en 12 min) en
+controleert op 12-11: vast 23 °C met DT4 20,5 °C geeft in het model COP 3,0 en ≈ 15 kWh per dag,
+gemeten COP 3,15 en ≈ 15 kWh per dag (geëxtrapoleerd). Van 1 januari tot en met 11 november rekent het
+≈ 1.900 kWh stroom tegen 2.404 kWh gemeten; het model schat het jaarverbruik dus wat laag, de
+verschillen tussen instellingen zijn betrouwbaarder dan de absolute getallen. Het gemeten
+warmwaterverbruik (524,7 kWh) past bij ≈ 60 L warm water van 40 °C per dag.
 
 De bovengrens van 850–1.050 kWh geldt alleen als de oorzaken uit §3.3 vooral in de regeling zitten. Blijkt een
 deel uit stand-byverbruik of meetonnauwkeurigheid te komen, dan is de winst kleiner. De meting na
@@ -402,12 +431,12 @@ Wacht daarna 2–3 dagen; vloerverwarming reageert traag.
 | Woonkamer < 19,7 °C terwijl de DT4 blijft vragen | AI-correctie **+1** (of beide punten +1 °C) |
 | Woonkamer > 20,7 °C, of de DT4 schakelt vaak af | AI-correctie **−1** |
 | Alleen koud bij vorst, goed bij zacht weer | Alleen het −10 °C-punt +1 à 2 °C |
-| Alleen te warm bij zacht weer | Alleen het +18 °C-punt −1 °C (niet lager dan ≈ 21,5 °C: met hysterese Aan −1 moet de herstartdrempel boven kamertemperatuur blijven) |
+| Alleen te warm bij zacht weer | Alleen het +10 °C-punt −0,5 à 1 °C (niet lager dan ≈ 20,5 °C: met hysterese Aan −1 moet de herstartdrempel rond kamertemperatuur blijven) |
 
 Is de AI-correctie na een paar weken structureel ±2 of meer, verwerk die dan in de stooklijnpunten en
-zet de correctie terug op 0. De simulator verwacht dat bij 3 °C buiten ongeveer **AI −3** nodig is voor
-20 °C in de woonkamer. Begin toch met 0 en ga in stappen omlaag; de knop "Stooklijn afstemmen op
-20 °C" in de simulator laat zien waar je ongeveer uitkomt. Controleer de lijn opnieuw bij de eerste echte vorst.
+zet de correctie terug op 0. Met de stooklijn −10/10 → 25/21 verwacht de simulator dat AI 0 tot −1
+nodig is voor 20 °C in de woonkamer. De knop "Afstemmen op 20 °C" in de simulator laat zien waar je
+ongeveer uitkomt. Controleer de lijn opnieuw bij de eerste echte vorst.
 
 **Bijhouden (dagelijks, zelfde tijdstip):**
 
@@ -487,8 +516,8 @@ Vink af wat je gedaan hebt:
 
 **B. Seizoensgebonden auto temp (stooklijn)**
 
-- [ ] Mode **Warmte** → *Buitentemp.* → punt 1 **−10**, punt 2 **18**
-- [ ] *Target Temp.* → punt 1 **25**, punt 2 **22**
+- [ ] Mode **Warmte** → *Buitentemp.* → punt 1 **−10**, punt 2 **10**
+- [ ] *Target Temp.* → punt 1 **25**, punt 2 **21**
 - [ ] Menu verlaten. Op het hoofdscherm het **AI**-icoon selecteren → correctie op **0**
 
 **C. Warm water**
