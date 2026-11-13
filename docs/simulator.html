@@ -499,9 +499,9 @@ const HUIDIG = { hmode: 'ai', fixT: 25, fixFollow: false, roomGoal: 20, c1o: -10
   silent: true, flowMode: 'opt', mpFix: 26, dT: 5, pumpMode: 'interval', pumpOn: 1, pumpOff: 10, heaterOn: -10,
   setA: 20, setB: 18.5, cr: 6, ot: 1, wiringA: 'beide', wiringB: 'beide', mA: 18, mB: 12, berg: 100, gpW: 20,
   dhwSet: 48, dhwHyst: 3, compLim: 58, disOn: true, disT: 67, dhwActive: 45, dhwStop: 30, dhwFrom: 0, dhwTo: 24 };
-const ADVIES = { ...HUIDIG, c1t: 25, c2o: 10, c2t: 21, ai: 0, hOn: -1, hOff: 3, wMax: 35, silent: false, setA: 21.5, cr: 3, ot: 5,
+const ADVIES = { ...HUIDIG, c1t: 25, c2o: 10, c2t: 21, ai: 0, hOn: -1, hOff: 3, wMax: 35, silent: false, setA: 21.5, cr: 3, ot: 10,
   mB: 10, berg: 50, gpW: 10, dhwSet: 48, dhwHyst: 4, disT: 60, dhwFrom: 11, dhwTo: 16 };
-const ZELF = { ...HUIDIG, hmode: 'vast', fixT: 23, fixFollow: true, roomGoal: 21, silent: false, setA: 21.5,
+const ZELF = { ...HUIDIG, hmode: 'vast', fixT: 23, fixFollow: true, roomGoal: 21, silent: false, setA: 21.5, cr: 3, ot: 10,
   mB: 10, berg: 50, gpW: 10, dhwFrom: 11, dhwTo: 16 };
 const BASE = { Tout: 3, RH: 94, sun: 0, H: 110, emit: 1.2, gains: 350, wtwQ: 150, wtwEta: 90, bypass: false, inf: 50, dhwUse: 60,
   pMinNom: 2.5, pNom: 9, calib: true, pvKWh: 5, baseLoad: 300, price: 0.27, feedIn: 0.05 };
@@ -537,8 +537,8 @@ const C = [
   { id: 'heaterOn', g: 'wp', l: 'Element toegestaan onder', min: -25, max: 5, step: 1, u: '°C', d: 0, h: 'Verwarmer aan-temperatuur: het 3 kW-element springt alleen bij onder deze buitentemperatuur.' },
   { id: 'setA', g: 'dt4', l: 'DT4 woonkamer', min: 15, max: 24, step: 0.5, u: '°C', d: 1 },
   { id: 'setB', g: 'dt4', l: 'DT4 slaapkamer', min: 15, max: 24, step: 0.5, u: '°C', d: 1 },
-  { id: 'cr', g: 'dt4', l: 'Schakelfrequentie (2:CR)', type: 'sel', opts: [[3, '3 per uur'], [6, '6 per uur (standaard)'], [9, '9 per uur'], [12, '12 per uur']] },
-  { id: 'ot', g: 'dt4', l: 'Minimale aan-tijd (3:OT)', min: 1, max: 5, step: 1, u: 'min', d: 0 },
+  { id: 'cr', g: 'dt4', l: 'Schakelfrequentie (Cr)', type: 'sel', opts: [[3, '3 per uur'], [6, '6 per uur (standaard)'], [9, '9 per uur'], [12, '12 per uur']] },
+  { id: 'ot', g: 'dt4', l: 'Minimale aan-tijd (Ot)', type: 'sel', opts: [[1, '1 min (standaard)'], [2, '2 min'], [3, '3 min'], [4, '4 min'], [5, '5 min'], [10, '10 min'], [15, '15 min'], [20, '20 min'], [25, '25 min'], [30, '30 min']] },
   { id: 'wiringA', g: 'dt4', l: 'Woonkamer-DT4 schakelt', type: 'sel', opts: [['parallel', 'Alleen de warmtepomp'], ['beide', 'Warmtepomp én groepspomp beneden']] },
   { id: 'wiringB', g: 'dt4', l: 'Slaapkamer-DT4 schakelt', type: 'sel', opts: [['parallel', 'De warmtepomp (parallel)'], ['pomp', 'De groepspomp boven'], ['beide', 'Allebei (warmtepomp én pomp boven)']] },
   { id: 'mA', g: 'vloer', l: 'Debiet groepen beneden', min: 5, max: 40, step: 1, u: 'L/min', d: 0 },

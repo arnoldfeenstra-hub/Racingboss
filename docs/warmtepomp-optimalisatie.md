@@ -21,7 +21,7 @@ roomsensor) stilgezet.
 | 1 | Stooklijn (Seizoensgeb. auto temp, op *Invoer*) | −10 °C → 45 °C / +20 °C → ≈19 °C | **−10 °C → 25 °C / +10 °C → 21 °C** |
 | 2 | Hysterese verwarmingswater | Aan −2,0 / Uit +2,0 | **Aan −1,0 / Uit +3,0** |
 | 3 | Temperatuursensor selecteren | (niet gefotografeerd) | **Water** (de bediening hangt in de berging) |
-| 4 | Honeywell DT4 woonkamer | 20 °C, standaard schakelfrequentie | **21,5–22 °C als begrenzer**, CR = 3, OT = 5 min |
+| 4 | Honeywell DT4 woonkamer | 20 °C, fabrieksinstellingen (Cr 6, Ot 1 min) | **0,5 °C boven de gewenste kamertemperatuur** (begrenzer); parameters Cr/Ot op fabriekswaarde laten |
 | 5 | Legionella-ontsmetting | 67 °C, vrijdag 12:00 | **60 °C**, vrijdag 12:00, 10 min |
 | 6 | Stille modus | continu aan | **Alleen 's nachts** (schema) of uit |
 
@@ -64,8 +64,8 @@ komende dag(en), bijv. van de weerapp voor Eelde):
 
 Verder: slaapkamer-DT4 op wat je daar wilt (nu 18,5 °C), geen nachtverlaging, stille modus uit, warm
 water via Roosters → DHW (11:00 → 48 °C, 16:00 → 40 °C), groepspompen op HD1 en eventueel de berging
-teruggeregeld (§6). De DT4-parameters (2:CR, 3:OT) hoeven dan niet te veranderen: omdat de DT4 een
-halve graad boven het doel staat, schakelt hij vrijwel nooit. Staat hij er precies op (bijv. 21,0 °C bij
+teruggeregeld (§6). De DT4-parameters (Cr, Ot) hoeven dan niet te veranderen: omdat de DT4 een
+halve graad boven het doel staat, schakelt hij vrijwel nooit (§5). Staat hij er precies op (bijv. 21,0 °C bij
 een doel van 21), dan gaat hij weer schakelen en pendelt de warmtepomp: bij 3 °C ≈ 24 starts per dag
 in plaats van 0–1.
 
@@ -290,18 +290,44 @@ op 18 °C (condensatiebeveiliging) en isoleer de koude leidingen in de berging t
 
 ## 5. Honeywell DT4-thermostaten
 
-De DT4 is een aan/uit-thermostaat met TPI-regeling. Installateursparameters (zie de handleiding van de
-bedrade T4/DT4): **2:CR** schakelfrequentie 3/6/9/12 per uur (standaard 6), **3:OT** minimale
-aan-tijd 1–5 min.
+De DT4 is een niet-programmeerbare aan/uit-thermostaat (geen tijdprogramma, dus ook geen
+nachtverlaging). Knoppen onder het display: **−**, **middelste knop** (wekken/selecteren) en **+**.
+
+**Temperatuur instellen:** druk op **+** of **−** tot de gewenste waarde knippert; na een paar seconden
+neemt hij die over. Gebruik de **Eco**-stand niet (tijdelijke verlaging, standaard −2 °C).
+
+**Installateursmenu (officiële DT4-handleiding R32350729):**
+
+1. Houd de **middelste knop 5 seconden** ingedrukt. Het display toont **PAr** (parameters).
+2. Druk **één keer** op de middelste knop. Je ziet **HC**.
+3. Blader met **+** (of **−**) naar de parameter: HC → Ot → OFt → Cr → tO → UL → LL → … → End.
+4. Druk op de **middelste knop** om de parameter te kiezen. De waarde knippert; wijzig met **+/−** en
+   bevestig met de **middelste knop**.
+5. Ga naar **End** en druk op de middelste knop om op te slaan en het menu te verlaten.
+
+| Parameter (DT4) | Bereik | Fabriek | Advies (beide DT4's) |
+|---|---|---|---|
+| **HC** verwarmen/koelen | H, C, HC | H | **H** laten |
+| **Ot** minimale aan-tijd | 1, 2, 3, 4, 5, 10, 15, 20, 25, 30 min | 1 | 1 laten; **5** als het logboek beurten korter dan 5 min blijft tonen |
+| **OFt** minimale uit-tijd | 0, 1, 5, 10 min | 5 | 5 laten |
+| **Cr** schakelfrequentie | 3, 6, 9, 12 per uur | 6 | 6 laten |
+| **tO** afwijking temperatuurweergave | −3,0 … +3,0 °C | 0,0 | alleen als de DT4 aantoonbaar afwijkt van een losse thermometer |
+| **UL / LL** hoogste / laagste instelbare temperatuur | 19–35 / 5–19 °C | 35 / 5 | laten |
+| **EOs** Eco-verlaging | −3,0 … +3,0 °C | −2,0 | laten, Eco-stand niet gebruiken |
+| **FS** fabrieksinstellingen | 0, 1 | 0 | **niet** op 1 zetten |
 
 | Instelling | Woonkamer | Slaapkamer |
 |---|---|---|
-| 2:CR (cycli per uur) | **3** | **3** |
-| 3:OT (minimale aan-tijd) | **5 min** | **5 min** |
-| Temperatuur | **21,5–22 °C** (≈ 1,5–2 °C boven de gewenste 20 °C) | zie hieronder |
-| Programma / nachtverlaging | **uit** (of hooguit 0,5 °C) | **uit** |
+| Temperatuur | **0,5 °C boven de gewenste kamertemperatuur**: 21,5 °C voor 21 °C, 20,5 °C voor 20 °C | gewenste slaapkamertemperatuur (nu 18,5 °C) |
+| Cr / Ot | fabriek (6 / 1 min) | fabriek (6 / 1 min) |
+| Eco / nachtverlaging | niet gebruiken | niet gebruiken |
 
-**Waarom de woonkamer-DT4 hoger:** de stooklijn bepaalt voortaan de temperatuur (≈ 20 °C). De DT4 is
+**Waarom de parameters niet hoeven te veranderen:** als de DT4 een halve graad boven de gewenste
+kamertemperatuur staat, schakelt hij bijna nooit. De simulator laat tussen Cr 3/6 en Ot 1/5/10 min
+verschillen zien van 0–10 starts per dag en ±0,3 kWh: binnen de meetonzekerheid. Zie je in het logboek
+toch regelmatig beurten van een paar minuten (zoals 13:11–13:14 op 12-11), zet dan **Ot op 5 min**.
+
+**Waarom de woonkamer-DT4 hoger:** de stooklijn of vaste watertemperatuur bepaalt voortaan de temperatuur. De DT4 is
 alleen nog een **begrenzer** bij zoninstraling of veel interne warmte. Staat hij precies op de gewenste
 temperatuur, dan blijft de TPI-regeling rond het setpoint hakken. Dat is precies het pendelen dat we
 willen voorkomen. Een nachtverlaging levert bij vloerverwarming in een A++-woning niets op en kost
@@ -554,14 +580,13 @@ Vink af wat je gedaan hebt:
 
 **E. Honeywell DT4 (beide)**
 
-Geavanceerd menu: houd de twee knoppen uit de DT4-handleiding (hoofdstuk *Configure the System*)
-± 3 seconden samen ingedrukt tot het display verandert. Blader naar de parameter, wijzig hem, sla op en
-verlaat het menu.
+Installateursmenu: houd de **middelste knop 5 seconden** ingedrukt (**PAr**), druk één keer op de
+middelste knop, blader met **+/−**, kies met de middelste knop, wijzig met **+/−**, bevestig met de
+middelste knop en sluit af via **End** (zie §5).
 
-- [ ] **2:CR → 3** (beide thermostaten)
-- [ ] **3:OT → 5** (beide thermostaten)
-- [ ] Tijdprogramma: alle perioden **dezelfde temperatuur** (geen nachtverlaging)
-- [ ] Woonkamer: **21,5 °C**
+- [ ] Cr en Ot: fabriekswaarde laten (Ot → 5 alleen bij blijvend korte beurten)
+- [ ] Eco-stand niet gebruiken (de DT4 heeft geen tijdprogramma)
+- [ ] Woonkamer: **21,5 °C** voor 21 °C (of 20,5 °C voor 20 °C)
 - [ ] Slaapkamer: eerst de test hieronder doen, dan instellen
 
 **Test: wat schakelt de slaapkamerthermostaat?** Zet de woonkamer-DT4 even op 5 °C en de
