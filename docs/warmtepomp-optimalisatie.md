@@ -123,6 +123,35 @@ door de woonkamer-DT4. De watertemperatuur van 23 °C is dus nog iets hoog: het 
 dan zet de DT4 de warmtepomp én de pomp beneden uit. Met **22 °C** (zolang het boven 2 °C is) draait hij
 langer en lager (simulator: COP 3,05 → 3,1, ≈ 1 kWh per dag minder, woonkamer ≈ 19,8–20 °C).
 
+### Meting 11–13 november: hele dagen met het weer erbij
+
+Dagtotalen teruggerekend uit de dag- en maandtellers (11-11 en 12-11 tot 24:00, 13-11 tot 23:17).
+Weer: Open-Meteo (11 en 12 november) en wttr.in (13 november) voor Eelde/Eelderwolde.
+
+| Dag | Weer | Instellingen | Stroom (verw. + ww) | Warmte | **COP** |
+|---|---|---|---|---|---|
+| 11-11 | 3,0 °C, RV 94 %, grijs | oud (AI, stooklijn 45/19), DT4 20 | 19,5 kWh (17,5 + 1,9) | 53,1 kWh | **2,72** |
+| 12-11 | 5,2 °C, RV 82 % | vast 23 °C, DT4 20,5 | 15,9 kWh (14,9 + 1,1) | 51,3 kWh | **3,23** |
+| 13-11 | ≈ 6,9 °C, RV ≈ 67 %, zonnig (8 zonuren) | vast 23 °C (aangenomen), DT4 21,0, stille modus uit; vrijdag = ontsmetting | 12,9 kWh (11,2 + 1,6) | 37,7 kWh | **2,92** |
+
+**Waarom de COP op 13-11 lager is dan op 12-11, terwijl het zachter was:**
+
+1. **Wekelijkse ontsmetting** (vrijdag 12:00, 67 °C): warm water kostte 1,6 kWh in plaats van ≈ 1,1, en
+   om 23:18 was de boiler nog 51 °C. Heet water maken heeft een lage COP. Alleen via het
+   installateursmenu terug te zetten naar 60 °C (§4.3).
+2. **Weinig warmtevraag:** zon en ≈ 7 °C buiten; het huis vroeg 37,7 kWh warmte tegen 51,3 kWh de dag
+   ervoor. Het vaste verbruik (interne pomp, stand-by) weegt dan zwaarder in de COP. Het totaal is wél
+   lager: 12,9 tegen 15,9 kWh.
+3. **Woonkamer-DT4 op 21,0 °C:** om 23:17 stond de LG op *Thermostaat* (DT4 vraagt niet; warmtepomp én
+   pomp beneden uit). Volgens de simulator geeft 21,0 °C bij dit weer ≈ 9 starts per dag, 21,5 °C ≈ 3.
+   Het verschil in stroom is klein (≈ 0,1 kWh), maar 21,5 °C is rustiger voor de warmtepomp.
+
+De simulator met het weer van 13-11 (6,9 °C, RV 67 %, ≈ 300 W nuttige zon, ontsmetting meegerekend)
+komt uit op 12,8 kWh stroom, 37,0 kWh warmte en COP 2,89, tegen 12,9 / 37,7 / 2,92 gemeten. Alleen het
+warmwaterdeel wijkt af: het model verwacht ≈ 4 kWh voor een ontsmetting naar 67 °C, de teller toont
+1,6 kWh. Mogelijk telt de LG het elektrische element in de boiler niet mee ("Instelling elektrische
+verwarming: Extern"); laat de installateur dat controleren.
+
 **Op het display:** tijdens **Ontdooiing** is *Uitvoer* lager dan *Invoer* (bijv. 22 / 20 °C). Dat is
 normaal: de warmtepomp draait dan even omgekeerd en haalt warmte uit het water om het ijs op het
 buitendeel te smelten. Rond 0–4 °C en hoge luchtvochtigheid gebeurt dat meerdere keren per nacht.
