@@ -236,9 +236,7 @@ const EELDE = [
   ['jul', 31, 17.7, 77, 800], ['aug', 31, 17.4, 79, 700], ['sep', 30, 14.3, 83, 550],
   ['okt', 31, 10.4, 87, 350], ['nov', 30, 6.4, 90, 150], ['dec', 31, 3.6, 90, 100]];
 
-const FIX_RULE = (To, goal) => goal >= 21
-  ? (To > 2 ? 23 : To > -1 ? 24 : To > -4 ? 25 : To > -7 ? 26 : 27)
-  : (To > 2 ? 22 : To > -2 ? 23 : To > -6 ? 24 : 25);
+const FIX_RULE = (To, goal) => (To > 6 ? 23 : To > 1 ? 24 : To > -1 ? 25 : To > -4 ? 26 : 27) - (goal >= 21 ? 0 : 1);
 function curveTarget(p, To) {
   if (p.hmode === 'vast') return clamp(p.fixFollow ? FIX_RULE(To, p.roomGoal ?? 20) : p.fixT, p.wMin, p.wMax);
   let t;
@@ -503,7 +501,7 @@ const ADVIES = { ...HUIDIG, c1t: 25, c2o: 10, c2t: 21, ai: 0, hOn: -1, hOff: 3, 
   mB: 10, berg: 50, gpW: 10, dhwSet: 48, dhwHyst: 4, disT: 60, dhwFrom: 11, dhwTo: 16 };
 const ZELF = { ...HUIDIG, hmode: 'vast', fixT: 23, fixFollow: true, roomGoal: 21, silent: false, setA: 21.5,
   mB: 10, berg: 50, gpW: 10, dhwFrom: 11, dhwTo: 16 };
-const BASE = { Tout: 3, RH: 94, sun: 0, H: 110, emit: 1.2, gains: 350, wtwQ: 150, wtwEta: 90, bypass: false, inf: 50, dhwUse: 60,
+const BASE = { Tout: 3, RH: 94, sun: 0, H: 115, emit: 0.95, gains: 350, wtwQ: 150, wtwEta: 90, bypass: false, inf: 50, dhwUse: 60,
   pMinNom: 2.5, pNom: 9, calib: true, pvKWh: 5, baseLoad: 300, price: 0.27, feedIn: 0.05 };
 
 const GROUPS = [
@@ -516,7 +514,7 @@ const C = [
   { id: 'sun', g: 'buiten', l: 'Zoninstraling (nuttig, gemiddeld)', min: 0, max: 2000, step: 50, u: 'W', d: 0 },
   { id: 'hmode', g: 'lijn', l: 'Regeling verwarming (hoofdscherm LG)', type: 'sel', opts: [['ai', 'Stooklijn · AI (Auto)'], ['vast', 'Vaste watertemperatuur (Verwarmen)']] },
   { id: 'fixFollow', g: 'lijn', l: 'Met het weer mee bijstellen volgens de tabel', type: 'chk', show: p => p.hmode === 'vast' },
-  { id: 'roomGoal', g: 'lijn', l: 'Tabel voor woonkamer', type: 'sel', opts: [[20, '20 °C: boven 2 → 22 · −2…2 → 23 · −6…−2 → 24 · kouder → 25'], [21, '21 °C: boven 2 → 23 · −1…2 → 24 · −4…−1 → 25 · −7…−4 → 26 · kouder → 27']], show: p => p.hmode === 'vast' && p.fixFollow },
+  { id: 'roomGoal', g: 'lijn', l: 'Tabel voor woonkamer', type: 'sel', opts: [[20, '20 °C: boven 6 → 22 · 1…6 → 23 · −1…1 → 24 · −4…−1 → 25 · kouder → 26'], [21, '21 °C: boven 6 → 23 · 1…6 → 24 · −1…1 → 25 · −4…−1 → 26 · kouder → 27']], show: p => p.hmode === 'vast' && p.fixFollow },
   { id: 'fixT', g: 'lijn', l: 'Vaste watertemperatuur', min: 15, max: 45, step: 1, u: '°C', d: 0, show: p => p.hmode === 'vast' && !p.fixFollow, h: 'Met regelen op Invoer is dit de retourtemperatuur.' },
   { id: 'c1o', g: 'lijn', l: 'Stooklijn punt 1 · buiten', min: -20, max: 5, step: 1, u: '°C', d: 0 , show: p => p.hmode !== 'vast'},
   { id: 'c1t', g: 'lijn', l: 'Stooklijn punt 1 · water', min: 15, max: 45, step: 0.5, u: '°C', d: 1 , show: p => p.hmode !== 'vast'},
@@ -560,7 +558,7 @@ const C = [
   { id: 'price', g: 'zon', l: 'Gemiddelde all-in stroomprijs', min: 0.15, max: 0.45, step: 0.01, u: '€/kWh', d: 2, h: 'Dynamisch: het model volgt een voorbeeldprofiel met goedkope nacht en middag en een dure ochtend- en avondpiek.' },
   { id: 'feedIn', g: 'zon', l: 'Waarde teruggeleverde stroom', min: 0, max: 0.30, step: 0.01, u: '€/kWh', d: 2, h: 'Na het einde van salderen (1-1-2027) alleen de terugleververgoeding.' },
   { id: 'H', g: 'woning', l: 'Transmissieverlies woning', min: 50, max: 200, step: 5, u: 'W/K', d: 0, h: 'Geijkt op de hele-dagwarmte van 11-11 (3,0 °C, ≈ 51 kWh) en 12-11 (5,0 °C, ≈ 46 kWh).' },
-  { id: 'emit', g: 'woning', l: 'Afgiftevermogen vloer (t.o.v. standaard)', min: 0.6, max: 1.8, step: 0.05, u: '×', d: 2, h: 'Pvc-vloeren, ≈ 30 groepen. 1,2 past bij de metingen.' },
+  { id: 'emit', g: 'woning', l: 'Afgiftevermogen vloer (t.o.v. standaard)', min: 0.6, max: 1.8, step: 0.05, u: '×', d: 2, h: 'Pvc-vloeren, ≈ 30 groepen. 0,95 past bij de meting van 14-11 (23 °C water → 20,5 °C).' },
   { id: 'gains', g: 'woning', l: 'Interne warmte (personen, apparaten)', min: 0, max: 1000, step: 50, u: 'W', d: 0 },
   { id: 'wtwQ', g: 'woning', l: 'WTW-debiet', min: 50, max: 400, step: 10, u: 'm³/h', d: 0 },
   { id: 'wtwEta', g: 'woning', l: 'WTW-rendement in de praktijk', min: 50, max: 95.5, step: 0.5, u: '%', d: 1 },
@@ -995,11 +993,12 @@ function renderAssume() {
     'Compressor: rendement volgens Carnot met een deellastcorrectie, condensatie 1,5–4 K boven de aanvoer, verdamping 2–7 K onder de buitenlucht. Maximaal vermogen 9 kW bij A7/W35, minimaal ≈ 2,5 kW (aanname). Na een start bouwt de compressor in ≈ 18 min op naar vol vermogen en is het rendement de eerste 6 minuten lager.',
     'Ontdooien: rijpvorming neemt toe met de luchtvochtigheid en is het sterkst rond +1 °C. Bij volledige rijp volgt een ontdooicyclus van 4 minuten die 1,5 kW uit de buffer haalt.',
     'Buffer 50 L + ≈ 22 L in unit en leidingen, volledig gemengd. LG-retour = buffertemperatuur. Groepspompen draaien continu (tenzij de slaapkamer-DT4 de pomp boven schakelt).',
-    'Woning in twee zones: beneden (58 % van het verlies, woonkamer-DT4) en boven (42 %, slaapkamer-DT4), elk met vloermassa en luchtmassa. Transmissie 110 W/K, WTW 150 m³/h met 90 % rendement, 50 m³/h infiltratie, 350 W interne warmte, vloerafgifte ×1,2. Geijkt op de hele-dagwarmte van 11-11 (≈ 51 kWh bij 3,0 °C, RV 94 %) en 12-11 (≈ 46 kWh bij 5,0 °C, RV 84 %); weergegevens Eelderwolde (Open-Meteo).',
+    'Woning in twee zones: beneden (58 % van het verlies, woonkamer-DT4) en boven (42 %, slaapkamer-DT4), elk met vloermassa en luchtmassa. Transmissie 115 W/K, WTW 150 m³/h met 90 % rendement, 50 m³/h infiltratie, 350 W interne warmte, vloerafgifte ×0,95 (14-11: 23 °C water gaf 20,5 °C bij ≈ 3,5 °C buiten). Geijkt op de hele-dagwarmte van 11-11 (≈ 51 kWh bij 3,0 °C, RV 94 %) en 12-11 (≈ 46 kWh bij 5,0 °C, RV 84 %); weergegevens Eelderwolde (Open-Meteo).',
     'DT4: TPI-regeling met de ingestelde schakelfrequentie en minimale aan-tijd. Na een stop wacht de LG tot het volgende meetmoment van de pomp (bij interval 1/10 min dus ≈ 11 min). Dat verklaart de gemeten pauzes van 11–12 min.',
     'Warm water: 180 L boiler, tappen om 07:00, 12:30 en 19:30. Wekelijkse ontsmetting als dagaandeel: tot de comp.-limiet met de warmtepomp, daarboven met het element.',
     'Jaarschatting: maandgemiddelden van KNMI-station Eelde (benadering), drie temperaturen per maand (−4, 0, +4 °C) en een gemiddelde nuttige zoninstraling per maand.',
     'Controle 12-11: vaste watertemperatuur 23 °C, woonkamer-DT4 20,5 °C, pompen op HD1. Gemeten COP 3,15 (00:00–19:50), ≈ 15 kWh stroom per dag, ≈ 0,5 starts per uur. Model: COP 3,0, 15,2 kWh, 9 starts per dag. Beide DT4’s schakelen hun groepspomp én (via het relais) de warmtepomp.',
+    'Bekende afwijking: bij een vaste watertemperatuur regelt de echte LG hard op (≈ 8 kW, 28 min aan, ≈ 100 min uit, schakelend op de waterhysterese −2/+2). Het model moduleert lager en geeft minder starts; de COP komt wel overeen (14-11: gemeten 2,98, model 3,05).',
     'Warm water: 60 L per dag bij 40 °C reproduceert precies het gemeten warmwaterverbruik van dit jaar (524,7 kWh). Voor 2 volwassenen en een kind met regendouche is 150–200 L gebruikelijk; het meetresultaat ligt dus laag.',
     'Zonnestroom: 18 panelen, een dagopbrengst die je zelf instelt, verdeeld over een zonneboog rond 13:00. Eerst gaat ' + nf(P.baseLoad, 0) + ' W naar het overige huishouden. Kosten: voorbeeldprofiel voor een dynamisch tarief (nacht en middag goedkoper, ochtend- en avondpiek duurder) rond de ingestelde gemiddelde prijs. Eigen zonnestroom telt tegen de terugleverwaarde.',
     'Vloeren: pvc op alle verdiepingen (lage warmteweerstand, vergelijkbaar met tegels). Groepspompen: OEG CPA-E 25-7.5 PWM, stand HD2 (constante druk, middelste curve).',

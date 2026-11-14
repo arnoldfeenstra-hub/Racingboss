@@ -53,14 +53,18 @@ hoofdscherm van **AI (Auto)** naar **Verwarmen (zon)** met een **vaste watertemp
 **Stel deze vaste watertemperatuur in, afhankelijk van het weer** (gemiddelde buitentemperatuur van de
 komende dag(en), bijv. van de weerapp voor Eelde):
 
-| Buitentemperatuur | Woonkamer **20 °C** | Woonkamer **21 °C** |
-|---|---|---|
-| boven 2 °C | **22 °C** | **23 °C** |
-| −1 tot 2 °C | 23 °C | 24 °C |
-| −4 tot −1 °C | 24 °C | 25 °C |
-| −7 tot −4 °C | 24–25 °C | 26 °C |
-| kouder dan −7 °C | 25 °C | 27 °C |
-| **Woonkamer-DT4** (bovengrens) | **20,5 °C** | **21,5 °C** |
+| Gemiddelde buitentemperatuur (komende 24 uur) | Water voor woonkamer **21 °C** |
+|---|---|
+| boven 6 °C | **23 °C** |
+| 1 tot 6 °C | **24 °C** |
+| −1 tot 1 °C | **25 °C** |
+| −4 tot −1 °C | **26 °C** |
+| kouder dan −4 °C | **27 °C** |
+| **Woonkamer-DT4** (bovengrens) | **21,5 °C** |
+
+Voor 20 °C in de woonkamer: overal één graad lager water en de DT4 op 20,5 °C. *(Bijgewerkt 14-11:
+gemeten gaf 23 °C water bij ≈ 3,5 °C buiten 20,5 °C in de woonkamer; de eerdere tabel lag ≈ 1 °C te
+laag.)*
 
 Verder: slaapkamer-DT4 op wat je daar wilt (nu 18,5 °C), geen nachtverlaging, stille modus uit, warm
 water via Roosters → DHW (11:00 → 48 °C, 16:00 → 40 °C), groepspompen op HD1 en eventueel de berging
@@ -71,8 +75,8 @@ in plaats van 0–1.
 
 **Weer in Eelderwolde** (Open-Meteo, uurwaarden): 11-11 gemiddeld **3,0 °C** (0,4–5,0) met **94 %**
 luchtvochtigheid; 12-11 gemiddeld **5,2 °C** (−0,3–9,0) met **82 %**. Verwachting 13–19 november:
-gemiddeld 4,5–8 °C, 80–92 %. Voor 21 °C is de komende week dus **23 °C** water de juiste stand; ga naar
-24 °C als het een dag rond het vriespunt blijft.
+gemiddeld 4,5–8 °C, 80–92 %. Gebruik voor de stand de tabel hierboven met het gemiddelde van de
+komende 24 uur, niet de temperatuur op dat moment: de vloer reageert pas na uren.
 
 **25 °C, zoals nu ingesteld, is te hoog.** Bij 2–3 °C buiten gebruikt het huis maar ≈ 22 °C retour. Bij
 25 °C haalt de warmtepomp zijn doel nooit en blijft de DT4 hem uitzetten: volgens de simulator nog
@@ -142,15 +146,37 @@ Weer: Open-Meteo (11 en 12 november) en wttr.in (13 november) voor Eelde/Eelderw
 2. **Weinig warmtevraag:** zon en ≈ 7 °C buiten; het huis vroeg 37,7 kWh warmte tegen 51,3 kWh de dag
    ervoor. Het vaste verbruik (interne pomp, stand-by) weegt dan zwaarder in de COP. Het totaal is wél
    lager: 12,9 tegen 15,9 kWh.
-3. **Woonkamer-DT4 op 21,0 °C:** om 23:17 stond de LG op *Thermostaat* (DT4 vraagt niet; warmtepomp én
-   pomp beneden uit). Volgens de simulator geeft 21,0 °C bij dit weer ≈ 9 starts per dag, 21,5 °C ≈ 3.
-   Het verschil in stroom is klein (≈ 0,1 kWh), maar 21,5 °C is rustiger voor de warmtepomp.
+3. ~~Woonkamer-DT4 op 21,0 °C~~ *Correctie 14-11:* de status *Thermostaat* op het LG-scherm betekent
+   niet dat de DT4 uitschakelt. Op 14-11 stond die tekst er ook terwijl de DT4 (21,5 °C, kamer 20,5 °C)
+   warmte vroeg en de pompen draaiden. Het is de eigen wachtstand van de LG als het water op
+   temperatuur is (zie hieronder).
 
 De simulator met het weer van 13-11 (6,9 °C, RV 67 %, ≈ 300 W nuttige zon, ontsmetting meegerekend)
 komt uit op 12,8 kWh stroom, 37,0 kWh warmte en COP 2,89, tegen 12,9 / 37,7 / 2,92 gemeten. Alleen het
 warmwaterdeel wijkt af: het model verwacht ≈ 4 kWh voor een ontsmetting naar 67 °C, de teller toont
 1,6 kWh. Mogelijk telt de LG het elektrische element in de boiler niet mee ("Instelling elektrische
 verwarming: Extern"); laat de installateur dat controleren.
+
+### Nacht 13→14 november: hoe de LG nu schakelt
+
+Vast 23 °C, DT4 21,5 °C (kamer 20,5 °C, DT4 vraagt continu), pompen draaien. Buiten 3–4,5 °C, RV ≈ 90 %.
+
+| Start | Stop | Draaitijd | Pauze ervoor | In/Uit bij stop |
+|---|---|---|---|---|
+| 21:56 | 22:05 | 9 min | | 24 / 28 °C |
+| 23:47 | 00:15 | 28 min | 102 min | 24 / 28 °C |
+| 01:57 | 02:25 | 28 min | 102 min | 22 / 23 °C |
+| 04:07 | 04:35 | 28 min | 102 min | 23 / 28 °C |
+| 06:17 | 06:45 | 28 min | 102 min | 22 / 24 °C |
+| 08:05 | 08:55 | 50 min | 80 min | 24 / 28 °C |
+
+Elke start gebeurt bij *In* 21 °C (= 23 − 2) en elke stop rond *In* 24–25 °C (= 23 + 2): de LG schakelt op
+zijn **eigen waterhysterese** (−2 / +2), niet op de DT4. Tijdens een run is het verschil Uit − In ≈ 4–5 K
+bij 28,9 L/min, dus ≈ **8 kW**: de LG regelt hard op en staat daarna ≈ 100 minuten stil. Dat zijn ≈ 11
+starts per etmaal (oude instellingen: ≈ 50). COP 00:00–10:42: 17,3 / 5,8 kWh = **2,98** bij ≈ 3,5 °C en
+RV ≈ 90 %. De hysterese groter maken (−1 / +3, §4.1) geeft langere, minder vaak voorkomende runs, maar
+kan alleen via het installateursmenu. Het model modelleert de LG zachter (lager vermogen, minder starts),
+maar komt op dezelfde COP uit (3,05).
 
 **Op het display:** tijdens **Ontdooiing** is *Uitvoer* lager dan *Invoer* (bijv. 22 / 20 °C). Dat is
 normaal: de warmtepomp draait dan even omgekeerd en haalt warmte uit het water om het ijs op het
