@@ -4,11 +4,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
-/* Layout: technisch installatieschema. Links instellingen, rechts KPI's, isometrisch schema, 24-uursgrafiek en analyse. Koper = accent (leidingen), blauw→rood = watertemperatuur. */
+/* Layout: één kolom met genummerde stappen (weer → vergelijken → rendement → instellen → schema → jaar), techniek in uitklappanelen. Koper = jouw situatie, blauw = advies, grijs = oud. */
 :root {
   --bg: #e9eeef; --panel: #f7f9f9; --panel-2: #eef2f3; --ink: #15242b; --muted: #5a6a71; --line: #c6d0d3;
-  --copper: #b05f2c; --copper-soft: #e9cdb9; --cold: #2c71b0; --warm: #cf452d; --refr: #7a59b0;
-  --good: #2a8455; --warn: #b07a0c; --bad: #bb3628;
+  --copper: #b05f2c; --copper-soft: #f3e3d7; --cold: #2c71b0; --cold-soft: #dde9f4; --warm: #cf452d; --refr: #7a59b0;
+  --good: #2a8455; --warn: #a06f0a; --bad: #bb3628; --old: #7d8b91;
   --slab-t: #dfe5e7; --slab-l: #c9d2d5; --slab-r: #b8c3c7; --dev-t: #f4f6f6; --dev-l: #dbe1e3; --dev-r: #cdd5d8;
   --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
   --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -16,87 +16,133 @@
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #0f171b; --panel: #162127; --panel-2: #1b2930; --ink: #e2e9eb; --muted: #94a4ab; --line: #2b3b42;
-  --copper: #d98a55; --copper-soft: #4a3122; --cold: #5ea4e6; --warm: #f0694f; --refr: #a98ae0;
-  --good: #4fbf84; --warn: #e0b03e; --bad: #ee6a5b;
+  --copper: #d98a55; --copper-soft: #3a2a20; --cold: #5ea4e6; --cold-soft: #1c3142; --warm: #f0694f; --refr: #a98ae0;
+  --good: #4fbf84; --warn: #e0b03e; --bad: #ee6a5b; --old: #8a989e;
   --slab-t: #26343b; --slab-l: #1d292f; --slab-r: #18232a; --dev-t: #34444c; --dev-l: #2a3940; --dev-r: #233138;
   color-scheme: dark; } }
 :root[data-theme="dark"] {
   --bg: #0f171b; --panel: #162127; --panel-2: #1b2930; --ink: #e2e9eb; --muted: #94a4ab; --line: #2b3b42;
-  --copper: #d98a55; --copper-soft: #4a3122; --cold: #5ea4e6; --warm: #f0694f; --refr: #a98ae0;
-  --good: #4fbf84; --warn: #e0b03e; --bad: #ee6a5b;
+  --copper: #d98a55; --copper-soft: #3a2a20; --cold: #5ea4e6; --cold-soft: #1c3142; --warm: #f0694f; --refr: #a98ae0;
+  --good: #4fbf84; --warn: #e0b03e; --bad: #ee6a5b; --old: #8a989e;
   --slab-t: #26343b; --slab-l: #1d292f; --slab-r: #18232a; --dev-t: #34444c; --dev-l: #2a3940; --dev-r: #233138;
   color-scheme: dark; }
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.45; }
-.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 18px 40px; max-width: 1480px; margin: 0 auto; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 48px; max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
 h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.01em; text-wrap: balance; margin: 0; }
-h1 { font-size: 2rem; line-height: 1.05; }
-h2 { font-size: 1.25rem; }
-h3 { font-size: 1.02rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-.num, .mono { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+h1 { font-size: 2.2rem; line-height: 1.05; }
+h2 { font-size: 1.45rem; line-height: 1.15; }
+h3 { font-size: 1.1rem; }
+p { margin: 0; }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
 button { font: inherit; }
+b { font-weight: 600; }
 
-header.top { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: end; justify-content: space-between; margin-bottom: 16px; }
-.plate { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.plate .sub { color: var(--muted); font-size: 0.93rem; }
-.plate .tag { font-family: var(--font-data); font-size: 0.78rem; color: var(--copper); letter-spacing: 0.04em; }
-.actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.btn { border: 1px solid var(--line); background: var(--panel); color: var(--ink); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; }
-.btn:hover { border-color: var(--copper); }
-.btn:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
-.btn.primary { background: var(--copper); border-color: var(--copper); color: var(--panel); }
-.btn[aria-pressed="true"] { border-color: var(--copper); box-shadow: inset 0 0 0 1px var(--copper); }
-.preset-state { font-size: 0.82rem; color: var(--muted); align-self: center; }
+header.top { display: flex; flex-direction: column; gap: 6px; }
+header .tag { font-family: var(--font-data); font-size: 0.78rem; color: var(--copper); letter-spacing: 0.04em; }
+header .sub { color: var(--muted); max-width: 72ch; }
 
-.app { display: grid; grid-template-columns: minmax(0, 330px) minmax(0, 1fr); gap: 18px; align-items: start; }
-@media (max-width: 980px) { .app { grid-template-columns: minmax(0, 1fr); } .controls { order: 2; } .stage { order: 1; } }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+@media (max-width: 600px) { .card { padding: 14px; } }
+.step-head { display: flex; gap: 12px; align-items: flex-start; }
+.step-n { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: var(--panel); display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; margin-top: 1px; }
+.lead { color: var(--muted); font-size: 0.93rem; max-width: 75ch; margin-top: 2px; }
 
-.controls { display: flex; flex-direction: column; gap: 10px; position: sticky; top: env(safe-area-inset-top, 0px); max-height: calc(100vh - 20px); overflow-y: auto; padding-right: 4px; }
-@media (max-width: 980px) { .controls { position: static; max-height: none; overflow: visible; padding-right: 0; } }
-details.grp { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
-details.grp > summary { cursor: pointer; list-style: none; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-details.grp > summary::-webkit-details-marker { display: none; }
-details.grp > summary h2 { font-size: 1.08rem; }
-details.grp > summary .chev { color: var(--muted); font-family: var(--font-data); transition: transform 0.15s; }
-details.grp[open] > summary .chev { transform: rotate(90deg); }
-.grp-body { padding: 2px 12px 12px; display: flex; flex-direction: column; gap: 10px; }
-.ctl { display: flex; flex-direction: column; gap: 3px; }
-.ctl label { display: flex; justify-content: space-between; gap: 10px; font-size: 0.86rem; }
-.ctl label .val { font-family: var(--font-data); color: var(--copper); white-space: nowrap; }
-.ctl .help { font-size: 0.76rem; color: var(--muted); }
-.ctl input[type="range"] { width: 100%; accent-color: var(--copper); }
-.ctl select { width: 100%; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); font: inherit; }
+/* stap 1: weer */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); border-radius: 999px; padding: 7px 14px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; text-align: left; }
+.chip small { color: var(--muted); font-family: var(--font-data); font-size: 0.74rem; }
+.chip[aria-pressed="true"] { border-color: var(--ink); background: var(--panel); box-shadow: inset 0 0 0 1px var(--ink); }
+.chip:hover { border-color: var(--ink); }
+.wx-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px 22px; }
+.ctl { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ctl label { display: flex; justify-content: space-between; gap: 10px; font-size: 0.9rem; }
+.ctl label .val { font-family: var(--font-data); color: var(--ink); font-weight: 500; white-space: nowrap; }
+.ctl .help { font-size: 0.78rem; color: var(--muted); }
+.ctl input[type="range"] { width: 100%; accent-color: var(--ink); }
+.ctl select { width: 100%; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); font: inherit; font-size: 0.9rem; }
 .ctl.check label { justify-content: flex-start; align-items: center; gap: 8px; cursor: pointer; }
-.ctl.check input { accent-color: var(--copper); width: 16px; height: 16px; }
-.ctl .chg { width: 7px; height: 7px; border-radius: 50%; background: var(--copper); display: inline-block; margin-right: 6px; vertical-align: middle; }
+.ctl.check input { accent-color: var(--ink); width: 16px; height: 16px; flex: none; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; width: fit-content; }
+.seg button { border: 0; background: var(--panel-2); color: var(--ink); padding: 7px 16px; cursor: pointer; font-family: var(--font-data); }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
 
-.stage { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.kpi .k-lab { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-.kpi .k-val { font-family: var(--font-display); font-size: 1.9rem; font-weight: 600; line-height: 1.05; font-variant-numeric: tabular-nums; }
-.kpi .k-val small { font-family: var(--font-body); font-size: 0.8rem; font-weight: 500; color: var(--muted); margin-left: 3px; }
-.kpi .k-sub { font-size: 0.78rem; color: var(--muted); }
-.delta { font-family: var(--font-data); font-size: 0.76rem; }
+/* stap 2: scenario's */
+.scen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+.scen { --c: var(--old); text-align: left; border: 1px solid var(--line); border-top: 5px solid var(--c); background: var(--panel); color: var(--ink); border-radius: 10px; padding: 14px 16px; cursor: pointer; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.scen:hover { border-color: var(--c); }
+.scen[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--c); border-color: var(--c); }
+.scen.nu { --c: var(--copper); } .scen.advies { --c: var(--cold); } .scen.eigen { --c: var(--refr); }
+.scen .s-tag { font-family: var(--font-data); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--c); font-weight: 500; }
+.scen .s-name { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; line-height: 1.1; }
+.scen .s-desc { font-size: 0.84rem; color: var(--muted); }
+.scen .s-main { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.scen .s-big { font-family: var(--font-display); font-size: 2.3rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+.scen .s-unit { color: var(--muted); font-size: 0.85rem; }
+.scen dl { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; margin: 0; font-size: 0.88rem; }
+.scen dt { color: var(--muted); }
+.scen dd { margin: 0; text-align: right; font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+.scen .s-sel { font-size: 0.8rem; color: var(--c); font-weight: 600; }
+.delta { font-family: var(--font-data); font-size: 0.8rem; }
 .delta.up { color: var(--good); } .delta.down { color: var(--bad); } .delta.flat { color: var(--muted); }
-.pill { display: inline-block; font-size: 0.7rem; font-weight: 600; padding: 1px 7px; border-radius: 999px; letter-spacing: 0.03em; border: 1px solid currentColor; }
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
 .pill.good { color: var(--good); } .pill.warn { color: var(--warn); } .pill.bad { color: var(--bad); } .pill.info { color: var(--muted); }
+.callout-line { background: var(--panel-2); border-radius: 8px; padding: 10px 14px; font-size: 0.9rem; }
+.link-btn { background: none; border: 0; padding: 0; color: var(--cold); text-decoration: underline; cursor: pointer; }
 
-.scene-head { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+/* stap 3: rendement */
+.cop-layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 860px) { .cop-layout { grid-template-columns: minmax(0, 1fr); } }
+.chart-wrap svg { display: block; width: 100%; height: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.8rem; color: var(--muted); }
+.legend i { display: inline-block; width: 20px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+.legend i.dot { width: 9px; height: 9px; border-radius: 50%; }
+.why { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; }
+.why li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; }
+.why li span:first-child { font-family: var(--font-data); color: var(--muted); }
+.stack { display: flex; height: 14px; border-radius: 4px; overflow: hidden; background: var(--panel-2); }
+.stack span { display: block; height: 100%; }
+.stack-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.8rem; color: var(--muted); }
+.stack-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+
+/* stap 4: instellen */
+.setup-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.setup h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.todo { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.todo li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 4px 14px; padding: 8px 0; border-bottom: 1px solid var(--panel-2); font-size: 0.9rem; }
+.todo li:last-child { border-bottom: 0; }
+.todo .where { color: var(--muted); }
+.todo .why2 { grid-column: 2; color: var(--muted); font-size: 0.8rem; }
+@media (max-width: 520px) { .todo li { grid-template-columns: minmax(0, 1fr); } .todo .why2 { grid-column: 1; } }
+.badge { display: inline-block; font-size: 0.68rem; font-weight: 600; padding: 1px 7px; border-radius: 4px; letter-spacing: 0.03em; text-transform: uppercase; white-space: nowrap; vertical-align: 1px; }
+.badge.zelf { background: var(--copper-soft); color: var(--copper); }
+.badge.inst { background: var(--cold-soft); color: var(--cold); }
+.badge.aanname { background: var(--panel-2); color: var(--muted); }
+table.tbl { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+table.tbl td, table.tbl th { padding: 6px 6px; border-bottom: 1px solid var(--panel-2); text-align: left; }
+table.tbl th { font-weight: 600; color: var(--muted); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.tbl td.r, table.tbl th.r { text-align: right; font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+table.tbl tr.hl td { background: var(--copper-soft); font-weight: 600; }
+table.tbl tr.sum td { font-weight: 600; border-top: 1px solid var(--line); }
+.tbl-wrap { overflow-x: auto; }
+
+/* stap 5: schema */
+.scene-head { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
 .timebar { display: flex; align-items: center; gap: 10px; flex: 1 1 280px; min-width: 0; }
-.timebar input { flex: 1; accent-color: var(--copper); min-width: 0; }
+.timebar input { flex: 1; accent-color: var(--ink); min-width: 0; }
 .timebar .clock { font-family: var(--font-data); font-size: 1.05rem; min-width: 3.4em; }
-.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.78rem; color: var(--muted); }
-.legend i { display: inline-block; width: 22px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+.btn { border: 1px solid var(--line); background: var(--panel); color: var(--ink); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 500; }
+.btn:hover { border-color: var(--ink); }
+.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--panel); }
 .scene-wrap { overflow-x: auto; }
 #scene { width: 100%; height: auto; display: block; min-width: 520px; }
 @media (max-width: 700px) { #scene .callout { display: none; } #scene { min-width: 0; } }
-
-.live { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 6px 14px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); }
-.live div { display: flex; justify-content: space-between; gap: 8px; font-size: 0.84rem; border-bottom: 1px solid var(--panel-2); padding-bottom: 3px; }
+.live { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 6px 16px; }
+.live div { display: flex; justify-content: space-between; gap: 8px; font-size: 0.86rem; border-bottom: 1px solid var(--panel-2); padding-bottom: 3px; }
 .live span:first-child { color: var(--muted); }
 .live span:last-child { font-family: var(--font-data); text-align: right; }
 
@@ -123,105 +169,168 @@ details.grp[open] > summary .chev { transform: rotate(90deg); }
 .pump { stroke: var(--ink); stroke-width: 1; }
 @keyframes dash { to { stroke-dashoffset: -14; } }
 @media (prefers-reduced-motion: reduce) { .flow, .fan.on { animation: none; } }
-
-.chart-wrap { width: 100%; }
-.chart-wrap svg { display: block; width: 100%; }
 .ax { stroke: var(--line); stroke-width: 1; }
 .gridl { stroke: var(--line); stroke-width: 0.6; stroke-dasharray: 2 4; }
 .ax-t { fill: var(--muted); font-family: var(--font-data); font-size: 10.5px; }
 
-.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
-table.bal { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
-table.bal td, table.bal th { padding: 4px 4px; border-bottom: 1px solid var(--panel-2); text-align: left; }
-table.bal th { font-weight: 600; color: var(--muted); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; }
-table.bal td.r, table.bal th.r { text-align: right; font-family: var(--font-data); font-variant-numeric: tabular-nums; }
-table.bal tr.sum td { font-weight: 600; border-top: 1px solid var(--line); }
-.diag { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 8px; }
-.diag li { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; font-size: 0.88rem; }
-.year-wrap { overflow-x: auto; }
-.year-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.bar { height: 6px; border-radius: 3px; background: var(--copper); display: block; min-width: 1px; }
-.bar.alt { background: var(--muted); opacity: 0.6; }
-.note { font-size: 0.82rem; color: var(--muted); max-width: 75ch; }
-details.assume summary { cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
-details.assume ul { padding-left: 18px; margin: 8px 0 0; display: flex; flex-direction: column; gap: 4px; font-size: 0.86rem; max-width: 95ch; }
-.busy { font-size: 0.8rem; color: var(--copper); font-family: var(--font-data); }
+/* tips */
+.diag { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.diag li { display: grid; grid-template-columns: 74px 1fr; gap: 8px; align-items: start; font-size: 0.9rem; }
+
+/* uitklappanelen */
+details.more { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+details.more > summary { cursor: pointer; list-style: none; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary .chev { font-family: var(--font-data); color: var(--muted); transition: transform 0.15s; }
+details.more[open] > summary .chev { transform: rotate(90deg); }
+details.more > .more-body { padding: 0 20px 18px; display: flex; flex-direction: column; gap: 14px; }
+.adv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; align-items: start; }
+.adv-grp { border: 1px solid var(--panel-2); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 10px; }
+.adv-grp h3 { font-size: 1rem; }
+.adv-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.note { font-size: 0.84rem; color: var(--muted); max-width: 80ch; }
+.assume { padding-left: 18px; margin: 0; display: flex; flex-direction: column; gap: 4px; font-size: 0.86rem; max-width: 95ch; }
+.busy { font-size: 0.8rem; color: var(--muted); font-family: var(--font-data); min-height: 1.2em; }
+</style>
+<style>
+.topbar { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; margin-top: 8px; }
+.ctl-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 0.9rem; color: var(--muted); }
+.mode-note { font-size: 0.86rem; color: var(--muted); }
+.steps { display: flex; flex-direction: column; gap: 18px; counter-reset: step; }
+.step .step-n::before { counter-increment: step; content: counter(step); }
+body[data-mode="eenvoudig"] .x-only { display: none !important; }
+body[data-mode="expert"] .s-only { display: none !important; }
+.fc-summary { display: flex; flex-direction: column; gap: 6px; font-size: 0.98rem; }
+.fc-summary .big-advice { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; line-height: 1.2; }
+.fc-summary .big-advice b { color: var(--copper); }
+table.tbl tr.past td { opacity: 0.45; }
+table.tbl td.water { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--copper); }
+table.tbl tr.change td.water::after { content: " ← wijzigen"; font-family: var(--font-body); font-size: 0.72rem; color: var(--muted); font-weight: 500; }
+@media (max-width: 640px) { table.tbl .opt { display: none; } table.tbl tr.change td.water::after { content: ""; } }
+.temp-bar { display: inline-block; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--cold), var(--warm)); vertical-align: middle; }
 </style>
 
 <div class="wrap">
   <header class="top">
-    <div class="plate">
-      <span class="tag">LG THERMA V · HN0913T · 9 kW · R32 SPLIT IWT</span>
-      <h1>Therma V Simulator</h1>
-      <span class="sub">Woning Eelderwolde (A++) · 50 L parallelbuffer · 4 verdelers vloerverwarming · 2× Honeywell DT4 · Itho HRU 400</span>
+    <span class="tag">LG THERMA V · HN0913T · 9 kW · EELDERWOLDE</span>
+    <h1>Therma V Simulator</h1>
+    <p class="sub">Rekent uit wat je warmtepomp doet bij ander weer en andere instellingen. Het model is afgestemd op je eigen metingen van 11 tot en met 14 november.</p>
+    <div class="topbar">
+      <div class="ctl-inline"><span>Weergave</span>
+        <div class="seg" id="mode-seg" role="group" aria-label="Weergave"><button type="button" data-v="eenvoudig">Eenvoudig</button><button type="button" data-v="expert">Expert</button></div>
+      </div>
+      <div class="ctl-inline"><span>Gewenste woonkamertemperatuur</span>
+        <div class="seg" id="goal-seg" role="group" aria-label="Gewenste woonkamertemperatuur"><button type="button" data-v="20">20 °C</button><button type="button" data-v="21">21 °C</button></div>
+      </div>
+      <span class="busy" id="busy" aria-live="polite"></span>
     </div>
-    <div class="actions">
-      <button class="btn" id="pre-huidig" type="button">Huidige instellingen</button>
-      <button class="btn" id="pre-zelf" type="button">Zonder installateur</button>
-      <button class="btn" id="pre-advies" type="button">Advies</button>
-      <button class="btn primary" id="tune" type="button">Afstemmen op 20 °C</button>
-      <span class="preset-state" id="preset-state"></span>
-    </div>
+    <p class="mode-note" id="mode-note"></p>
   </header>
 
-  <main class="app">
-    <aside class="controls" id="controls" aria-label="Instellingen"></aside>
-
-    <section class="stage">
-      <div class="kpis" id="kpis" aria-live="polite"></div>
-
-      <div class="card">
-        <div class="scene-head">
-          <h2>Installatie op <span id="clock-title" class="num">18:00</span></h2>
-          <div class="timebar">
-            <button class="btn" id="play" type="button" aria-label="Dag afspelen">▶</button>
-            <input type="range" id="time" min="0" max="719" step="1" value="540" aria-label="Tijdstip in het etmaal">
-            <span class="clock" id="clock">18:00</span>
-          </div>
-        </div>
-        <div class="legend">
-          <span><i style="background: var(--cold)"></i>koud water</span>
-          <span><i style="background: var(--warm)"></i>warm water</span>
-          <span><i style="background: var(--refr)"></i>koudemiddel R32</span>
-          <span><i style="background: var(--copper)"></i>warm tapwater</span>
-          <span class="busy" id="busy"></span>
-        </div>
-        <div class="scene-wrap"><svg id="scene" viewBox="0 0 960 640" role="img" aria-label="Isometrisch schema van de installatie"></svg></div>
-        <div class="live" id="live"></div>
-      </div>
-
-      <div class="card">
-        <div class="scene-head">
-          <h2>Etmaalverloop</h2>
-          <div class="legend" id="chart-legend"></div>
-        </div>
-        <div class="chart-wrap" id="chart"></div>
-      </div>
-
-      <div class="cols">
-        <div class="card">
-          <h2>Energiebalans per etmaal</h2>
-          <div id="balance"></div>
-        </div>
-        <div class="card">
-          <h2>Diagnose</h2>
-          <ul class="diag" id="diag"></ul>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="year-head">
-          <h2>Jaarschatting (klimaat Eelde)</h2>
-          <button class="btn" id="year-btn" type="button">Bereken jaar</button>
-        </div>
-        <div id="year"><p class="note">Rekent elke maand door met de gemiddelde buitentemperatuur en luchtvochtigheid van KNMI-station Eelde (±4 °C spreiding) en de zoninstraling per maand. Vergelijkt de huidige instellingen met jouw instellingen en met de meting van dit jaar.</p></div>
-      </div>
-
-      <details class="card assume">
-        <summary>Modelaannames en ijking</summary>
-        <ul id="assume"></ul>
-      </details>
+  <main class="steps">
+    <section class="card step s-only" id="sec-forecast">
+      <div class="step-head"><span class="step-n"></span><div><h2>Advies voor de komende dagen</h2>
+        <p class="lead">Op basis van de weersverwachting voor Eelde. Je hoeft alleen de watertemperatuur op het hoofdscherm van de LG bij te stellen; de rest blijft staan.</p></div></div>
+      <div class="fc-summary" id="fc-summary"></div>
+      <div class="tbl-wrap"><table class="tbl" id="fc-table"></table></div>
+      <p class="note" id="fc-note"></p>
     </section>
+
+    <section class="card step s-only" id="sec-bands">
+      <div class="step-head"><span class="step-n"></span><div><h2>Instellingen per buitentemperatuur</h2>
+        <p class="lead">Kijk naar de gemiddelde temperatuur van de komende dag, niet naar de temperatuur op dit moment. De vloer reageert pas na een paar uur, dus stel 's avonds in voor de volgende dag.</p></div></div>
+      <div class="tbl-wrap"><table class="tbl" id="band-table"></table></div>
+      <h3>Dit blijft altijd hetzelfde</h3>
+      <ul class="todo" id="always"></ul>
+    </section>
+
+    <section class="card step" id="sec-compare">
+      <div class="step-head"><span class="step-n"></span><div><h2>Vergelijk drie situaties</h2>
+        <p class="lead">Kies een soort dag. De kaarten laten zien wat de warmtepomp dan per dag gebruikt. Klik op een kaart om die situatie hieronder in het schema te bekijken.</p></div></div>
+      <div class="chips" id="wx-chips" role="group" aria-label="Soort dag"></div>
+      <div class="wx-grid x-only" id="wx-sliders"></div>
+      <div class="scen-grid" id="cards"></div>
+      <p class="callout-line" id="cop-hint"></p>
+    </section>
+
+    <section class="card step" id="sec-cop">
+      <div class="step-head"><span class="step-n"></span><div><h2>Waarom ligt de COP rond 3?</h2>
+        <p class="lead">De COP zegt hoeveel kWh warmte de warmtepomp maakt van 1 kWh stroom. Hoe kouder en vochtiger de buitenlucht, hoe lager de COP.</p></div></div>
+      <div class="cop-layout">
+        <div>
+          <div class="chart-wrap" id="cop-chart"></div>
+          <div class="legend" id="cop-legend"></div>
+        </div>
+        <ol class="why" id="why"></ol>
+      </div>
+      <div>
+        <p class="note" id="stack-title" style="margin-bottom: 6px"></p>
+        <div class="stack" id="stack"></div>
+        <div class="stack-legend" id="stack-legend" style="margin-top: 6px"></div>
+      </div>
+    </section>
+
+    <section class="card step x-only" id="sec-setup">
+      <div class="step-head"><span class="step-n"></span><div><h2 id="setup-title">Wat stel je in?</h2>
+        <p class="lead">Per instelling staat erbij wie hem kan veranderen: jij zelf of de installateur.</p></div></div>
+      <div id="setup"></div>
+    </section>
+
+    <section class="card step" id="sec-scene">
+      <div class="step-head"><span class="step-n"></span><div><h2 id="scene-title">Zo draait je installatie</h2>
+        <p class="lead">Een etmaal uit de berekening. Speel de dag af of schuif door de tijd. Blauw is koel water, rood is warm water.</p></div></div>
+      <div class="scene-head">
+        <div class="timebar">
+          <button class="btn" id="play" type="button" aria-label="Dag afspelen">▶</button>
+          <input type="range" id="time" min="0" max="719" step="1" value="540" aria-label="Tijdstip in het etmaal">
+          <span class="clock" id="clock">18:00</span>
+        </div>
+        <span class="num" id="clock-title" hidden></span>
+      </div>
+      <div class="legend">
+        <span><i style="background: var(--cold)"></i>koel water</span>
+        <span><i style="background: var(--warm)"></i>warm water</span>
+        <span><i style="background: var(--refr)"></i>koudemiddel</span>
+        <span><i style="background: var(--copper)"></i>boiler</span>
+      </div>
+      <div class="scene-wrap"><svg id="scene" viewBox="0 0 960 640" role="img" aria-label="Isometrisch schema van de installatie"></svg></div>
+      <div class="live" id="live"></div>
+      <h3>Het hele etmaal</h3>
+      <div class="legend" id="chart-legend"></div>
+      <div class="chart-wrap" id="chart"></div>
+    </section>
+
+    <section class="card step x-only" id="sec-tips">
+      <div class="step-head"><span class="step-n"></span><div><h2>Tips voor deze situatie</h2></div></div>
+      <ul class="diag" id="diag"></ul>
+    </section>
+
+    <section class="card step x-only" id="sec-year">
+      <div class="step-head"><span class="step-n"></span><div><h2>Per jaar</h2>
+        <p class="lead">Rekent elke maand door met het gemiddelde weer van Eelde en vergelijkt de situaties over een heel jaar.</p></div></div>
+      <div><button class="btn primary" id="year-btn" type="button">Bereken het jaar</button></div>
+      <div id="year"></div>
+    </section>
+
+    <details class="more x-only" id="sec-adv">
+      <summary><h2>Alle instellingen zelf aanpassen</h2><span class="chev">›</span></summary>
+      <div class="more-body">
+        <p class="note">Je past de situatie aan die nu geselecteerd is. Er verschijnt dan een vierde kaart “Eigen instellingen”. Instellingen van de woning en het model gelden voor alle kaarten.
+          <span class="badge zelf">zelf</span> zelf in te stellen · <span class="badge inst">installateur</span> alleen via het installateursmenu of de installatie · <span class="badge aanname">aanname</span> gegeven of schatting</p>
+        <div class="adv-bar"><button class="btn" id="adv-reset" type="button">Eigen instellingen wissen</button><button class="btn" id="adv-tune" type="button">Afstemmen op de gewenste temperatuur</button></div>
+        <div class="adv-grid" id="adv"></div>
+      </div>
+    </details>
+
+    <details class="more x-only">
+      <summary><h2>Energiebalans van de gekozen situatie</h2><span class="chev">›</span></summary>
+      <div class="more-body"><div class="tbl-wrap" id="balance"></div></div>
+    </details>
+
+    <details class="more x-only">
+      <summary><h2>Hoe rekent dit model?</h2><span class="chev">›</span></summary>
+      <div class="more-body"><ul class="assume" id="assume"></ul></div>
+    </details>
   </main>
 </div>
 
@@ -490,231 +599,170 @@ function calibrate(pBase, goal = 2.7) {
   return k;
 }
 
+/* ===================== WEERSVERWACHTING (met.no, Eelde) ===================== */
+const FORECAST = {"updated": "2026-11-14T09:31:54Z", "days": [{"d": "2026-11-14", "n": 14, "tmin": 1.9, "tmax": 7.2, "tmean": 4.3, "rh": 94}, {"d": "2026-11-15", "n": 24, "tmin": -0.6, "tmax": 8.2, "tmean": 3.2, "rh": 95}, {"d": "2026-11-16", "n": 24, "tmin": 3.9, "tmax": 9.0, "tmean": 7.3, "rh": 89}, {"d": "2026-11-17", "n": 24, "tmin": 2.3, "tmax": 9.5, "tmean": 5.2, "rh": 93}, {"d": "2026-11-18", "n": 24, "tmin": 8.0, "tmax": 9.7, "tmean": 8.7, "rh": 92}, {"d": "2026-11-19", "n": 24, "tmin": 7.2, "tmax": 9.4, "tmean": 8.1, "rh": 93}, {"d": "2026-11-20", "n": 24, "tmin": 5.2, "tmax": 8.5, "tmean": 6.7, "rh": 87}, {"d": "2026-11-21", "n": 24, "tmin": 3.6, "tmax": 8.7, "tmean": 5.6, "rh": 87}, {"d": "2026-11-22", "n": 24, "tmin": 2.6, "tmax": 6.1, "tmean": 4.4, "rh": 91}, {"d": "2026-11-23", "n": 24, "tmin": 2.9, "tmax": 6.4, "tmean": 5.0, "rh": 91}]};
+
 /* ===================== INSTELLINGEN ===================== */
-const WEATHER_KEYS = ['Tout', 'RH', 'sun'];
-const HOUSE_KEYS = ['H', 'emit', 'gains', 'wtwQ', 'wtwEta', 'bypass', 'inf', 'dhwUse', 'pMinNom', 'pNom', 'calib'];
 const HUIDIG = { hmode: 'ai', fixT: 25, fixFollow: false, roomGoal: 20, c1o: -10, c1t: 45, c2o: 20, c2t: 19, ai: 0, ctrl: 'invoer', hOn: -2, hOff: 2, wMin: 15, wMax: 45,
   silent: true, flowMode: 'opt', mpFix: 26, dT: 5, pumpMode: 'interval', pumpOn: 1, pumpOff: 10, heaterOn: -10,
   setA: 20, setB: 18.5, cr: 6, ot: 1, wiringA: 'beide', wiringB: 'beide', mA: 18, mB: 12, berg: 100, gpW: 20,
   dhwSet: 48, dhwHyst: 3, compLim: 58, disOn: true, disT: 67, dhwActive: 45, dhwStop: 30, dhwFrom: 0, dhwTo: 24 };
-const ADVIES = { ...HUIDIG, c1t: 25, c2o: 10, c2t: 21, ai: 0, hOn: -1, hOff: 3, wMax: 35, silent: false, setA: 21.5, cr: 3, ot: 5,
-  mB: 10, berg: 50, gpW: 10, dhwSet: 48, dhwHyst: 4, disT: 60, dhwFrom: 11, dhwTo: 16 };
-const ZELF = { ...HUIDIG, hmode: 'vast', fixT: 23, fixFollow: true, roomGoal: 21, silent: false, setA: 21.5,
-  mB: 10, berg: 50, gpW: 10, dhwFrom: 11, dhwTo: 16 };
 const BASE = { Tout: 3, RH: 94, sun: 0, H: 115, emit: 0.95, gains: 350, wtwQ: 150, wtwEta: 90, bypass: false, inf: 50, dhwUse: 60,
   pMinNom: 2.5, pNom: 9, calib: true, pvKWh: 5, baseLoad: 300, price: 0.27, feedIn: 0.05 };
+const HOUSE_KEYS = ['H', 'emit', 'gains', 'wtwQ', 'wtwEta', 'bypass', 'inf', 'dhwUse', 'pMinNom', 'pNom', 'calib', 'pvKWh', 'baseLoad', 'price', 'feedIn'];
+const SCEN_KEYS = Object.keys(HUIDIG);
+const curveFor = g => g >= 21 ? [27, 22] : [26, 21];
+const SCN = {
+  oud: { name: 'Zoals het was', tag: 'Oude instellingen',
+    desc: 'Instellingen van de installateur bij oplevering: stooklijn 45 → 19 °C, stille modus aan, thermostaat op de gewenste temperatuur.',
+    build: g => ({ ...HUIDIG, setA: g }) },
+  nu: { name: 'Zelf ingesteld', tag: 'Zonder installateur',
+    desc: 'Vaste watertemperatuur die je met het weer meeverandert, thermostaat een halve graad boven je wens, stille modus uit, pompen laag, warm water ’s middags.',
+    build: g => ({ ...HUIDIG, hmode: 'vast', fixFollow: true, roomGoal: g, setA: g + 0.5, silent: false, gpW: 10, dhwFrom: 11, dhwTo: 16 }) },
+  advies: { name: 'Met de installateur', tag: 'Advies',
+    desc: 'De installateur verlaagt de stooklijn en past drie instellingen aan. Daarna past de warmtepomp zich zelf aan het weer aan.',
+    build: g => { const [a, b] = curveFor(g); return { ...HUIDIG, c1o: -10, c1t: a, c2o: 10, c2t: b, ai: 0, hOn: -2, hOff: 3, wMax: 35, silent: false,
+      setA: g + 0.5, mB: 10, berg: 50, gpW: 10, dhwHyst: 4, disT: 60, dhwFrom: 11, dhwTo: 16 }; } } };
+const MEASURED = [
+  { T: 3.0, cop: 2.72, s: 'oud', l: '11 nov' }, { T: 5.2, cop: 3.23, s: 'nu', l: '12 nov' },
+  { T: 6.9, cop: 2.92, s: 'nu', l: '13 nov (met legionellabeurt)' }, { T: 3.5, cop: 2.98, s: 'nu', l: '14 nov, nacht' }];
+const WHO = { hmode: 'zelf', fixFollow: 'zelf', roomGoal: 'zelf', fixT: 'zelf', ai: 'zelf', silent: 'zelf', setA: 'zelf', setB: 'zelf', cr: 'zelf', ot: 'zelf',
+  mA: 'zelf', mB: 'zelf', berg: 'zelf', gpW: 'zelf', dhwSet: 'zelf', dhwFrom: 'zelf', dhwTo: 'zelf', wtwQ: 'zelf', bypass: 'zelf',
+  c1o: 'inst', c1t: 'inst', c2o: 'inst', c2t: 'inst', ctrl: 'inst', hOn: 'inst', hOff: 'inst', wMax: 'inst', flowMode: 'inst', mpFix: 'inst', dT: 'inst',
+  pumpMode: 'inst', pumpOn: 'inst', pumpOff: 'inst', heaterOn: 'inst', wiringA: 'inst', wiringB: 'inst', dhwHyst: 'inst', compLim: 'inst', disOn: 'inst',
+  disT: 'inst', dhwActive: 'inst', dhwStop: 'inst' };
+const WHO_LABEL = { zelf: 'zelf', inst: 'installateur', aanname: 'aanname' };
 
-const GROUPS = [
-  ['buiten', 'Buiten', true], ['lijn', 'Stooklijn en regeling', true], ['wp', 'Warmtepomp', false],
-  ['dt4', 'Thermostaten DT4', true], ['vloer', 'Vloerverwarming en pompen', false], ['ww', 'Warm water', false],
-  ['zon', 'Zonnestroom en tarief', false], ['woning', 'Woning en WTW', false], ['model', 'Model', false]];
+const GROUPS = [['lijn', 'Regeling verwarming'], ['dt4', 'Thermostaten'], ['vloer', 'Vloerverwarming en pompen'], ['ww', 'Warm water'],
+  ['wp', 'Warmtepomp (techniek)'], ['woning', 'Woning en ventilatie'], ['zon', 'Zonnestroom en tarief'], ['model', 'Rekenmodel']];
 const C = [
-  { id: 'Tout', g: 'buiten', l: 'Buitentemperatuur', min: -15, max: 20, step: 0.5, u: '°C', d: 1 },
-  { id: 'RH', g: 'buiten', l: 'Relatieve luchtvochtigheid', min: 30, max: 100, step: 1, u: '%', d: 0, h: 'Hoge vochtigheid rond 0–7 °C geeft rijp op de verdamper en dus ontdooicycli.' },
-  { id: 'sun', g: 'buiten', l: 'Zoninstraling (nuttig, gemiddeld)', min: 0, max: 2000, step: 50, u: 'W', d: 0 },
-  { id: 'hmode', g: 'lijn', l: 'Regeling verwarming (hoofdscherm LG)', type: 'sel', opts: [['ai', 'Stooklijn · AI (Auto)'], ['vast', 'Vaste watertemperatuur (Verwarmen)']] },
-  { id: 'fixFollow', g: 'lijn', l: 'Met het weer mee bijstellen volgens de tabel', type: 'chk', show: p => p.hmode === 'vast' },
-  { id: 'roomGoal', g: 'lijn', l: 'Tabel voor woonkamer', type: 'sel', opts: [[20, '20 °C: boven 6 → 22 · 1…6 → 23 · −1…1 → 24 · −4…−1 → 25 · kouder → 26'], [21, '21 °C: boven 6 → 23 · 1…6 → 24 · −1…1 → 25 · −4…−1 → 26 · kouder → 27']], show: p => p.hmode === 'vast' && p.fixFollow },
-  { id: 'fixT', g: 'lijn', l: 'Vaste watertemperatuur', min: 15, max: 45, step: 1, u: '°C', d: 0, show: p => p.hmode === 'vast' && !p.fixFollow, h: 'Met regelen op Invoer is dit de retourtemperatuur.' },
-  { id: 'c1o', g: 'lijn', l: 'Stooklijn punt 1 · buiten', min: -20, max: 5, step: 1, u: '°C', d: 0 , show: p => p.hmode !== 'vast'},
-  { id: 'c1t', g: 'lijn', l: 'Stooklijn punt 1 · water', min: 15, max: 45, step: 0.5, u: '°C', d: 1 , show: p => p.hmode !== 'vast'},
-  { id: 'c2o', g: 'lijn', l: 'Stooklijn punt 2 · buiten', min: 10, max: 25, step: 1, u: '°C', d: 0 , show: p => p.hmode !== 'vast'},
-  { id: 'c2t', g: 'lijn', l: 'Stooklijn punt 2 · water', min: 15, max: 35, step: 0.5, u: '°C', d: 1 , show: p => p.hmode !== 'vast'},
-  { id: 'ai', g: 'lijn', l: 'AI-correctie', min: -5, max: 5, step: 0.5, u: 'K', d: 1, sign: true, h: 'Verschuift de hele stooklijn. Op de LG gaat de knop van −5 tot +5.', show: p => p.hmode !== 'vast' },
+  { id: 'hmode', g: 'lijn', l: 'Regeling (hoofdscherm LG)', type: 'sel', opts: [['ai', 'Stooklijn (AI / auto)'], ['vast', 'Vaste watertemperatuur (verwarmen)']] },
+  { id: 'fixFollow', g: 'lijn', l: 'Watertemperatuur volgens de tabel', type: 'chk', show: p => p.hmode === 'vast' },
+  { id: 'roomGoal', g: 'lijn', l: 'Tabel voor', type: 'sel', opts: [[20, 'woonkamer 20 °C'], [21, 'woonkamer 21 °C']], show: p => p.hmode === 'vast' && p.fixFollow },
+  { id: 'fixT', g: 'lijn', l: 'Vaste watertemperatuur', min: 15, max: 45, step: 1, u: '°C', d: 0, show: p => p.hmode === 'vast' && !p.fixFollow },
+  { id: 'c1o', g: 'lijn', l: 'Stooklijn punt 1 · buiten', min: -20, max: 5, step: 1, u: '°C', d: 0, show: p => p.hmode !== 'vast' },
+  { id: 'c1t', g: 'lijn', l: 'Stooklijn punt 1 · water', min: 15, max: 45, step: 0.5, u: '°C', d: 1, show: p => p.hmode !== 'vast' },
+  { id: 'c2o', g: 'lijn', l: 'Stooklijn punt 2 · buiten', min: 5, max: 25, step: 1, u: '°C', d: 0, show: p => p.hmode !== 'vast' },
+  { id: 'c2t', g: 'lijn', l: 'Stooklijn punt 2 · water', min: 15, max: 35, step: 0.5, u: '°C', d: 1, show: p => p.hmode !== 'vast' },
+  { id: 'ai', g: 'lijn', l: 'AI-correctie', min: -5, max: 5, step: 0.5, u: 'K', d: 1, sign: true, show: p => p.hmode !== 'vast' },
   { id: 'ctrl', g: 'lijn', l: 'Regelen op', type: 'sel', opts: [['invoer', 'Invoer (retour)'], ['uitvoer', 'Uitvoer (aanvoer)']] },
-  { id: 'hOn', g: 'lijn', l: 'Hysterese verwarmingswater · aan', min: -9, max: 0, step: 0.5, u: 'K', d: 1, sign: true },
-  { id: 'hOff', g: 'lijn', l: 'Hysterese verwarmingswater · uit', min: 0, max: 4, step: 0.5, u: 'K', d: 1, sign: true },
+  { id: 'hOn', g: 'lijn', l: 'Hysterese water · aan', min: -9, max: 0, step: 0.5, u: 'K', d: 1, sign: true },
+  { id: 'hOff', g: 'lijn', l: 'Hysterese water · uit', min: 0, max: 4, step: 0.5, u: 'K', d: 1, sign: true },
   { id: 'wMax', g: 'lijn', l: 'Max. watertemperatuur', min: 25, max: 45, step: 1, u: '°C', d: 0 },
+  { id: 'setA', g: 'dt4', l: 'Thermostaat woonkamer', min: 15, max: 24, step: 0.5, u: '°C', d: 1 },
+  { id: 'setB', g: 'dt4', l: 'Thermostaat slaapkamer', min: 15, max: 24, step: 0.5, u: '°C', d: 1 },
+  { id: 'cr', g: 'dt4', l: 'Schakelfrequentie (Cr)', type: 'sel', opts: [[3, '3 per uur'], [6, '6 per uur (fabriek)'], [9, '9 per uur'], [12, '12 per uur']] },
+  { id: 'ot', g: 'dt4', l: 'Minimale aan-tijd (Ot)', type: 'sel', opts: [[1, '1 min (fabriek)'], [2, '2 min'], [3, '3 min'], [5, '5 min'], [10, '10 min'], [20, '20 min'], [30, '30 min']] },
+  { id: 'wiringA', g: 'dt4', l: 'Woonkamer-thermostaat schakelt', type: 'sel', opts: [['parallel', 'alleen de warmtepomp'], ['beide', 'warmtepomp én pomp beneden']] },
+  { id: 'wiringB', g: 'dt4', l: 'Slaapkamer-thermostaat schakelt', type: 'sel', opts: [['parallel', 'alleen de warmtepomp'], ['pomp', 'alleen de pomp boven'], ['beide', 'warmtepomp én pomp boven']] },
+  { id: 'mA', g: 'vloer', l: 'Doorstroming groepen beneden', min: 5, max: 40, step: 1, u: 'L/min', d: 0 },
+  { id: 'mB', g: 'vloer', l: 'Doorstroming groepen boven', min: 0, max: 30, step: 1, u: 'L/min', d: 0 },
+  { id: 'berg', g: 'vloer', l: 'Berginggroepen open', min: 0, max: 100, step: 5, u: '%', d: 0 },
+  { id: 'gpW', g: 'vloer', l: 'Vermogen per groepspomp', min: 3, max: 45, step: 1, u: 'W', d: 0, h: 'Stand HD2 ≈ 20 W, HD1 ≈ 10 W (schatting).' },
+  { id: 'dhwSet', g: 'ww', l: 'Boilertemperatuur', min: 40, max: 55, step: 1, u: '°C', d: 0 },
+  { id: 'dhwFrom', g: 'ww', l: 'Opwarmen vanaf', min: 0, max: 23, step: 1, u: 'uur', d: 0 },
+  { id: 'dhwTo', g: 'ww', l: 'Opwarmen tot', min: 1, max: 24, step: 1, u: 'uur', d: 0 },
+  { id: 'dhwHyst', g: 'ww', l: 'Boiler-hysterese', min: 2, max: 4, step: 1, u: 'K', d: 0 },
+  { id: 'disOn', g: 'ww', l: 'Wekelijkse legionellabeurt', type: 'chk' },
+  { id: 'disT', g: 'ww', l: 'Legionellatemperatuur', min: 55, max: 70, step: 1, u: '°C', d: 0, show: p => p.disOn },
+  { id: 'compLim', g: 'ww', l: 'Max. boilertemp. warmtepomp', min: 45, max: 58, step: 1, u: '°C', d: 0 },
+  { id: 'dhwActive', g: 'ww', l: 'Warm water max. aaneen', min: 5, max: 95, step: 5, u: 'min', d: 0 },
+  { id: 'dhwStop', g: 'ww', l: 'Pauze tussen warmwaterbeurten', min: 0, max: 120, step: 5, u: 'min', d: 0 },
+  { id: 'dhwUse', g: 'ww', l: 'Warmwatergebruik (bij 40 °C)', min: 0, max: 250, step: 10, u: 'L/dag', d: 0, h: '60 L/dag past bij het gemeten verbruik van dit jaar.' },
   { id: 'silent', g: 'wp', l: 'Stille modus (max. ≈ 70 % vermogen)', type: 'chk' },
-  { id: 'flowMode', g: 'wp', l: 'Waterdebiet LG', type: 'sel', opts: [['opt', 'Optimale debiet (28,9 L/min)'], ['vast', 'Vast debiet'], ['dt', 'Vaste ΔT']] },
+  { id: 'flowMode', g: 'wp', l: 'Waterdebiet LG', type: 'sel', opts: [['opt', 'optimaal (28,9 L/min)'], ['vast', 'vast debiet'], ['dt', 'vaste ΔT']] },
   { id: 'mpFix', g: 'wp', l: 'Vast debiet', min: 10, max: 30, step: 0.5, u: 'L/min', d: 1, show: p => p.flowMode === 'vast' },
   { id: 'dT', g: 'wp', l: 'Vaste ΔT', min: 3, max: 8, step: 0.5, u: 'K', d: 1, show: p => p.flowMode === 'dt' },
-  { id: 'pumpMode', g: 'wp', l: 'Pomp bij thermo-uit', type: 'sel', opts: [['interval', 'Tijdsinstelling (interval)'], ['continu', 'Doorlopende werking']] },
-  { id: 'pumpOn', g: 'wp', l: 'Interval · pomp aan', min: 1, max: 10, step: 1, u: 'min', d: 0, show: p => p.pumpMode === 'interval' },
-  { id: 'pumpOff', g: 'wp', l: 'Interval · pomp uit', min: 1, max: 30, step: 1, u: 'min', d: 0, show: p => p.pumpMode === 'interval' },
-  { id: 'heaterOn', g: 'wp', l: 'Element toegestaan onder', min: -25, max: 5, step: 1, u: '°C', d: 0, h: 'Verwarmer aan-temperatuur: het 3 kW-element springt alleen bij onder deze buitentemperatuur.' },
-  { id: 'setA', g: 'dt4', l: 'DT4 woonkamer', min: 15, max: 24, step: 0.5, u: '°C', d: 1 },
-  { id: 'setB', g: 'dt4', l: 'DT4 slaapkamer', min: 15, max: 24, step: 0.5, u: '°C', d: 1 },
-  { id: 'cr', g: 'dt4', l: 'Schakelfrequentie (Cr)', type: 'sel', opts: [[3, '3 per uur'], [6, '6 per uur (standaard)'], [9, '9 per uur'], [12, '12 per uur']] },
-  { id: 'ot', g: 'dt4', l: 'Minimale aan-tijd (Ot)', type: 'sel', opts: [[1, '1 min (standaard)'], [2, '2 min'], [3, '3 min'], [4, '4 min'], [5, '5 min'], [10, '10 min'], [15, '15 min'], [20, '20 min'], [25, '25 min'], [30, '30 min']] },
-  { id: 'wiringA', g: 'dt4', l: 'Woonkamer-DT4 schakelt', type: 'sel', opts: [['parallel', 'Alleen de warmtepomp'], ['beide', 'Warmtepomp én groepspomp beneden']] },
-  { id: 'wiringB', g: 'dt4', l: 'Slaapkamer-DT4 schakelt', type: 'sel', opts: [['parallel', 'De warmtepomp (parallel)'], ['pomp', 'De groepspomp boven'], ['beide', 'Allebei (warmtepomp én pomp boven)']] },
-  { id: 'mA', g: 'vloer', l: 'Debiet groepen beneden', min: 5, max: 40, step: 1, u: 'L/min', d: 0 },
-  { id: 'mB', g: 'vloer', l: 'Debiet groepen boven (slaapkamers, zolder)', min: 0, max: 30, step: 1, u: 'L/min', d: 0 },
-  { id: 'berg', g: 'vloer', l: 'Berginggroepen open', min: 0, max: 100, step: 5, u: '%', d: 0 },
-  { id: 'gpW', g: 'vloer', l: 'Vermogen per groepspomp', min: 3, max: 45, step: 1, u: 'W', d: 0, h: 'OEG CPA-E 25-7.5 PWM (max. 60 W). Stand HD2 ≈ 20 W, HD1 ≈ 10–12 W (schatting).' },
-  { id: 'dhwSet', g: 'ww', l: 'Boilertemperatuur', min: 40, max: 55, step: 1, u: '°C', d: 0 },
-  { id: 'dhwHyst', g: 'ww', l: 'Hysterese (Tank instelling 2)', min: 2, max: 4, step: 1, u: 'K', d: 0 },
-  { id: 'dhwUse', g: 'ww', l: 'Warmwatergebruik (bij 40 °C)', min: 0, max: 250, step: 10, u: 'L/dag', d: 0 },
-  { id: 'compLim', g: 'ww', l: 'Comp. limiettemperatuur', min: 45, max: 58, step: 1, u: '°C', d: 0 },
-  { id: 'disOn', g: 'ww', l: 'Wekelijkse ontsmetting', type: 'chk' },
-  { id: 'disT', g: 'ww', l: 'Ontsmettingstemperatuur', min: 55, max: 70, step: 1, u: '°C', d: 0, show: p => p.disOn },
-  { id: 'dhwFrom', g: 'ww', l: 'Opwarmen vanaf', min: 0, max: 23, step: 1, u: 'uur', d: 0, h: 'LG: Roosters → DHW, bijv. 11:00 → 48 °C en 16:00 → 40 °C. Buiten het venster warmt hij alleen bij onder 40 °C min de hysterese.' },
-  { id: 'dhwTo', g: 'ww', l: 'Opwarmen tot', min: 1, max: 24, step: 1, u: 'uur', d: 0 },
-  { id: 'dhwActive', g: 'ww', l: 'DHW tijd actief', min: 5, max: 95, step: 5, u: 'min', d: 0 },
-  { id: 'dhwStop', g: 'ww', l: 'DHW stoptijd', min: 0, max: 120, step: 5, u: 'min', d: 0 },
-  { id: 'pvKWh', g: 'zon', l: 'Zonnestroom vandaag (18 panelen)', min: 0, max: 50, step: 1, u: 'kWh', d: 0, h: 'Grijze novemberdag ≈ 3–6 kWh, zonnige junidag ≈ 40 kWh.' },
-  { id: 'baseLoad', g: 'zon', l: 'Overig huishoudverbruik', min: 100, max: 1000, step: 50, u: 'W', d: 0 },
-  { id: 'price', g: 'zon', l: 'Gemiddelde all-in stroomprijs', min: 0.15, max: 0.45, step: 0.01, u: '€/kWh', d: 2, h: 'Dynamisch: het model volgt een voorbeeldprofiel met goedkope nacht en middag en een dure ochtend- en avondpiek.' },
-  { id: 'feedIn', g: 'zon', l: 'Waarde teruggeleverde stroom', min: 0, max: 0.30, step: 0.01, u: '€/kWh', d: 2, h: 'Na het einde van salderen (1-1-2027) alleen de terugleververgoeding.' },
-  { id: 'H', g: 'woning', l: 'Transmissieverlies woning', min: 50, max: 200, step: 5, u: 'W/K', d: 0, h: 'Geijkt op de hele-dagwarmte van 11-11 (3,0 °C, ≈ 51 kWh) en 12-11 (5,0 °C, ≈ 46 kWh).' },
-  { id: 'emit', g: 'woning', l: 'Afgiftevermogen vloer (t.o.v. standaard)', min: 0.6, max: 1.8, step: 0.05, u: '×', d: 2, h: 'Pvc-vloeren, ≈ 30 groepen. 0,95 past bij de meting van 14-11 (23 °C water → 20,5 °C).' },
-  { id: 'gains', g: 'woning', l: 'Interne warmte (personen, apparaten)', min: 0, max: 1000, step: 50, u: 'W', d: 0 },
-  { id: 'wtwQ', g: 'woning', l: 'WTW-debiet', min: 50, max: 400, step: 10, u: 'm³/h', d: 0 },
-  { id: 'wtwEta', g: 'woning', l: 'WTW-rendement in de praktijk', min: 50, max: 95.5, step: 0.5, u: '%', d: 1 },
+  { id: 'pumpMode', g: 'wp', l: 'Interne pomp bij stilstand', type: 'sel', opts: [['interval', 'met tussenpozen'], ['continu', 'doorlopend']] },
+  { id: 'pumpOn', g: 'wp', l: 'Pomp aan', min: 1, max: 10, step: 1, u: 'min', d: 0, show: p => p.pumpMode === 'interval' },
+  { id: 'pumpOff', g: 'wp', l: 'Pomp uit', min: 1, max: 30, step: 1, u: 'min', d: 0, show: p => p.pumpMode === 'interval' },
+  { id: 'heaterOn', g: 'wp', l: 'Elektrisch element toegestaan onder', min: -25, max: 5, step: 1, u: '°C', d: 0 },
+  { id: 'H', g: 'woning', l: 'Warmteverlies woning', min: 50, max: 200, step: 5, u: 'W/K', d: 0, h: 'Afgestemd op 11–14 november.' },
+  { id: 'emit', g: 'woning', l: 'Afgiftevermogen vloer', min: 0.6, max: 1.8, step: 0.05, u: '×', d: 2 },
+  { id: 'gains', g: 'woning', l: 'Interne warmte (mensen, apparaten)', min: 0, max: 1000, step: 50, u: 'W', d: 0 },
+  { id: 'wtwQ', g: 'woning', l: 'Ventilatie (WTW)', min: 50, max: 400, step: 10, u: 'm³/h', d: 0 },
+  { id: 'wtwEta', g: 'woning', l: 'Rendement WTW', min: 50, max: 95.5, step: 0.5, u: '%', d: 1 },
   { id: 'bypass', g: 'woning', l: 'WTW-bypass open', type: 'chk' },
-  { id: 'inf', g: 'woning', l: 'Infiltratie (kieren)', min: 0, max: 200, step: 10, u: 'm³/h', d: 0 },
-  { id: 'calib', g: 'model', l: 'IJken op meting 11-11 (COP 2,7 bij 3 °C)', type: 'chk' },
-  { id: 'pMinNom', g: 'model', l: 'Minimaal compressorvermogen (bij 7 °C)', min: 1.5, max: 4, step: 0.1, u: 'kW', d: 1, h: 'Aanname; LG publiceert dit niet. De meting wijst op ruim 2 kW.' },
+  { id: 'inf', g: 'woning', l: 'Kieren (infiltratie)', min: 0, max: 200, step: 10, u: 'm³/h', d: 0 },
+  { id: 'pvKWh', g: 'zon', l: 'Zonnestroom vandaag', min: 0, max: 50, step: 1, u: 'kWh', d: 0, h: 'Grijze novemberdag ≈ 3–6 kWh.' },
+  { id: 'baseLoad', g: 'zon', l: 'Overig huishoudverbruik', min: 100, max: 1000, step: 50, u: 'W', d: 0 },
+  { id: 'price', g: 'zon', l: 'Gemiddelde stroomprijs', min: 0.15, max: 0.45, step: 0.01, u: '€/kWh', d: 2 },
+  { id: 'feedIn', g: 'zon', l: 'Waarde teruggeleverde stroom', min: 0, max: 0.30, step: 0.01, u: '€/kWh', d: 2 },
+  { id: 'calib', g: 'model', l: 'Afstemmen op de meting van 11 november', type: 'chk' },
+  { id: 'pMinNom', g: 'model', l: 'Minimaal compressorvermogen', min: 1.5, max: 4, step: 0.1, u: 'kW', d: 1 },
   { id: 'pNom', g: 'model', l: 'Nominaal vermogen (A7/W35)', min: 7, max: 10, step: 0.5, u: 'kW', d: 1 }];
 
-/* ===================== UI ===================== */
+/* ===================== HULP ===================== */
 const $ = id => document.getElementById(id);
 const nf = (v, d = 1) => v == null || !isFinite(v) ? '–' : v.toLocaleString('nl-NL', { minimumFractionDigits: d, maximumFractionDigits: d });
 const sg = (v, d = 1) => (v > 0 ? '+' : '') + nf(v, d);
 const hhmm = s => { const m = Math.round(s / 60); return String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+const tick = () => new Promise(res => setTimeout(res, 0));
+const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+const dayLabel = ds => new Date(ds + 'T12:00:00').toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' });
+const rhFor = T => T < 6 ? 90 : 82;
 
-let P = { ...BASE, ...HUIDIG };
-try { const s = JSON.parse(localStorage.getItem('thermav-sim') || 'null'); if (s && typeof s === 'object') P = { ...P, ...s }; } catch (e) { /* geen opslag */ }
-P.ai = clamp(+P.ai || 0, -5, 5);
-let K = 1, RES = null, BASE_RES = null, baseKey = '', timeIdx = 540, playing = null;
+/* ===================== TOESTAND ===================== */
+const DEF = { mode: 'eenvoudig', goal: 21, wx: 'morgen', Tout: 4, RH: 90, sun: 50, sel: 'nu', custom: null, customBase: 'nu', house: {} };
+let ST = { ...DEF };
+try { const s = JSON.parse(localStorage.getItem('thermav-sim-v2') || 'null'); if (s && typeof s === 'object') ST = { ...DEF, ...s, house: { ...(s.house || {}) } }; } catch (e) { /* geen opslag */ }
+if (location.hash === '#expert' || location.hash === '#eenvoudig') ST.mode = location.hash.slice(1);
+function save() { try { localStorage.setItem('thermav-sim-v2', JSON.stringify(ST)); } catch (e) { /* geen opslag */ } }
 
-function buildControls() {
-  const root = $('controls');
-  root.innerHTML = GROUPS.map(([g, title, open]) => `<details class="grp" id="grp-${g}" ${open ? 'open' : ''}><summary><h2>${title}</h2><span class="chev">›</span></summary><div class="grp-body">${
-    C.filter(c => c.g === g).map(c => {
-      if (c.type === 'sel') return `<div class="ctl" id="w-${c.id}"><label for="${c.id}"><span><span class="chg" id="d-${c.id}" hidden></span>${c.l}</span></label><select id="${c.id}">${c.opts.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div>`;
-      if (c.type === 'chk') return `<div class="ctl check" id="w-${c.id}"><label for="${c.id}"><input type="checkbox" id="${c.id}"><span><span class="chg" id="d-${c.id}" hidden></span>${c.l}</span></label></div>`;
-      return `<div class="ctl" id="w-${c.id}"><label for="${c.id}"><span><span class="chg" id="d-${c.id}" hidden></span>${c.l}</span><span class="val" id="v-${c.id}"></span></label><input type="range" id="${c.id}" min="${c.min}" max="${c.max}" step="${c.step}">${c.h ? `<span class="help">${c.h}</span>` : ''}</div>`;
-    }).join('')}</div></details>`).join('');
-  $('grp-lijn').querySelector('.grp-body').insertAdjacentHTML('afterbegin', '<div id="curve-mini" aria-label="Stooklijn met AI-correctie"></div>');
-  for (const c of C) {
-    const el = $(c.id);
-    el.addEventListener('input', () => {
-      if (c.type === 'chk') P[c.id] = el.checked;
-      else if (c.type === 'sel') P[c.id] = isNaN(+el.value) ? el.value : +el.value;
-      else P[c.id] = +el.value;
-      syncControls(); schedule();
-    });
-  }
-}
-function syncControls() {
-  for (const c of C) {
-    const el = $(c.id);
-    if (c.type === 'chk') el.checked = !!P[c.id];
-    else el.value = P[c.id];
-    if (!c.type) $('v-' + c.id).textContent = (c.sign ? sg(P[c.id], c.d) : nf(P[c.id], c.d)) + ' ' + c.u;
-    $('w-' + c.id).hidden = c.show ? !c.show(P) : false;
-    const ref = c.id in HUIDIG ? HUIDIG[c.id] : BASE[c.id];
-    $('d-' + c.id).hidden = String(P[c.id]) === String(ref);
-  }
-  const same = (ref, skip = []) => Object.keys(ref).every(k => skip.includes(k) || String(P[k]) === String(ref[k]));
-  const isH = same(HUIDIG), isA = !isH && same(ADVIES, ['ai', 'fixT', 'fixFollow']), isZ = !isH && same(ZELF, ['fixT', 'fixFollow', 'ai']);
-  $('pre-huidig').setAttribute('aria-pressed', isH);
-  $('pre-advies').setAttribute('aria-pressed', isA);
-  $('pre-zelf').setAttribute('aria-pressed', isZ);
-  $('preset-state').textContent = isH ? 'Huidige instellingen actief' : isA ? 'Advies actief' + (P.ai ? ` (AI ${sg(P.ai)})` : '')
-    : isZ ? 'Zonder installateur actief' + (P.fixFollow ? ' (vast, met het weer mee)' : ` (vast ${nf(P.fixT, 0)} °C)`) : 'Aangepaste instellingen';
-}
+let K = 1, R = {}, P = null, RES = null, BASE_RES = null, timeIdx = 540, playing = null;
+const house = () => ({ ...BASE, ...ST.house });
+const kNow = () => (house().calib ? K : 1);
+const ids = () => ['oud', 'nu', 'advies', ...(ST.custom ? ['eigen'] : [])];
+const nameOf = id => id === 'eigen' ? 'Eigen instellingen' : SCN[id].name;
+function scenOf(id) { return id === 'eigen' ? ST.custom : SCN[id].build(ST.goal); }
+function paramsFor(id, w) { return { ...house(), ...scenOf(id), ...(w || { Tout: ST.Tout, RH: ST.RH, sun: ST.sun }) }; }
 
-let timer = null;
-function schedule() {
-  clearTimeout(timer);
-  $('busy').textContent = 'rekent…';
-  timer = setTimeout(run, 140);
+/* ===================== WEERSVERWACHTING ===================== */
+function forecastDays() {
+  const t = todayStr();
+  return FORECAST.days.filter(d => d.d >= t);
 }
-function run() {
-  try { localStorage.setItem('thermav-sim', JSON.stringify(P)); } catch (e) { /* geen opslag */ }
-  const k = P.calib ? K : 1;
-  RES = simulate(P, { k });
-  const key = JSON.stringify([...WEATHER_KEYS, ...HOUSE_KEYS].map(x => P[x]));
-  if (key !== baseKey) {
-    const bp = { ...P, ...HUIDIG };
-    BASE_RES = simulate(bp, { k });
-    baseKey = key;
-  }
-  $('busy').textContent = '';
-  if (!playing) timeIdx = pickTime(RES);
-  $('time').value = timeIdx;
-  renderAll();
+function forecastAdvice(goal) {
+  const days = forecastDays();
+  const eff = days.map((d, i) => days[i + 1] ? (d.tmean + days[i + 1].tmean) / 2 : d.tmean);
+  const w = eff.map(T => FIX_RULE(T, goal));
+  for (let i = 1; i < w.length - 1; i++) if (w[i - 1] === w[i + 1] && w[i] !== w[i - 1]) w[i] = w[i - 1];
+  return days.map((d, i) => ({ ...d, eff: eff[i], water: w[i], change: i > 0 && w[i] !== w[i - 1] }));
 }
-function pickTime(r) {
-  const s = r.series;
-  let best = 540;
-  for (let i = 520; i < 600 && i < s.length; i++) if (s[i].state === 1) { best = i; break; }
-  return best;
-}
-function renderAll() {
-  renderKPIs(); renderScene(); renderLive(); renderChart(); renderBalance(); renderDiag(); renderCurve();
-}
-function renderCurve() {
-  const el = $('curve-mini'); if (!el) return;
-  const W = 290, H = 150, m = { l: 30, r: 8, t: 10, b: 22 };
-  const xo = v => m.l + (W - m.l - m.r) * (v + 15) / 35, yo = v => m.t + (H - m.t - m.b) * (1 - (v - 15) / 35);
-  let o = '';
-  for (let v = 15; v <= 50; v += 5) o += `<line class="gridl" x1="${m.l}" x2="${W - m.r}" y1="${yo(v)}" y2="${yo(v)}"/><text class="ax-t" x="${m.l - 4}" y="${yo(v) + 3.5}" text-anchor="end">${v}</text>`;
-  for (let v = -15; v <= 20; v += 5) o += `<text class="ax-t" x="${xo(v)}" y="${H - 6}" text-anchor="middle">${v}</text>`;
-  const pts = (ai) => { let d = ''; for (let T = -15; T <= 20; T += 0.5) { const v = curveTarget({ ...P, ai }, T); d += (d ? ' L' : 'M') + xo(T).toFixed(1) + ',' + yo(v).toFixed(1); } return d; };
-  if (P.ai && P.hmode !== 'vast') o += `<path d="${pts(0)}" style="fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 4 3"/>`;
-  o += `<path d="${pts(P.ai)}" style="fill: none; stroke: var(--copper); stroke-width: 2.2"/>`;
-  const tg = curveTarget(P, P.Tout), need = RES?.TbufAvg;
-  o += `<line x1="${xo(P.Tout)}" x2="${xo(P.Tout)}" y1="${m.t}" y2="${H - m.b}" style="stroke: var(--line); stroke-width: 1"/>`;
-  o += `<circle cx="${xo(P.Tout)}" cy="${yo(tg)}" r="4" style="fill: var(--copper)"/>`;
-  if (need) o += `<circle cx="${xo(P.Tout)}" cy="${yo(need)}" r="4" style="fill: var(--panel); stroke: var(--cold); stroke-width: 2"/>`;
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width: 100%; height: auto; display: block">${o}</svg>
-    <div class="help"><span style="color: var(--copper)">●</span> doel ${nf(tg, 1)} °C bij ${nf(P.Tout, 1)} °C buiten · <span style="color: var(--cold)">○</span> werkelijk retour gemiddeld ${need ? nf(need, 1) : '–'} °C${P.ai && P.hmode !== 'vast' ? ' · stippel: zonder AI-correctie' : ''}${P.hmode === 'vast' ? ' · vaste watertemperatuur' : ''}</div>`;
+function wxPresets() {
+  const days = forecastDays();
+  const t = days[0]?.d === todayStr() ? days[1] : days[0];
+  return [
+    t && { id: 'morgen', l: `Morgen, ${dayLabel(t.d)}`, d: `${nf(t.tmean, 1)} °C · ${t.rh} %`, Tout: t.tmean, RH: t.rh, sun: 50 },
+    { id: 'nacht', l: 'Koude, natte nacht', d: '0 °C · 98 %', Tout: 0, RH: 98, sun: 0 },
+    { id: 'grijs', l: 'Grijze novemberdag', d: '4 °C · 90 %', Tout: 4, RH: 90, sun: 50 },
+    { id: 'zacht', l: 'Zachte dag', d: '9 °C · 80 %', Tout: 9, RH: 80, sun: 250 },
+    { id: 'vorst', l: 'Vorst', d: '−5 °C · 85 %', Tout: -5, RH: 85, sun: 150 },
+    { id: 'streng', l: 'Strenge vorst', d: '−10 °C · 75 %', Tout: -10, RH: 75, sun: 150 }].filter(Boolean);
 }
 
-function delta(v, base, d, invert = false, unit = '') {
-  if (base == null || v == null) return '';
-  const dv = v - base;
-  if (Math.abs(dv) < Math.pow(10, -d) / 2) return `<span class="delta flat">gelijk aan huidig</span>`;
-  const good = invert ? dv < 0 : dv > 0;
-  return `<span class="delta ${good ? 'up' : 'down'}">${sg(dv, d)}${unit} t.o.v. huidig</span>`;
-}
-function renderKPIs() {
-  const r = RES, b = BASE_RES;
-  const cc = costCalc(r), cb = costCalc(b);
-  const sPill = r.starts > 48 ? 'bad' : r.starts > 24 ? 'warn' : 'good';
-  const sTxt = r.starts > 48 ? 'pendelt' : r.starts > 24 ? 'veel starts' : 'rustig';
-  const tA = r.TAavg;
-  const cPill = tA < 19.5 ? ['warn', 'te koud'] : tA > 20.8 ? ['warn', 'te warm'] : ['good', 'comfortabel'];
-  const tiles = [
-    ['COP (zoals LG-display)', nf(r.copLG, 2), '', delta(r.copLG, b.copLG, 2), `verwarming ${nf(r.copSH, 2)} · warm water ${nf(r.copDHW, 2)}`],
-    ['Stroom LG', nf(r.elLG, 1), 'kWh/dag', delta(r.elLG, b.elLG, 1, true, ' kWh'), `+ ${nf(r.elGP + r.elWTW, 1)} kWh pompen en WTW`],
-    ['Warmte geleverd', nf(r.heatTotal, 1), 'kWh/dag', '', `verwarming ${nf(r.heatSH + r.heatElem, 1)} · warm water ${nf(r.heatDHW + r.disHeat, 1)}`],
-    ['Starts', nf(r.starts, 0), 'per dag', `<span class="pill ${sPill}">${sTxt}</span>`, `looptijd ${nf(r.runAvg, 0)} min · pauze ${nf(r.offAvg, 0)} min`],
-    ['Woonkamer', nf(tA, 1), '°C', `<span class="pill ${cPill[0]}">${cPill[1]}</span>`, `${nf(r.TAmin, 1)}–${nf(r.TAmax, 1)} °C over de dag`],
-    ['Slaapkamers', nf(r.TBavg, 1), '°C', '', `berging ${nf(r.Tberg, 1)} °C`],
-    ['Aanvoer / retour', r.supAvg ? `${nf(r.supAvg, 1)}<small>/</small>${nf(r.retAvg, 1)}` : '–', '°C', '', `${P.hmode === 'vast' ? 'vast doel' : 'stooklijndoel'} ${nf(r.target, 1)} °C (${P.ctrl})`],
-    ['Ontdooicycli', nf(r.defrosts, 0), 'per dag', '', r.FI > 0.4 ? 'veel rijpvorming' : r.FI > 0.1 ? 'enige rijpvorming' : 'geen rijpvorming'],
-    ['Kosten warmtepomp', '€ ' + nf(cc.cost, 2), 'per dag', delta(cc.cost, cb.cost, 2, true, ' €'), `${nf(cc.pvUsed, 1)} kWh uit eigen zonnestroom (${nf(cc.share * 100, 0)} %)`]];
-  $('kpis').innerHTML = tiles.map(([l, v, u, dlt, sub]) => `<div class="kpi"><span class="k-lab">${l}</span><span class="k-val">${v}${u ? `<small>${u}</small>` : ''}</span>${dlt ? `<span>${dlt}</span>` : ''}<span class="k-sub">${sub}</span></div>`).join('');
-}
-
-/* ---------- kosten en zonnestroom ---------- */
+/* ===================== KOSTEN ===================== */
 const PRICE_SHAPE = (() => {
   const m = [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 1.0, 1.15, 1.15, 1.15, 0.92, 0.92, 0.92, 0.92, 0.92, 0.92, 1.05, 1.22, 1.22, 1.22, 1.22, 0.98, 0.98, 0.98];
   const avg = m.reduce((a, b) => a + b, 0) / 24;
   return m.map(x => x / avg);
 })();
-function pvAt(hr) {
-  const W = clamp(8 + P.pvKWh / 5, 8, 16), h0 = 13 - W / 2;
-  if (hr < h0 || hr > h0 + W || P.pvKWh <= 0) return 0;
-  return P.pvKWh * Math.PI / (2 * W) * Math.sin(Math.PI * (hr - h0) / W);
+function pvAt(hr, p) {
+  const W = clamp(8 + p.pvKWh / 5, 8, 16), h0 = 13 - W / 2;
+  if (hr < h0 || hr > h0 + W || p.pvKWh <= 0) return 0;
+  return p.pvKWh * Math.PI / (2 * W) * Math.sin(Math.PI * (hr - h0) / W);
 }
-function costCalc(r) {
-  let cost = 0, pvUsed = 0, el = 0, elDay = 0;
+function costCalc(r, p) {
+  let cost = 0, pvUsed = 0, el = 0;
   const dtH = 120 / 3600;
   for (const smp of r.series) {
     const hr = smp.t / 3600, e = smp.Ptot * dtH;
-    const avail = Math.max(0, pvAt(hr) - P.baseLoad / 1000);
-    const cov = Math.min(smp.Ptot, avail) * dtH;
-    cost += (e - cov) * P.price * PRICE_SHAPE[Math.floor(hr) % 24] + cov * P.feedIn;
-    pvUsed += cov; el += e; if (hr >= 10 && hr < 16) elDay += e;
+    const cov = Math.min(smp.Ptot, Math.max(0, pvAt(hr, p) - p.baseLoad / 1000)) * dtH;
+    cost += (e - cov) * p.price * PRICE_SHAPE[Math.floor(hr) % 24] + cov * p.feedIn;
+    pvUsed += cov; el += e;
   }
   const scale = el > 0 ? r.elLG / el : 1;
-  return { cost: cost * scale, pvUsed: pvUsed * scale, share: el > 0 ? pvUsed / el : 0, dayShare: el > 0 ? elDay / el : 0 };
+  return { cost: cost * scale, pvUsed: pvUsed * scale, share: el > 0 ? pvUsed / el : 0 };
 }
 
 /* ---------- isometrisch schema ---------- */
@@ -829,17 +877,6 @@ function renderScene() {
   sv.setAttribute('viewBox', (sv.clientWidth || 960) < 640 ? '222 84 452 512' : '0 0 960 640');
   sv.innerHTML = o;
 }
-function renderLive() {
-  const s = RES.series[timeIdx] || RES.series[0];
-  const st = ['stand-by', 'verwarmen', 'warm water', 'ontdooien'][s.state];
-  const copNow = s.Pel > 0.05 && s.state !== 3 ? s.Q / s.Pel : null;
-  const rows = [['Status', st], ['Warmte / stroom', `${nf(s.Q, 2)} / ${nf(s.Pel, 2)} kW`], ['COP nu', copNow ? nf(copNow, 2) : '–'],
-    ['Aanvoer LG', s.Tlgout ? nf(s.Tlgout, 1) + ' °C' : '–'], ['Buffer / retour', nf(s.Tbuf, 1) + ' °C'], ['Debiet LG', nf(s.mp, 1) + ' L/min'],
-    ['Beneden lucht', nf(s.TA, 1) + ' °C'], ['Slaapkamers lucht', nf(s.TB, 1) + ' °C'], ['Boiler', nf(s.Td, 1) + ' °C'],
-    ['DT4 woonkamer', s.demA ? 'vraagt warmte' : 'rust'], ['DT4 slaapkamer', s.demB ? 'vraagt warmte' : 'rust'], ['Rijp verdamper', nf((s.frost || 0) * 100, 0) + ' %']];
-  $('live').innerHTML = rows.map(([a, b]) => `<div><span>${a}</span><span>${b}</span></div>`).join('');
-  $('clock').textContent = hhmm(s.t); $('clock-title').textContent = hhmm(s.t);
-}
 
 /* ---------- grafiek ---------- */
 function renderChart() {
@@ -892,145 +929,363 @@ function renderChart() {
   hit.addEventListener('pointerdown', e => { pick(e); hit.setPointerCapture(e.pointerId); });
   hit.addEventListener('pointermove', e => { if (e.buttons) pick(e); });
 }
-function setTime(i) { timeIdx = clamp(i, 0, RES.series.length - 1); $('time').value = timeIdx; renderScene(); renderLive(); renderChart(); }
 
-/* ---------- balans en diagnose ---------- */
-function renderBalance() {
-  const r = RES, b = BASE_RES;
-  const row = (l, v, bv, cls = '') => `<tr class="${cls}"><td>${l}</td><td class="r">${nf(v, 2)}</td><td class="r">${bv == null ? '' : nf(bv, 2)}</td></tr>`;
-  $('balance').innerHTML = `<table class="bal"><thead><tr><th>kWh per etmaal</th><th class="r">Deze instellingen</th><th class="r">Huidig</th></tr></thead><tbody>
-    ${row('Warmteverlies transmissie', r.lossTrans, b.lossTrans)}
-    ${row('Warmteverlies ventilatie + kieren', r.lossVent, b.lossVent)}
-    ${row('Interne warmte en zon', -r.gain, -b.gain)}
-    ${row('Warmte WP → verwarming', r.heatSH, b.heatSH)}
-    ${row('Warmte WP → warm water (incl. ontsmetting)', r.heatDHW + r.disHeat, b.heatDHW + b.disHeat)}
-    ${row('Warmte element 3 kW', r.heatElem, b.heatElem)}
-    ${row('Stroom compressor verwarming', r.elComp, b.elComp)}
-    ${row('Stroom compressor warm water + ontsmetting', r.elCompDHW + r.disEl, b.elCompDHW + b.disEl)}
-    ${row('Stroom element', r.elElem, b.elElem)}
-    ${row('Stroom interne pomp + stand-by', r.elPump + r.elStandby, b.elPump + b.elStandby)}
-    ${row('Totaal LG-teller', r.elLG, b.elLG, 'sum')}
-    ${row('Groepspompen (niet in LG-teller)', r.elGP, b.elGP)}
-    ${row('WTW-ventilatoren', r.elWTW, b.elWTW)}
-    ${row('Totaal stroom', r.elLG + r.elGP + r.elWTW, b.elLG + b.elGP + b.elWTW, 'sum')}
-  </tbody></table>
-  <p class="note">Meting 11-11 (3 °C, RV ≈ 90 %): 15,8 kWh stroom, 42,6 kWh warmte, COP 2,7, ≈ 54 starts. Model met huidige instellingen bij 3 °C: ${nf(simCache.h3?.elLG, 1)} kWh, ${nf(simCache.h3?.heatTotal, 1)} kWh, COP ${nf(simCache.h3?.copLG, 2)}, ${nf(simCache.h3?.starts, 0)} starts.</p>`;
+
+/* ===================== BOVENBALK EN WEER ===================== */
+function renderTop() {
+  document.body.dataset.mode = ST.mode;
+  for (const b of $('mode-seg').querySelectorAll('button')) b.setAttribute('aria-pressed', b.dataset.v === ST.mode);
+  for (const b of $('goal-seg').querySelectorAll('button')) b.setAttribute('aria-pressed', +b.dataset.v === ST.goal);
+  $('mode-note').textContent = ST.mode === 'eenvoudig'
+    ? 'Eenvoudig: alleen wat je zelf kunt instellen, zonder installateur, met een advies voor de komende dagen.'
+    : 'Expert: alle instellingen, ook die van de installateur, met tips, een jaarberekening en de rekendetails.';
 }
+function renderChips() {
+  $('wx-chips').innerHTML = wxPresets().map(w => `<button type="button" class="chip" data-id="${w.id}" aria-pressed="${ST.wx === w.id}">${w.l}<small>${w.d}</small></button>`).join('')
+    + (ST.wx === 'eigen' ? `<button type="button" class="chip" aria-pressed="true" disabled>Eigen weer<small>${nf(ST.Tout, 1)} °C · ${nf(ST.RH, 0)} %</small></button>` : '');
+}
+const WX_CTL = [
+  { id: 'Tout', l: 'Buitentemperatuur (daggemiddelde)', min: -15, max: 20, step: 0.5, u: '°C', d: 1 },
+  { id: 'RH', l: 'Luchtvochtigheid', min: 40, max: 100, step: 1, u: '%', d: 0, h: 'Vochtige lucht rond 0–7 °C laat ijs groeien op het buitendeel.' },
+  { id: 'sun', l: 'Zon door de ramen (gemiddeld)', min: 0, max: 1500, step: 50, u: 'W', d: 0 }];
+function buildSliders() {
+  $('wx-sliders').innerHTML = WX_CTL.map(c => `<div class="ctl"><label for="wx-${c.id}"><span>${c.l}</span><span class="val" id="wxv-${c.id}"></span></label><input type="range" id="wx-${c.id}" min="${c.min}" max="${c.max}" step="${c.step}">${c.h ? `<span class="help">${c.h}</span>` : ''}</div>`).join('');
+  for (const c of WX_CTL) $('wx-' + c.id).addEventListener('input', e => { ST[c.id] = +e.target.value; ST.wx = 'eigen'; renderSliders(); renderChips(); schedule(); });
+}
+function renderSliders() {
+  for (const c of WX_CTL) { $('wx-' + c.id).value = ST[c.id]; $('wxv-' + c.id).textContent = `${nf(ST[c.id], c.d)} ${c.u}`; }
+}
+
+/* ===================== KAARTEN ===================== */
+function cardHTML(id) {
+  const r = R[id], b = R.oud;
+  const dEl = r.elLG - b.elLG, pct = dEl / b.elLG * 100;
+  const comfort = r.TAavg < ST.goal - 0.4 ? ['warn', 'te koud'] : r.TAavg > ST.goal + 0.7 ? ['warn', 'warmer dan nodig'] : ['good', 'goed'];
+  const starts = r.starts > 48 ? ['bad', 'pendelt'] : r.starts > 24 ? ['warn', 'vaak'] : ['good', 'rustig'];
+  const tag = id === 'eigen' ? 'Aangepast' : SCN[id].tag;
+  const desc = id === 'eigen' ? `Aangepast onder “Alle instellingen”, gebaseerd op “${SCN[ST.customBase].name}”.` : SCN[id].desc;
+  return `<div class="scen ${id}" role="button" tabindex="0" data-id="${id}" aria-pressed="${ST.sel === id}">
+    <span class="s-tag">${tag}</span><span class="s-name">${nameOf(id)}</span><span class="s-desc">${desc}</span>
+    <span class="s-main"><span class="s-big">${nf(r.elLG, 1)}</span><span class="s-unit">kWh stroom per dag</span></span>
+    ${id === 'oud' ? '<span class="delta flat">uitgangssituatie</span>' : `<span class="delta ${dEl < 0 ? 'up' : 'down'}">${sg(dEl, 1)} kWh per dag (${sg(pct, 0)} %) t.o.v. oud</span>`}
+    <dl><dt>Kosten per dag</dt><dd>€ ${nf(r.cost.cost, 2)}</dd>
+      <dt>COP</dt><dd>${nf(r.copLG, 2)}</dd>
+      <dt>Woonkamer</dt><dd>${nf(r.TAavg, 1)} °C <span class="pill ${comfort[0]}">${comfort[1]}</span></dd>
+      <dt>Starts per dag (berekend)</dt><dd>${nf(r.starts, 0)}× <span class="pill ${starts[0]}">${starts[1]}</span></dd></dl>
+    <span class="s-sel">${ST.sel === id ? '● Getoond in het schema hieronder' : 'Klik om in het schema te bekijken'}</span></div>`;
+}
+function renderCards() {
+  $('cards').innerHTML = ids().map(cardHTML).join('');
+  const w = wxPresets().find(x => x.id === ST.wx);
+  const wl = w ? w.l.toLowerCase() : `${nf(ST.Tout, 1)} °C`;
+  $('cop-hint').innerHTML = `Bij dit weer (${wl}, ${nf(ST.Tout, 1)} °C en ${nf(ST.RH, 0)} % luchtvochtigheid) haalt deze installatie een COP van ongeveer ${nf(R.nu.copLG, 1)}. Dat is normaal voor deze installatie bij dit weer; in de volgende stap staat waarom. Op een zachte dag van 10 °C wordt het ongeveer 4.`;
+}
+function selectScen(id) { if (!R[id]) return; ST.sel = id; save(); P = paramsFor(id); RES = R[id]; if (!playing) timeIdx = pickTime(RES); renderSelected(); }
+
+/* ===================== RENDEMENT ===================== */
+let CURVES = {};
+const CURVE_T = [-10, -6, -2, 2, 6, 10, 14];
+const SC_COL = { oud: 'var(--old)', nu: 'var(--copper)', advies: 'var(--cold)', eigen: 'var(--refr)' };
+function renderCopChart() {
+  const el = $('cop-chart');
+  const W = Math.max(320, el.clientWidth || 640), H = 260, m = { l: 40, r: 16, t: 14, b: 34 };
+  const xMin = -10, xMax = 15, yMin = 1.5, yMax = 5;
+  const X = v => m.l + (W - m.l - m.r) * (v - xMin) / (xMax - xMin);
+  const Y = v => m.t + (H - m.t - m.b) * (1 - (clamp(v, yMin, yMax) - yMin) / (yMax - yMin));
+  let o = '';
+  for (let v = 2; v <= 5; v += 0.5) o += `<line class="gridl" x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text class="ax-t" x="${m.l - 6}" y="${Y(v) + 3.5}" text-anchor="end">${nf(v, 1)}</text>`;
+  for (let v = -10; v <= 15; v += 5) o += `<text class="ax-t" x="${X(v)}" y="${H - 16}" text-anchor="middle">${v} °C</text>`;
+  o += `<text class="ax-t" x="${(W + m.l) / 2}" y="${H - 2}" text-anchor="middle">buitentemperatuur (daggemiddelde)</text>`;
+  o += `<line class="ax" x1="${m.l}" x2="${W - m.r}" y1="${H - m.b}" y2="${H - m.b}"/>`;
+  o += `<line x1="${X(ST.Tout)}" x2="${X(ST.Tout)}" y1="${m.t}" y2="${H - m.b}" style="stroke: var(--ink); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.5"/>`;
+  for (const id of ids()) {
+    const c = CURVES[id]; if (!c || c.length < 2) continue;
+    o += `<path d="${c.map((q, i) => (i ? 'L' : 'M') + X(q.T).toFixed(1) + ',' + Y(q.cop).toFixed(1)).join(' ')}" style="fill: none; stroke: ${SC_COL[id]}; stroke-width: ${id === ST.sel ? 3 : 1.8}"/>`;
+  }
+  for (const q of MEASURED) o += `<circle cx="${X(q.T)}" cy="${Y(q.cop)}" r="5" style="fill: ${q.s === 'oud' ? 'var(--panel)' : SC_COL.nu}; stroke: ${SC_COL[q.s]}; stroke-width: 2"><title>Gemeten ${q.l}: COP ${nf(q.cop, 2)} bij ${nf(q.T, 1)} °C</title></circle>`;
+  if (RES) o += `<circle cx="${X(ST.Tout)}" cy="${Y(RES.copLG)}" r="7" style="fill: none; stroke: ${SC_COL[ST.sel]}; stroke-width: 2.5"/><text class="ax-t" x="${X(ST.Tout) + (ST.Tout > 8 ? -10 : 10)}" y="${Y(RES.copLG) + 22}" text-anchor="${ST.Tout > 8 ? 'end' : 'start'}" style="fill: var(--ink)">dit weer: COP ${nf(RES.copLG, 2)}</text>`;
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="COP tegen buitentemperatuur per situatie, met gemeten dagen">${o}</svg>`;
+  $('cop-legend').innerHTML = ids().map(id => `<span><i style="background: ${SC_COL[id]}"></i>${nameOf(id)}</span>`).join('')
+    + `<span><i class="dot" style="background: ${SC_COL.nu}"></i>gemeten, nieuwe instellingen</span><span><i class="dot" style="border: 2px solid var(--old)"></i>gemeten, oud</span><span>lijnen: berekend bij gangbare luchtvochtigheid, zonder zon</span>`;
+}
+function renderCopStatic() {
+  const r = RES, aux = r.elPump + r.elStandby;
+  const items = [
+    ['Het weer', `Hoe kouder de buitenlucht, hoe harder de warmtepomp moet pompen. Rond 0–5 °C met vochtige lucht vriest het buitendeel aan en moet hij ontdooien${r.defrosts > 0.5 ? `, bij dit weer ${nf(r.defrosts, 0)} keer per dag` : ''}.`],
+    ['Warm water', `De boiler op 48 °C, en eens per week 67 °C tegen legionella, haalt een COP van ongeveer ${nf(r.copDHW, 1)}. Dat telt mee in het getal op het display.`],
+    ['Vast verbruik', `De interne pomp, de besturing en de verwarming van de compressor kosten samen ${nf(aux, 1)} kWh per dag, ook als er weinig te doen is. Je huis vraagt weinig warmte, dus dat weegt zwaar.`],
+    ['Groot vermogen', 'De 9 kW-unit is ruim 2× zo groot als het huis nodig heeft. Hij draait kort op hoog vermogen en staat dan weer stil. Dat kost rendement.'],
+    ['De meting', 'De LG berekent de geleverde warmte zelf uit een klein temperatuurverschil, en dat is niet heel nauwkeurig. Een kWh-meter op de groep van de warmtepomp in de meterkast geeft zekerheid.']];
+  $('why').innerHTML = items.map(([a, b], i) => `<li><span>${i + 1}</span><span><b>${a}.</b> ${b}</span></li>`).join('');
+  const parts = [['verwarmen', r.elComp, 'var(--warm)'], ['warm water', r.elCompDHW, 'var(--copper)'], ['legionella (gemiddeld per dag)', r.disEl, 'var(--refr)'],
+    ['elektrisch element', r.elElem, 'var(--bad)'], ['pomp en besturing', aux, 'var(--old)']].filter(x => x[1] > 0.01);
+  const tot = parts.reduce((a, x) => a + x[1], 0);
+  $('stack-title').textContent = `Waar gaat de stroom heen? ${nameOf(ST.sel)}, bij dit weer: ${nf(tot, 1)} kWh per dag`;
+  $('stack').innerHTML = parts.map(([l, v, c]) => `<span style="width: ${v / tot * 100}%; background: ${c}" title="${l}: ${nf(v, 2)} kWh"></span>`).join('');
+  $('stack-legend').innerHTML = parts.map(([l, v, c]) => `<span><i style="background: ${c}"></i>${l} ${nf(v, 1)} kWh</span>`).join('');
+}
+
+/* ===================== WAT STEL JE IN ===================== */
+function todoList(rows) {
+  return `<ul class="todo">${rows.map(([where, what, why]) => `<li><span class="where">${where}</span><span>${what}</span>${why ? `<span class="why2">${why}</span>` : ''}</li>`).join('')}</ul>`;
+}
+function selfRows(g, auto) {
+  return [
+    ['LG-bediening, hoofdscherm', auto ? 'Kies <b>AI</b> (auto) en zet de AI-correctie op <b>0</b>' : `Kies <b>Verwarmen</b> (zon) en zet het water op <b>${FIX_RULE(ST.Tout, g)} °C</b>`, auto ? '' : 'bij dit weer; zie de tabel per buitentemperatuur'],
+    ['Thermostaat woonkamer (DT4)', `<b>${nf(g + 0.5, 1)} °C</b>`, 'een halve graad boven je wens: hij grijpt alleen in als het te warm wordt'],
+    ['Thermostaat slaapkamer (DT4)', '<b>18,5 °C</b>', ''],
+    ['LG-bediening, stille modus', '<b>uit</b>', ''],
+    ['Groepspompen (2×)', 'knop indrukken tot lampjes <b>II + III</b> branden (stand HD1)', 'lager verbruik, zelfde comfort'],
+    ['LG-bediening, Roosters → DHW', '<b>11:00 → 48 °C</b> en <b>16:00 → 40 °C</b>', 'warm water maken in de middag, met zonnestroom'],
+    ['LG-bediening, Roosters → DHW verwarming', '<b>leeg laten</b>', 'dit is het elektrische element']];
+}
+function renderSetup() {
+  const id = ST.sel, g = ST.goal;
+  $('setup-title').textContent = `Wat stel je in voor “${nameOf(id)}”?`;
+  let html;
+  if (id === 'oud') html = '<p class="note">Dit is de uitgangssituatie, ter vergelijking. Hier hoef je niets voor te doen.</p>';
+  else if (id === 'eigen') html = '<p class="note">Dit is je eigen combinatie uit “Alle instellingen”. Bij elke instelling staat of je hem zelf kunt veranderen.</p>';
+  else if (id === 'nu') html = `<div class="setup"><h3><span class="badge zelf">zelf</span> Zonder installateur</h3>${todoList(selfRows(g, false))}</div>`;
+  else {
+    const [a, b] = curveFor(g);
+    html = `<div class="setup-cols"><div class="setup"><h3><span class="badge inst">installateur</span> Eenmalig door de installateur</h3>${todoList([
+      ['Seizoensgebonden auto temp (stooklijn)', `buiten −10 °C → <b>${a} °C</b>, buiten +10 °C → <b>${b} °C</b>`, 'nu −10 → 45 °C en +20 → 19 °C'],
+      ['Hysterese verwarmingswater', 'uit op <b>+3</b>, aan op −2 laten', 'nu −2 / +2: langere, rustigere beurten'],
+      ['Tank-ontsmetting (legionella)', '<b>60 °C</b>', 'nu 67 °C; alles boven 58 °C gaat elektrisch'],
+      ['Tank instelling 2, hysterese', '<b>4</b>', 'nu 3'],
+      ['Berging, aparte verdeler (3 groepen)', '<b>half dicht</b>', 'kan ook zelf']])}</div>
+      <div class="setup"><h3><span class="badge zelf">zelf</span> Daarna zelf</h3>${todoList(selfRows(g, true))}</div></div>`;
+  }
+  $('setup').innerHTML = html;
+}
+
+/* ===================== SCHEMA EN DAGVERLOOP ===================== */
+function pickTime(r) {
+  const s = r.series;
+  for (let i = 520; i < 600 && i < s.length; i++) if (s[i].state === 1) return i;
+  return 540;
+}
+function renderLive() {
+  const s = RES.series[timeIdx] || RES.series[0];
+  const st = ['staat stil', 'verwarmt het huis', 'maakt warm water', 'ontdooit het buitendeel'][s.state];
+  const copNow = s.Pel > 0.05 && s.state !== 3 ? s.Q / s.Pel : null;
+  const rows = [['Warmtepomp', st], ['Warmte / stroom nu', `${nf(s.Q, 1)} / ${nf(s.Pel, 2)} kW`], ['COP op dit moment', copNow ? nf(copNow, 2) : '–'],
+    ['Woonkamer', nf(s.TA, 1) + ' °C'], ['Slaapkamers', nf(s.TB, 1) + ' °C'], ['Water naar de vloer', nf(s.Tbuf, 1) + ' °C'],
+    ['Boiler', nf(s.Td, 1) + ' °C'], ['Thermostaat woonkamer', s.demA ? 'vraagt warmte' : 'tevreden'], ['IJs op buitendeel', nf((s.frost || 0) * 100, 0) + ' %']];
+  $('live').innerHTML = rows.map(([a, b]) => `<div><span>${a}</span><span>${b}</span></div>`).join('');
+  $('clock').textContent = hhmm(s.t); $('clock-title').textContent = hhmm(s.t);
+}
+function setTime(i) { timeIdx = clamp(i, 0, RES.series.length - 1); $('time').value = timeIdx; renderScene(); renderLive(); renderChart(); }
+function renderSelected() {
+  renderCards(); renderCopStatic(); renderCopChart(); renderSetup();
+  $('scene-title').textContent = `Zo draait je installatie: ${nameOf(ST.sel)}`;
+  $('time').value = timeIdx; renderScene(); renderLive(); renderChart(); renderDiag(); renderBalance(); syncAdv();
+}
+
+/* ===================== TIPS EN BALANS ===================== */
 function renderDiag() {
   const r = RES, items = [];
   const add = (lvl, txt) => items.push(`<li><span class="pill ${lvl}">${{ good: 'goed', warn: 'let op', bad: 'probleem', info: 'info' }[lvl]}</span><span>${txt}</span></li>`);
-  if (r.starts > 48) add('bad', `De warmtepomp pendelt: ${nf(r.starts, 0)} starts per dag, gemiddeld ${nf(r.runAvg, 0)} min draaien en ${nf(r.offAvg, 0)} min pauze. Elke start kost rendement en slijtage.`);
-  else if (r.starts > 24) add('warn', `${nf(r.starts, 0)} starts per dag. Doel is maximaal één per uur bij koud weer.`);
-  else add('good', `Rustig bedrijf: ${nf(r.starts, 0)} starts per dag${r.runAvg ? `, gemiddeld ${nf(r.runAvg, 0)} min per run` : ', de compressor draait continu'}.`);
+  if (r.starts > 48) add('bad', `De warmtepomp slaat ${nf(r.starts, 0)} keer per dag aan en uit (gemiddeld ${nf(r.runAvg, 0)} min aan, ${nf(r.offAvg, 0)} min uit). Elke start kost rendement en slijtage.`);
+  else if (r.starts > 24) add('warn', `${nf(r.starts, 0)} starts per dag. Doel is hooguit één per uur bij koud weer.`);
+  else add('good', `Rustig: ${nf(r.starts, 0)} starts per dag${r.runAvg ? `, gemiddeld ${nf(r.runAvg, 0)} min per beurt` : ', de compressor draait door'}.`);
   const gap = r.target - r.TbufAvg;
-  if (gap > 2.5 && P.ctrl === 'invoer') {
-    const need = Math.round(r.TbufAvg);
-    if (P.hmode === 'vast') add('warn', `De vaste watertemperatuur (${nf(r.target, 0)} °C) ligt ${nf(gap, 1)} K boven de retour die het huis gemiddeld gebruikt (${nf(r.TbufAvg, 1)} °C). De warmtepomp haalt zijn doel nooit en de DT4 bepaalt wanneer hij stopt. Zet hem op ≈ ${need} °C.`);
-    else {
-      const aiEff = Math.round((P.ai - (gap - 1)) * 2) / 2;
-      add('warn', `Het stooklijndoel (${nf(r.target, 1)} °C) ligt ${nf(gap, 1)} K boven de retour die het huis gemiddeld gebruikt (${nf(r.TbufAvg, 1)} °C). De warmtepomp haalt zijn doel nooit en de DT4 bepaalt wanneer hij stopt. ${aiEff < -5 ? `Effect zou pas rond AI ${sg(aiEff, 1)} komen, maar de LG gaat maar tot −5. Kies op het hoofdscherm de vaste watertemperatuur (≈ ${need} °C) of laat de installateur de stooklijnpunten verlagen.` : `Effect zie je pas rond AI ${sg(aiEff, 1)}.`}`);
-    }
-  }
-  if (r.statAshare < 0.93 && r.TAavg > P.setA - 0.4) add('warn', `De woonkamer-DT4 schakelt de warmtepomp ${nf((1 - r.statAshare) * 100, 0)} % van de tijd uit. De thermostaat regelt nu, niet de stooklijn. Verlaag de stooklijn (AI-correctie) of zet de DT4 hoger.`);
-  if (r.TAavg < 19.5) add('warn', `Woonkamer gemiddeld ${nf(r.TAavg, 1)} °C: te koud. Verhoog ${P.hmode === 'vast' ? 'de vaste watertemperatuur met 1 °C' : 'de AI-correctie met +1'}.`);
-  else if (r.TAavg > 20.8) add('warn', `Woonkamer gemiddeld ${nf(r.TAavg, 1)} °C: warmer dan nodig. Elke graad kost ≈ 6–7 % extra warmte. Verlaag de AI-correctie of de vaste watertemperatuur, of gebruik ‘Afstemmen op 20 °C’.`);
-  if (r.heatElem > 0.05) add('bad', `Het 3 kW-element springt bij: ${nf(r.heatElem, 1)} kWh per dag tegen COP 1. Oorzaak: stooklijn hoger dan de warmtepomp kan halen${P.silent ? ' (stille modus beperkt het vermogen)' : ''}.`);
-  if (r.target + P.hOn < r.TAavg + 0.3 && P.ctrl === 'invoer') add('warn', `Herstartdrempel (stooklijn ${nf(r.target, 1)} °C ${sg(P.hOn, 1)} K) ligt rond of onder de kamertemperatuur. De warmtepomp start dan pas als de vloer is afgekoeld.`);
-  if (P.silent) add('info', `Stille modus begrenst het vermogen op ≈ ${nf(r.Pm, 1)} kW. Bij vorst kan dat te weinig zijn.`);
-  if (P.bypass) add('bad', 'De WTW-bypass staat open: de warmteterugwinning valt weg en de warmtevraag stijgt.');
-  if (r.defrosts > 0.5) add('info', `${nf(r.defrosts, 0)} ontdooicycli per dag door rijpvorming (${nf(P.Tout, 1)} °C, RV ${nf(P.RH, 0)} %). Elke cyclus haalt kort warmte uit de buffer.`);
-  if (P.disOn && P.disT > P.compLim) add('info', `Ontsmetting op ${nf(P.disT, 0)} °C: alles boven ${nf(P.compLim, 0)} °C gaat via het element (${nf(r.disEl * 7, 1)} kWh per week).`);
-  const inWin = h => P.dhwFrom <= P.dhwTo ? (h >= P.dhwFrom && h < P.dhwTo) : (h >= P.dhwFrom || h < P.dhwTo);
-  const fullDay = P.dhwFrom === 0 && P.dhwTo === 24;
-  if (P.pvKWh >= 3 && (fullDay || !inWin(13))) add('info', `Laat de boiler opwarmen tussen ±11 en 16 uur. Dan gebruikt hij je eigen zonnestroom en draait hij bij de warmste buitenlucht. Na het einde van salderen (1-1-2027) scheelt dat direct geld.`);
-  if (P.dhwSet < 48 && P.dhwUse >= 120) add('warn', `Bij ${nf(P.dhwUse, 0)} L warm water per dag (regendouche) is ${nf(P.dhwSet, 0)} °C in 180 L krap. Twee douchebeurten achter elkaar kunnen de boiler leegtrekken.`);
-  if (r.elGP > 0.6) add('info', `De groepspompen gebruiken ${nf(r.elGP, 2)} kWh per dag, buiten de LG-teller om.`);
-  if (P.wiringA === 'beide' && r.statAshare < 0.9) add(r.statAshare < 0.6 ? 'warn' : 'info', `De woonkamer-DT4 zet de groepspomp beneden ${nf((1 - r.statAshare) * 100, 0)} % van de tijd uit. De vloer beneden krijgt dan geen water en de warmtepomp start daarna met een hogere aanvoer. Zet de DT4 hoger (bovengrens) of de watertemperatuur lager, zodat de pomp blijft draaien.`);
-  if ((P.wiringB === 'pomp' || P.wiringB === 'beide') && r.statBshare < 0.9) add(r.statBshare < 0.5 ? 'warn' : 'info', `De slaapkamer-DT4 zet de groepspomp boven ${nf((1 - r.statBshare) * 100, 0)} % van de tijd uit. Verdieping én zolder krijgen dan geen warmte. Zet de slaapkamer-DT4 als begrenzer op ≈ 20 °C en regel de slaapkamergroepen op de verdeler terug.`);
+  if (gap > 2.5 && P.ctrl === 'invoer') add('warn', P.hmode === 'vast'
+    ? `De watertemperatuur (${nf(r.target, 0)} °C) ligt ${nf(gap, 1)} graden boven wat het huis gebruikt (${nf(r.TbufAvg, 1)} °C). Dan regelt de thermostaat in plaats van het water. Zet het water op ≈ ${Math.round(r.TbufAvg)} °C.`
+    : `De stooklijn (${nf(r.target, 1)} °C) ligt ${nf(gap, 1)} graden boven wat het huis gebruikt (${nf(r.TbufAvg, 1)} °C). Kies op het hoofdscherm een vaste watertemperatuur of laat de installateur de stooklijn verlagen.`);
+  if (r.TAavg < ST.goal - 0.4) add('warn', `Woonkamer gemiddeld ${nf(r.TAavg, 1)} °C: te koud voor ${ST.goal} °C. Zet ${P.hmode === 'vast' ? 'het water 1 °C hoger' : 'de AI-correctie 1 hoger'}.`);
+  else if (r.TAavg > ST.goal + 0.7) add('warn', `Woonkamer gemiddeld ${nf(r.TAavg, 1)} °C: warmer dan nodig. Elke graad kost ongeveer 6–7 % extra.`);
+  if (r.heatElem > 0.05) add('bad', `Het elektrische element springt bij: ${nf(r.heatElem, 1)} kWh per dag tegen COP 1.`);
+  if (P.silent) add('info', `Stille modus begrenst het vermogen op ≈ ${nf(r.Pm, 1)} kW.`);
+  if (P.bypass) add('bad', 'De WTW-bypass staat open: de warmteterugwinning valt weg.');
+  if (r.defrosts > 0.5) add('info', `${nf(r.defrosts, 0)} keer per dag ontdooien door ijs op het buitendeel. Normaal bij ${nf(P.Tout, 1)} °C en ${nf(P.RH, 0)} % luchtvochtigheid.`);
+  if (P.disOn && P.disT > P.compLim) add('info', `Legionellabeurt op ${nf(P.disT, 0)} °C: alles boven ${nf(P.compLim, 0)} °C gaat elektrisch (${nf(r.disEl * 7, 1)} kWh per week). 60 °C is genoeg.`);
+  if (P.dhwFrom === 0 && P.dhwTo === 24) add('info', 'Laat de boiler tussen 11 en 16 uur opwarmen: dan met zonnestroom en de warmste buitenlucht.');
+  if (r.elGP > 0.6) add('info', `De groepspompen gebruiken ${nf(r.elGP, 2)} kWh per dag (niet in de LG-teller). Stand HD1 halveert dat ongeveer.`);
+  if (P.wiringA === 'beide' && r.statAshare < 0.9) add(r.statAshare < 0.6 ? 'warn' : 'info', `De woonkamer-thermostaat zet de pomp beneden ${nf((1 - r.statAshare) * 100, 0)} % van de tijd uit. Zet de thermostaat iets hoger of het water iets lager, zodat de pomp blijft draaien.`);
   $('diag').innerHTML = items.join('');
 }
-
-/* ---------- jaarschatting ---------- */
-async function runYear() {
-  const btn = $('year-btn'); btn.disabled = true;
-  const k = P.calib ? K : 1;
-  const scen = [['Huidig', { ...P, ...HUIDIG }], ['Deze instellingen', { ...P }]];
-  const out = {};
-  for (const [name, p] of scen) {
-    out[name] = [];
-    for (const [m, days, Tm, rh, sun] of EELDE) {
-      btn.textContent = `Rekent ${name.toLowerCase()} · ${m}…`;
-      await new Promise(res => setTimeout(res, 0));
-      const acc = { heat: 0, el: 0, starts: 0, other: 0 };
-      for (const [dT, w] of [[-4, 0.25], [0, 0.5], [4, 0.25]]) {
-        const r = simulate({ ...p, Tout: Tm + dT, RH: rh }, { k, sun, fast: true });
-        acc.heat += w * r.heatTotal; acc.el += w * r.elLG; acc.starts += w * r.starts; acc.other += w * (r.elGP + r.elWTW);
-      }
-      out[name].push({ m, days, Tm, heat: acc.heat * days, el: acc.el * days, starts: acc.starts * days, other: acc.other * days });
-    }
-  }
-  btn.disabled = false; btn.textContent = 'Opnieuw berekenen';
-  const H = out['Huidig'], N = out['Deze instellingen'];
-  const sum = (a, f) => a.reduce((s, x) => s + f(x), 0);
-  const ytd = (a, f) => sum(a.slice(0, 10), f) + f(a[10]) * 11 / 30;
-  const maxEl = Math.max(...H.map(x => x.el), ...N.map(x => x.el));
-  const rows = N.map((x, i) => `<tr><td>${x.m}</td><td class="r">${nf(x.Tm, 1)}</td><td class="r">${nf(H[i].el, 0)}</td><td class="r">${nf(x.el, 0)}</td><td style="min-width: 90px"><span class="bar alt" style="width: ${H[i].el / maxEl * 100}%"></span><span class="bar" style="width: ${x.el / maxEl * 100}%; margin-top: 2px"></span></td><td class="r">${nf(x.heat, 0)}</td><td class="r">${nf(x.heat / x.el, 2)}</td><td class="r">${nf(x.starts, 0)}</td></tr>`).join('');
-  const hE = sum(H, x => x.el), nE = sum(N, x => x.el), hQ = sum(H, x => x.heat), nQ = sum(N, x => x.heat);
-  $('year').innerHTML = `<div class="kpis" style="margin-bottom: 12px">
-      <div class="kpi"><span class="k-lab">Stroom LG per jaar</span><span class="k-val">${nf(nE, 0)}<small>kWh</small></span><span>${delta(nE, hE, 0, true, ' kWh')}</span></div>
-      <div class="kpi"><span class="k-lab">SCOP</span><span class="k-val">${nf(nQ / nE, 2)}</span><span>${delta(nQ / nE, hQ / hE, 2)}</span></div>
-      <div class="kpi"><span class="k-lab">Warmte per jaar</span><span class="k-val">${nf(nQ, 0)}<small>kWh</small></span><span class="k-sub">huidig ${nf(hQ, 0)} kWh</span></div>
-      <div class="kpi"><span class="k-lab">Starts per jaar</span><span class="k-val">${nf(sum(N, x => x.starts), 0)}</span><span class="k-sub">huidig ${nf(sum(H, x => x.starts), 0)}</span></div></div>
-    <div class="year-wrap"><table class="bal"><thead><tr><th>Maand</th><th class="r">T gem.</th><th class="r">kWh huidig</th><th class="r">kWh nu</th><th>grijs huidig · koper nu</th><th class="r">Warmte</th><th class="r">COP</th><th class="r">Starts</th></tr></thead><tbody>${rows}
-      <tr class="sum"><td>Jaar</td><td></td><td class="r">${nf(hE, 0)}</td><td class="r">${nf(nE, 0)}</td><td></td><td class="r">${nf(nQ, 0)}</td><td class="r">${nf(nQ / nE, 2)}</td><td class="r">${nf(sum(N, x => x.starts), 0)}</td></tr></tbody></table></div>
-    <p class="note">Controle tegen de meting: met de huidige instellingen rekent het model van 1 januari t/m 11 november ${nf(ytd(H, x => x.el), 0)} kWh stroom en ${nf(ytd(H, x => x.heat), 0)} kWh warmte. Gemeten: 2.404 kWh en 5.382 kWh. Groepspompen en WTW komen daar nog bij: ${nf(sum(N, x => x.other), 0)} kWh per jaar (huidig ${nf(sum(H, x => x.other), 0)} kWh).</p>`;
+function renderBalance() {
+  const r = RES, b = BASE_RES;
+  const row = (l, v, bv, cls = '') => `<tr class="${cls}"><td>${l}</td><td class="r">${nf(v, 2)}</td><td class="r">${nf(bv, 2)}</td></tr>`;
+  $('balance').innerHTML = `<table class="tbl"><thead><tr><th>kWh per etmaal</th><th class="r">${nameOf(ST.sel)}</th><th class="r">Oud</th></tr></thead><tbody>
+    ${row('Warmteverlies muren, dak, ramen', r.lossTrans, b.lossTrans)}${row('Warmteverlies ventilatie en kieren', r.lossVent, b.lossVent)}
+    ${row('Interne warmte en zon', -r.gain, -b.gain)}${row('Warmte naar de vloer', r.heatSH, b.heatSH)}
+    ${row('Warmte naar warm water (incl. legionella)', r.heatDHW + r.disHeat, b.heatDHW + b.disHeat)}${row('Warmte elektrisch element', r.heatElem, b.heatElem)}
+    ${row('Stroom compressor, verwarmen', r.elComp, b.elComp)}${row('Stroom compressor, warm water en legionella', r.elCompDHW + r.disEl, b.elCompDHW + b.disEl)}
+    ${row('Stroom elektrisch element', r.elElem, b.elElem)}${row('Stroom interne pomp en besturing', r.elPump + r.elStandby, b.elPump + b.elStandby)}
+    ${row('Totaal op de LG-teller', r.elLG, b.elLG, 'sum')}${row('Groepspompen (niet op de LG-teller)', r.elGP, b.elGP)}
+    ${row('Ventilatie (WTW)', r.elWTW, b.elWTW)}${row('Totaal stroom', r.elLG + r.elGP + r.elWTW, b.elLG + b.elGP + b.elWTW, 'sum')}</tbody></table>`;
 }
 
-/* ---------- aannames ---------- */
+/* ===================== ALLE INSTELLINGEN ===================== */
+function buildAdv() {
+  $('adv').innerHTML = GROUPS.map(([g, title]) => `<div class="adv-grp" id="ag-${g}"><h3>${title}</h3>${C.filter(c => c.g === g).map(c => {
+    const who = WHO[c.id] || 'aanname';
+    const lab = `<span><span class="badge ${who}">${WHO_LABEL[who]}</span> ${c.l}</span>`;
+    if (c.type === 'sel') return `<div class="ctl" id="w-${c.id}"><label for="${c.id}">${lab}</label><select id="${c.id}">${c.opts.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div>`;
+    if (c.type === 'chk') return `<div class="ctl check" id="w-${c.id}"><label for="${c.id}"><input type="checkbox" id="${c.id}">${lab}</label></div>`;
+    return `<div class="ctl" id="w-${c.id}"><label for="${c.id}">${lab}<span class="val" id="v-${c.id}"></span></label><input type="range" id="${c.id}" min="${c.min}" max="${c.max}" step="${c.step}">${c.h ? `<span class="help">${c.h}</span>` : ''}</div>`;
+  }).join('')}</div>`).join('');
+  for (const c of C) $(c.id).addEventListener('input', e => {
+    const el = e.target, v = c.type === 'chk' ? el.checked : c.type === 'sel' ? (isNaN(+el.value) ? el.value : +el.value) : +el.value;
+    if (HOUSE_KEYS.includes(c.id)) ST.house[c.id] = v;
+    else {
+      if (ST.sel !== 'eigen') { ST.customBase = ST.sel; ST.custom = { ...scenOf(ST.sel) }; ST.sel = 'eigen'; }
+      ST.custom[c.id] = v;
+    }
+    syncAdv(); schedule();
+  });
+}
+function syncAdv() {
+  if (!P) return;
+  for (const c of C) {
+    const el = $(c.id), v = P[c.id];
+    if (c.type === 'chk') el.checked = !!v; else el.value = v;
+    if (!c.type) $('v-' + c.id).textContent = `${c.sign ? sg(v, c.d) : nf(v, c.d)} ${c.u}`;
+    $('w-' + c.id).hidden = c.show ? !c.show(P) : false;
+  }
+  $('adv-reset').disabled = !ST.custom;
+}
+
+/* ===================== VERWACHTING EN TABEL PER TEMPERATUUR ===================== */
+const BANDS = [
+  { l: 'boven 6 °C', rep: 8 }, { l: '1 tot 6 °C', rep: 3.5 }, { l: '−1 tot 1 °C', rep: 0 },
+  { l: '−4 tot −1 °C', rep: -2.5 }, { l: 'kouder dan −4 °C', rep: -7 }];
+async function computeForecast(token) {
+  const g = ST.goal, adv = forecastAdvice(g), t = todayStr();
+  if (!adv.length) {
+    $('fc-summary').innerHTML = '<p>De opgeslagen weersverwachting is verlopen. Gebruik de tabel hieronder met de verwachting uit je weerapp, of vraag om een nieuwe versie van deze pagina.</p>';
+    $('fc-table').innerHTML = ''; $('fc-note').textContent = ''; return;
+  }
+  const rows = [];
+  for (const d of adv) {
+    await tick(); if (token !== secToken) return;
+    const p = { ...house(), ...SCN.nu.build(g), fixFollow: false, fixT: d.water, Tout: d.tmean, RH: d.rh, sun: 50 };
+    const r = simulate(p, { k: kNow(), fast: true });
+    rows.push({ ...d, el: r.elLG, cop: r.copLG, room: r.TAavg, cost: r.elLG * house().price });
+  }
+  const runs = [];
+  for (const d of rows) { const last = runs[runs.length - 1]; if (last && last.water === d.water) last.to = d; else runs.push({ water: d.water, from: d, to: d }); }
+  const span = r => r.from.d === r.to.d ? dayLabel(r.from.d) : `${dayLabel(r.from.d)} t/m ${dayLabel(r.to.d)}`;
+  const first = runs[0];
+  let txt = `<p class="big-advice">Zet het water nu op <b>${first.water} °C</b>${runs.length > 1 ? ` en vanaf ${dayLabel(runs[1].from.d)} op <b>${runs[1].water} °C</b>` : ''}.</p>`;
+  txt += `<p>${runs.map(r => `${span(r)}: <b>${r.water} °C</b>`).join(' · ')}. Thermostaat woonkamer: <b>${nf(g + 0.5, 1)} °C</b>. Zet een nieuwe stand de avond ervoor om.</p>`;
+  $('fc-summary').innerHTML = txt;
+  const tMin = Math.min(...rows.map(d => d.tmin)), tMax = Math.max(...rows.map(d => d.tmax));
+  const bar = d => `<span class="temp-bar" style="margin-left: ${(d.tmin - tMin) / (tMax - tMin) * 60}px; width: ${Math.max(4, (d.tmax - d.tmin) / (tMax - tMin) * 60)}px"></span>`;
+  $('fc-table').innerHTML = `<thead><tr><th>Dag</th><th>Water op</th><th class="r">Buiten gem.</th><th class="opt">Min – max</th><th class="r opt">Luchtvocht.</th><th class="r">Verbruik</th><th class="r opt">≈ Kosten</th><th class="r opt">COP</th></tr></thead><tbody>${rows.map(d => `<tr class="${d.change ? 'change' : ''}"><td>${d.d === t ? '<b>Vandaag</b>' : dayLabel(d.d)}</td><td class="water">${d.water} °C</td><td class="r">${nf(d.tmean, 1)} °C</td><td class="opt"><span class="num">${nf(d.tmin, 0)} – ${nf(d.tmax, 0)} °C</span> ${bar(d)}</td><td class="r opt">${d.rh} %</td><td class="r">${nf(d.el, 0)} kWh</td><td class="r opt">€ ${nf(d.cost, 2)}</td><td class="r opt">${nf(d.cop, 1)}</td></tr>`).join('')}</tbody>`;
+  const upd = new Date(FORECAST.updated);
+  $('fc-note').textContent = `Weersverwachting van met.no voor Eelde, opgehaald op ${upd.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long' })} om ${upd.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}. Verder dan 3–4 dagen vooruit is een verwachting onzeker; kijk dan in je weerapp en gebruik de tabel hieronder. De watertemperatuur volgt het gemiddelde van die dag en de dag erna, omdat de vloer langzaam reageert. Verbruik en kosten zijn berekend met het model (gemiddelde stroomprijs € ${nf(house().price, 2)}).`;
+}
+async function computeBands(token) {
+  const g = ST.goal, rows = [];
+  const tm = wxPresets().find(w => w.id === 'morgen');
+  for (const b of BANDS) {
+    await tick(); if (token !== secToken) return;
+    const p = { ...house(), ...SCN.nu.build(g), Tout: b.rep, RH: rhFor(b.rep), sun: 50 };
+    const r = simulate(p, { k: kNow(), fast: true });
+    rows.push({ ...b, w20: FIX_RULE(b.rep, 20), w21: FIX_RULE(b.rep, 21), el: r.elLG, cop: r.copLG, room: r.TAavg });
+  }
+  const isNow = b => tm && FIX_RULE(tm.Tout, 21) === b.w21 && FIX_RULE(tm.Tout, 20) === b.w20;
+  $('band-table').innerHTML = `<thead><tr><th>Buiten, gemiddeld over de dag</th><th class="r">Water voor 20 °C</th><th class="r">Water voor 21 °C</th><th class="r opt">Verwacht verbruik</th><th class="r opt">COP</th></tr></thead><tbody>${rows.map(b => `<tr class="${isNow(b) ? 'hl' : ''}"><td>${b.l}${isNow(b) ? ' · morgen' : ''}</td><td class="r">${b.w20} °C</td><td class="r">${b.w21} °C</td><td class="r opt">${nf(b.el, 0)} kWh/dag</td><td class="r opt">${nf(b.cop, 1)}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="5" class="note">Thermostaat woonkamer: ${nf(20.5, 1)} °C bij 20 °C, ${nf(21.5, 1)} °C bij 21 °C. Verbruik en COP gelden voor ${g} °C in de woonkamer. Wordt het te koud of te warm, zet het water dan 1 °C hoger of lager en wacht een dag.</td></tr></tfoot>`;
+  $('always').innerHTML = selfRows(g, false).slice(1).map(([where, what, why]) => `<li><span class="where">${where}</span><span>${what}</span>${why ? `<span class="why2">${why}</span>` : ''}</li>`).join('');
+}
+async function computeCurves(token) {
+  CURVES = {};
+  for (const id of ids()) {
+    const pts = [];
+    for (const T of CURVE_T) {
+      await tick(); if (token !== secToken) return;
+      const r = simulate({ ...paramsFor(id, { Tout: T, RH: rhFor(T), sun: 0 }) }, { k: kNow(), fast: true });
+      pts.push({ T, cop: r.copLG });
+    }
+    CURVES[id] = pts; renderCopChart();
+  }
+}
+let secToken = 0, secKey = '';
+async function runSecondary() {
+  const key = JSON.stringify([ST.goal, ST.house, ST.custom, todayStr()]);
+  if (key === secKey) return;
+  secKey = key; const token = ++secToken;
+  await computeForecast(token); await computeBands(token); await computeCurves(token);
+}
+
+/* ===================== JAAR ===================== */
+async function runYear() {
+  const btn = $('year-btn'); btn.disabled = true;
+  const out = {};
+  for (const id of ids()) {
+    let el = 0, heat = 0, st = 0, ytdE = 0;
+    for (const [i, [m, days, Tm, rh, sun]] of EELDE.entries()) {
+      btn.textContent = `Rekent ${nameOf(id).toLowerCase()} · ${m}…`; await tick();
+      for (const [dT, w] of [[-4, 0.25], [0, 0.5], [4, 0.25]]) {
+        const r = simulate(paramsFor(id, { Tout: Tm + dT, RH: rh, sun }), { k: kNow(), fast: true });
+        el += w * r.elLG * days; heat += w * r.heatTotal * days; st += w * r.starts * days;
+        if (id === 'oud') ytdE += w * r.elLG * days * (i < 10 ? 1 : i === 10 ? 11 / 30 : 0);
+      }
+    }
+    out[id] = { el, heat, st, ytdE };
+  }
+  btn.disabled = false; btn.textContent = 'Opnieuw berekenen';
+  const pr = house().price, o = out.oud;
+  $('year').innerHTML = `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Situatie</th><th class="r">Stroom per jaar</th><th class="r">≈ Kosten</th><th class="r">Besparing</th><th class="r">COP over het jaar</th><th class="r">Aan/uit per jaar</th></tr></thead><tbody>${Object.entries(out).map(([id, y]) => `<tr><td>${nameOf(id)}</td><td class="r">${nf(y.el, 0)} kWh</td><td class="r">€ ${nf(y.el * pr, 0)}</td><td class="r">${id === 'oud' ? '–' : `${nf(o.el - y.el, 0)} kWh · € ${nf((o.el - y.el) * pr, 0)}`}</td><td class="r">${nf(y.heat / y.el, 2)}</td><td class="r">${nf(y.st, 0)}</td></tr>`).join('')}</tbody></table></div>
+    <p class="note">Gemiddeld weer van Eelde per maand, ${ST.goal} °C in de woonkamer, stroomprijs € ${nf(pr, 2)} per kWh. Controle: met de oude instellingen rekent het model van 1 januari tot en met 11 november ${nf(o.ytdE, 0)} kWh; de LG-teller gaf 2.404 kWh. Groepspompen en ventilatie staan niet op de LG-teller en zitten hier niet in.</p>`;
+}
+
+/* ===================== MODELUITLEG ===================== */
 function renderAssume() {
   $('assume').innerHTML = [
-    `IJking: de compressorrendementen zijn vermenigvuldigd met ${nf(K, 2)}, zodat de huidige instellingen bij 3,0 °C en RV 94 % (het weer van 11-11) precies de gemeten COP van 2,7 geven. Wat het model niet verklaart (meetonnauwkeurigheid van de LG, extra verliezen) zit in die factor en geldt voor alle scenario's. Verschillen tussen scenario's komen uit het fysische model.`,
-    'Compressor: rendement volgens Carnot met een deellastcorrectie, condensatie 1,5–4 K boven de aanvoer, verdamping 2–7 K onder de buitenlucht. Maximaal vermogen 9 kW bij A7/W35, minimaal ≈ 2,5 kW (aanname). Na een start bouwt de compressor in ≈ 18 min op naar vol vermogen en is het rendement de eerste 6 minuten lager.',
-    'Ontdooien: rijpvorming neemt toe met de luchtvochtigheid en is het sterkst rond +1 °C. Bij volledige rijp volgt een ontdooicyclus van 4 minuten die 1,5 kW uit de buffer haalt.',
-    'Buffer 50 L + ≈ 22 L in unit en leidingen, volledig gemengd. LG-retour = buffertemperatuur. Groepspompen draaien continu (tenzij de slaapkamer-DT4 de pomp boven schakelt).',
-    'Woning in twee zones: beneden (58 % van het verlies, woonkamer-DT4) en boven (42 %, slaapkamer-DT4), elk met vloermassa en luchtmassa. Transmissie 115 W/K, WTW 150 m³/h met 90 % rendement, 50 m³/h infiltratie, 350 W interne warmte, vloerafgifte ×0,95 (14-11: 23 °C water gaf 20,5 °C bij ≈ 3,5 °C buiten). Geijkt op de hele-dagwarmte van 11-11 (≈ 51 kWh bij 3,0 °C, RV 94 %) en 12-11 (≈ 46 kWh bij 5,0 °C, RV 84 %); weergegevens Eelderwolde (Open-Meteo).',
-    'DT4: TPI-regeling met de ingestelde schakelfrequentie en minimale aan-tijd. Na een stop wacht de LG tot het volgende meetmoment van de pomp (bij interval 1/10 min dus ≈ 11 min). Dat verklaart de gemeten pauzes van 11–12 min.',
-    'Warm water: 180 L boiler, tappen om 07:00, 12:30 en 19:30. Wekelijkse ontsmetting als dagaandeel: tot de comp.-limiet met de warmtepomp, daarboven met het element.',
-    'Jaarschatting: maandgemiddelden van KNMI-station Eelde (benadering), drie temperaturen per maand (−4, 0, +4 °C) en een gemiddelde nuttige zoninstraling per maand.',
-    'Controle 12-11: vaste watertemperatuur 23 °C, woonkamer-DT4 20,5 °C, pompen op HD1. Gemeten COP 3,15 (00:00–19:50), ≈ 15 kWh stroom per dag, ≈ 0,5 starts per uur. Model: COP 3,0, 15,2 kWh, 9 starts per dag. Beide DT4’s schakelen hun groepspomp én (via het relais) de warmtepomp.',
-    'Bekende afwijking: bij een vaste watertemperatuur regelt de echte LG hard op (≈ 8 kW, 28 min aan, ≈ 100 min uit, schakelend op de waterhysterese −2/+2). Het model moduleert lager en geeft minder starts; de COP komt wel overeen (14-11: gemeten 2,98, model 3,05).',
-    'Warm water: 60 L per dag bij 40 °C reproduceert precies het gemeten warmwaterverbruik van dit jaar (524,7 kWh). Voor 2 volwassenen en een kind met regendouche is 150–200 L gebruikelijk; het meetresultaat ligt dus laag.',
-    'Zonnestroom: 18 panelen, een dagopbrengst die je zelf instelt, verdeeld over een zonneboog rond 13:00. Eerst gaat ' + nf(P.baseLoad, 0) + ' W naar het overige huishouden. Kosten: voorbeeldprofiel voor een dynamisch tarief (nacht en middag goedkoper, ochtend- en avondpiek duurder) rond de ingestelde gemiddelde prijs. Eigen zonnestroom telt tegen de terugleverwaarde.',
-    'Vloeren: pvc op alle verdiepingen (lage warmteweerstand, vergelijkbaar met tegels). Groepspompen: OEG CPA-E 25-7.5 PWM, stand HD2 (constante druk, middelste curve).',
-    'Nog onzeker en welkom om het model te verbeteren: het opgenomen vermogen van de groepspompen, hoe de DT4’s bedraad zijn, de waarde van ‘Temperatuursensor selecteren’ en ‘Verwarmer aan-temperatuur’.'
+    `Afstemming: de rendementen van de compressor zijn vermenigvuldigd met ${nf(K, 2)}, zodat de oude instellingen bij het weer van 11 november (3,0 °C, 94 %) precies de gemeten COP van 2,7 geven. Daarna klopt het model ook met 12 november (gemeten 3,23, model 3,2) en de nacht van 14 november (gemeten 2,98, model 3,05).`,
+    'Compressor: rendement volgens Carnot met een deellastcorrectie; 9 kW bij A7/W35, minimaal ≈ 2,5 kW. Na een start is het rendement de eerste minuten lager.',
+    'Ontdooien: ijsvorming groeit met de luchtvochtigheid en is het sterkst rond +1 °C; elke ontdooibeurt duurt 4 minuten en haalt warmte uit de buffer.',
+    'Woning: twee zones (beneden met de woonkamer-thermostaat, boven met de slaapkamer-thermostaat), warmteverlies 115 W/K, WTW 150 m³/h met 90 % rendement, pvc-vloeren. Afgestemd op de dagwarmte van 11 en 12 november en de 20,5 °C bij 23 °C water op 14 november.',
+    'Thermostaten: aan/uit met de ingestelde schakelfrequentie; beide schakelen hun eigen groepspomp en via het relais ook de warmtepomp.',
+    'Warm water: 180 L boiler, ≈ 60 L per dag bij 40 °C (past bij het gemeten verbruik), wekelijkse legionellabeurt als gemiddelde per dag.',
+    'Bekende afwijking: bij een vaste watertemperatuur schakelt de echte LG harder (≈ 8 kW, 28 min aan, ≈ 100 min uit). Het model rekent met lager vermogen en minder starts; de COP komt wel overeen.',
+    'Weersverwachting: met.no voor Eelde, vastgelegd in de pagina op het moment van publiceren. De pagina kan zelf geen nieuwe verwachting ophalen.',
+    'Kosten: voorbeeldprofiel voor een dynamisch tarief rond de ingestelde gemiddelde prijs, met eigen zonnestroom eerst voor het huishouden.'
   ].map(x => `<li>${x}</li>`).join('');
 }
 
-/* ---------- start ---------- */
-const simCache = {};
+/* ===================== REKENEN EN START ===================== */
+let mainTimer = null;
+function schedule() { clearTimeout(mainTimer); $('busy').textContent = 'rekent…'; mainTimer = setTimeout(runMain, 120); }
+function runMain() {
+  save();
+  R = {};
+  for (const id of ids()) { const p = paramsFor(id); const r = simulate(p, { k: kNow() }); r.cost = costCalc(r, p); R[id] = r; }
+  if (!R[ST.sel]) ST.sel = 'nu';
+  P = paramsFor(ST.sel); RES = R[ST.sel]; BASE_RES = R.oud;
+  if (!playing) timeIdx = pickTime(RES);
+  $('busy').textContent = '';
+  renderTop(); renderChips(); renderSliders(); renderSelected();
+  runSecondary();
+}
+function applyPreset(id) {
+  const w = wxPresets().find(x => x.id === id);
+  if (!w) return false;
+  ST.wx = id; ST.Tout = w.Tout; ST.RH = w.RH; ST.sun = w.sun; return true;
+}
 function init() {
-  buildControls(); syncControls();
-  $('pre-huidig').addEventListener('click', () => { P = { ...P, ...HUIDIG }; syncControls(); schedule(); });
-  $('pre-advies').addEventListener('click', () => { P = { ...P, ...ADVIES }; syncControls(); schedule(); });
-  $('pre-zelf').addEventListener('click', () => { P = { ...P, ...ZELF }; syncControls(); schedule(); });
-  $('tune').addEventListener('click', () => {
+  buildSliders(); buildAdv();
+  if (ST.wx !== 'eigen' && !applyPreset(ST.wx)) applyPreset(wxPresets()[0].id);
+  renderTop();
+  $('mode-seg').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; ST.mode = b.dataset.v; try { history.replaceState(null, '', '#' + ST.mode); } catch (er) { /* geen hash */ } save(); renderTop(); renderCopChart(); renderChart(); renderScene(); });
+  $('goal-seg').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; ST.goal = +b.dataset.v; renderTop(); schedule(); });
+  $('wx-chips').addEventListener('click', e => { const b = e.target.closest('button[data-id]'); if (!b) return; applyPreset(b.dataset.id); renderChips(); renderSliders(); schedule(); });
+  $('cards').addEventListener('click', e => { const c = e.target.closest('.scen'); if (c) selectScen(c.dataset.id); });
+  $('cards').addEventListener('keydown', e => { const c = e.target.closest('.scen'); if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); selectScen(c.dataset.id); } });
+  $('adv-reset').addEventListener('click', () => { ST.sel = ST.customBase || 'nu'; ST.custom = null; schedule(); });
+  $('adv-tune').addEventListener('click', () => {
     $('busy').textContent = 'stemt af…';
     setTimeout(() => {
-      const k = P.calib ? K : 1;
-      if (P.hmode === 'vast') {
-        let best = P.fixT, bd = 99;
-        for (let x = 18; x <= 32; x++) { const d = Math.abs(simulate({ ...P, fixFollow: false, fixT: x }, { k, fast: true }).TAavg - 20); if (d < bd - 0.05) { bd = d; best = x; } }
-        P.fixFollow = false; P.fixT = best; syncControls(); run(); return;
-      }
-      let lo = -5, hi = 5;
-      const f = ai => simulate({ ...P, ai }, { k, fast: true }).TAavg - 20;
-      if (f(lo) > 0) P.ai = lo; else if (f(hi) < 0) P.ai = hi;
-      else {
-        for (let i = 0; i < 7; i++) { const mid = (lo + hi) / 2; if (f(mid) > 0) hi = mid; else lo = mid; }
-        const c1 = Math.floor((lo + hi)) / 2, c2 = c1 + 0.5;
-        P.ai = Math.abs(f(c1)) <= Math.abs(f(c2)) ? c1 : c2;
-      }
-      syncControls(); run();
+      if (ST.sel !== 'eigen') { ST.customBase = ST.sel; ST.custom = { ...scenOf(ST.sel) }; ST.sel = 'eigen'; }
+      const c = ST.custom, base = paramsFor('eigen'), f = q => simulate({ ...base, ...q }, { k: kNow(), fast: true }).TAavg - ST.goal;
+      if (c.hmode === 'vast') { let best = c.fixT, bd = 99; c.fixFollow = false; for (let x = 18; x <= 32; x++) { const d = Math.abs(f({ fixFollow: false, fixT: x })); if (d < bd - 0.05) { bd = d; best = x; } } c.fixT = best; }
+      else { let best = 0, bd = 99; for (let a = -5; a <= 5; a += 0.5) { const d = Math.abs(f({ ai: a })); if (d < bd - 0.02) { bd = d; best = a; } } c.ai = best; }
+      schedule();
     }, 20);
   });
   $('time').addEventListener('input', e => setTime(+e.target.value));
@@ -1040,17 +1295,14 @@ function init() {
     playing = setInterval(() => setTime((timeIdx + 2) % RES.series.length), 70);
   });
   $('year-btn').addEventListener('click', runYear);
+  window.addEventListener('hashchange', () => { if (location.hash === '#expert' || location.hash === '#eenvoudig') { ST.mode = location.hash.slice(1); save(); renderTop(); } });
   if ('ResizeObserver' in window) {
     new ResizeObserver(() => RES && renderChart()).observe($('chart'));
     new ResizeObserver(() => RES && renderScene()).observe($('scene'));
+    new ResizeObserver(() => RES && renderCopChart()).observe($('cop-chart'));
   }
-  $('busy').textContent = 'ijkt op meting…';
-  setTimeout(() => {
-    K = calibrate({ ...BASE, ...HUIDIG });
-    simCache.h3 = simulate({ ...BASE, ...HUIDIG }, { k: K });
-    renderAssume();
-    run();
-  }, 30);
+  $('busy').textContent = 'afstemmen op je metingen…';
+  setTimeout(() => { K = calibrate({ ...BASE, ...HUIDIG }); renderAssume(); runMain(); }, 30);
 }
 init();
 </script>
