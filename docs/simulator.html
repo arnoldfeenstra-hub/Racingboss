@@ -600,7 +600,7 @@ function calibrate(pBase, goal = 2.7) {
 }
 
 /* ===================== WEERSVERWACHTING (met.no, Eelde) ===================== */
-const FORECAST = {"updated": "2026-11-14T09:31:54Z", "days": [{"d": "2026-11-14", "n": 14, "tmin": 1.9, "tmax": 7.2, "tmean": 4.3, "rh": 94}, {"d": "2026-11-15", "n": 24, "tmin": -0.6, "tmax": 8.2, "tmean": 3.2, "rh": 95}, {"d": "2026-11-16", "n": 24, "tmin": 3.9, "tmax": 9.0, "tmean": 7.3, "rh": 89}, {"d": "2026-11-17", "n": 24, "tmin": 2.3, "tmax": 9.5, "tmean": 5.2, "rh": 93}, {"d": "2026-11-18", "n": 24, "tmin": 8.0, "tmax": 9.7, "tmean": 8.7, "rh": 92}, {"d": "2026-11-19", "n": 24, "tmin": 7.2, "tmax": 9.4, "tmean": 8.1, "rh": 93}, {"d": "2026-11-20", "n": 24, "tmin": 5.2, "tmax": 8.5, "tmean": 6.7, "rh": 87}, {"d": "2026-11-21", "n": 24, "tmin": 3.6, "tmax": 8.7, "tmean": 5.6, "rh": 87}, {"d": "2026-11-22", "n": 24, "tmin": 2.6, "tmax": 6.1, "tmean": 4.4, "rh": 91}, {"d": "2026-11-23", "n": 24, "tmin": 2.9, "tmax": 6.4, "tmean": 5.0, "rh": 91}]};
+const FORECAST = {"updated": "2026-11-14T21:30:57Z", "days": [{"d": "2026-11-14", "n": 24, "tmin": 1.4, "tmax": 7.2, "tmean": 4.0, "rh": 92}, {"d": "2026-11-15", "n": 24, "tmin": -0.6, "tmax": 7.8, "tmean": 3.1, "rh": 93}, {"d": "2026-11-16", "n": 24, "tmin": 4.2, "tmax": 8.6, "tmean": 7.3, "rh": 95}, {"d": "2026-11-17", "n": 24, "tmin": 2.2, "tmax": 9.2, "tmean": 5.0, "rh": 95}, {"d": "2026-11-18", "n": 24, "tmin": 7.8, "tmax": 9.6, "tmean": 8.6, "rh": 93}, {"d": "2026-11-19", "n": 24, "tmin": 6.4, "tmax": 9.1, "tmean": 7.9, "rh": 94}, {"d": "2026-11-20", "n": 24, "tmin": 5.2, "tmax": 8.0, "tmean": 6.4, "rh": 84}, {"d": "2026-11-21", "n": 24, "tmin": 3.2, "tmax": 8.2, "tmean": 5.3, "rh": 86}, {"d": "2026-11-22", "n": 24, "tmin": 1.5, "tmax": 6.3, "tmean": 3.8, "rh": 93}, {"d": "2026-11-23", "n": 24, "tmin": 3.8, "tmax": 6.3, "tmean": 5.2, "rh": 93}, {"d": "2026-11-24", "n": 19, "tmin": 4.1, "tmax": 6.0, "tmean": 4.9, "rh": 93}]};
 
 /* ===================== INSTELLINGEN ===================== */
 const HUIDIG = { hmode: 'ai', fixT: 25, fixFollow: false, roomGoal: 20, c1o: -10, c1t: 45, c2o: 20, c2t: 19, ai: 0, ctrl: 'invoer', hOn: -2, hOff: 2, wMin: 15, wMax: 45,
@@ -625,7 +625,7 @@ const SCN = {
       setA: g + 0.5, mB: 10, berg: 50, gpW: 10, dhwHyst: 4, disT: 60, dhwFrom: 11, dhwTo: 16 }; } } };
 const MEASURED = [
   { T: 3.0, cop: 2.72, s: 'oud', l: '11 nov' }, { T: 5.2, cop: 3.23, s: 'nu', l: '12 nov' },
-  { T: 6.9, cop: 2.92, s: 'nu', l: '13 nov (met legionellabeurt)' }, { T: 3.5, cop: 2.98, s: 'nu', l: '14 nov, nacht' }];
+  { T: 6.9, cop: 2.92, s: 'nu', l: '13 nov (met legionellabeurt)' }, { T: 3.5, cop: 2.98, s: 'nu', l: '14 nov, nacht' }, { T: 4.0, cop: 3.55, s: 'nu', l: '14 nov t/m 22:28 (huis warmt op naar 21 °C)' }];
 const WHO = { hmode: 'zelf', fixFollow: 'zelf', roomGoal: 'zelf', fixT: 'zelf', ai: 'zelf', silent: 'zelf', setA: 'zelf', setB: 'zelf', cr: 'zelf', ot: 'zelf',
   mA: 'zelf', mB: 'zelf', berg: 'zelf', gpW: 'zelf', dhwSet: 'zelf', dhwFrom: 'zelf', dhwTo: 'zelf', wtwQ: 'zelf', bypass: 'zelf',
   c1o: 'inst', c1t: 'inst', c2o: 'inst', c2t: 'inst', ctrl: 'inst', hOn: 'inst', hOff: 'inst', wMax: 'inst', flowMode: 'inst', mpFix: 'inst', dT: 'inst',
@@ -1014,7 +1014,7 @@ function renderCopStatic() {
     ['Het weer', `Hoe kouder de buitenlucht, hoe harder de warmtepomp moet pompen. Rond 0–5 °C met vochtige lucht vriest het buitendeel aan en moet hij ontdooien${r.defrosts > 0.5 ? `, bij dit weer ${nf(r.defrosts, 0)} keer per dag` : ''}.`],
     ['Warm water', `De boiler op 48 °C, en eens per week 67 °C tegen legionella, haalt een COP van ongeveer ${nf(r.copDHW, 1)}. Dat telt mee in het getal op het display.`],
     ['Vast verbruik', `De interne pomp, de besturing en de verwarming van de compressor kosten samen ${nf(aux, 1)} kWh per dag, ook als er weinig te doen is. Je huis vraagt weinig warmte, dus dat weegt zwaar.`],
-    ['Groot vermogen', 'De 9 kW-unit is ruim 2× zo groot als het huis nodig heeft. Hij draait kort op hoog vermogen en staat dan weer stil. Dat kost rendement.'],
+    ['Groot vermogen', 'De 9 kW-unit is ruim 2× zo groot als het huis nodig heeft. Hij draait kort op hoog vermogen en staat dan weer stil. Dat kost rendement. Draait hij lang achter elkaar, dan gaat het beter: op 14 november, toen het huis opwarmde naar 21 °C, haalde hij van 10:42 tot 22:28 een COP van 3,8.'],
     ['De meting', 'De LG berekent de geleverde warmte zelf uit een klein temperatuurverschil, en dat is niet heel nauwkeurig. Een kWh-meter op de groep van de warmtepomp in de meterkast geeft zekerheid.']];
   $('why').innerHTML = items.map(([a, b], i) => `<li><span>${i + 1}</span><span><b>${a}.</b> ${b}</span></li>`).join('');
   const parts = [['verwarmen', r.elComp, 'var(--warm)'], ['warm water', r.elCompDHW, 'var(--copper)'], ['legionella (gemiddeld per dag)', r.disEl, 'var(--refr)'],

@@ -176,6 +176,31 @@ RV ≈ 90 %. De uit-marge groter maken (−2 / +3, §4.1) geeft langere, minder 
 kan alleen via het installateursmenu. Het model modelleert de LG zachter (lager vermogen, minder starts),
 maar komt op dezelfde COP uit (3,05).
 
+### 14 november: water 23 → 24 °C, woonkamer-DT4 21,5 °C
+
+Weer: ≈ 4 °C gemiddeld (1,4 – 7,2 °C), RV ≈ 92 %, middag zonnig. Tellers om 10:42 en 22:28:
+
+| Periode | Water | Stroom | Warmte | **COP** | Gem. warmtevermogen |
+|---|---|---|---|---|---|
+| 00:00 – 10:42 | 23 °C | 5,8 kWh | 17,3 kWh | 2,98 | 1,6 kW |
+| 10:42 – 22:28 | 24 °C (vanaf de middag) | 11,9 kWh (incl. 1,3 warm water) | 45,6 kWh | **3,83** | 3,9 kW |
+| 00:00 – 22:28 | | 17,7 kWh | 62,9 kWh | **3,55** | |
+
+De beste COP tot nu toe. Twee dingen spelen mee:
+
+1. **Het huis warmt op.** Het huis verliest bij ≈ 4,4 °C buiten en 21 °C binnen ongeveer 2,4 kW. De
+   warmtepomp leverde 3,9 kW: het verschil (≈ 15 kWh) is in de vloeren en de muren gaan zitten, omdat
+   de woonkamer van 20,5 naar 21 °C gaat (de LG-sensor in de berging liep op van 19,5 naar 21,0 °C).
+   Zodra het huis op temperatuur is, daalt de warmtevraag weer naar ≈ 50–55 kWh per dag bij 3–4 °C.
+2. **Lang doordraaien op een redelijk vermogen is gunstig.** Bij 1,6 kW gemiddeld (veel stilstand) was de
+   COP 3,0, bij 3,9 kW (lang achter elkaar) 3,8. Het vaste verbruik weegt dan minder zwaar en de LG
+   meet de warmte nauwkeuriger bij een groter temperatuurverschil (24 → 28 °C in plaats van 21 → 23 °C).
+   Het model rekent dit effect zwakker: het verwacht voor deze dag een COP van ≈ 3,0.
+
+Starts in de avond: 17:40, 18:20, 19:07 en 21:46, telkens bij *In* 22–23 °C; om 22:28 draaide hij nog
+(24 / 28 °C). Geen foutcodes. Verwachting zodra het huis op 21 °C is: ≈ 19 kWh per dag bij 3 °C, COP
+≈ 3,0–3,3.
+
 **Op het display:** tijdens **Ontdooiing** is *Uitvoer* lager dan *Invoer* (bijv. 22 / 20 °C). Dat is
 normaal: de warmtepomp draait dan even omgekeerd en haalt warmte uit het water om het ijs op het
 buitendeel te smelten. Rond 0–4 °C en hoge luchtvochtigheid gebeurt dat meerdere keren per nacht.
