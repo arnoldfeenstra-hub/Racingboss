@@ -201,6 +201,17 @@ Starts in de avond: 17:40, 18:20, 19:07 en 21:46, telkens bij *In* 22–23 °C; 
 (24 / 28 °C). Geen foutcodes. Verwachting zodra het huis op 21 °C is: ≈ 19 kWh per dag bij 3 °C, COP
 ≈ 3,0–3,3.
 
+### Nacht 14→15 november (water 24 °C, buiten ≈ −0,5 tot 2 °C, RV 95–100 %)
+
+| Periode | Stroom | Warmte | COP |
+|---|---|---|---|
+| 14-11 hele dag (teruggerekend) | 18,6 kWh | 66,4 kWh | **3,57** |
+| 15-11 00:00 – 10:17 | 12,4 kWh (10,8 verwarming + 1,5 warm water) | 31,9 kWh | **2,57** |
+
+Koude, verzadigde lucht rond het vriespunt: veel ontdooien, lagere COP (model verwachtte ≈ 2,8).
+Warm water kostte 1,5 kWh in de nacht/ochtend: de boiler warmde buiten het middagvenster bij
+(controleer of in Roosters → DHW de regel 16:00 → 40 °C staat).
+
 **Op het display:** tijdens **Ontdooiing** is *Uitvoer* lager dan *Invoer* (bijv. 22 / 20 °C). Dat is
 normaal: de warmtepomp draait dan even omgekeerd en haalt warmte uit het water om het ijs op het
 buitendeel te smelten. Rond 0–4 °C en hoge luchtvochtigheid gebeurt dat meerdere keren per nacht.
