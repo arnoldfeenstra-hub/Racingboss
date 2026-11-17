@@ -257,6 +257,30 @@ absolute COP is onzeker tot er een onafhankelijke meting is:
 4. **Installateur:** *Energiebewaking → elektrische verwarming* controleren (het element in de HN0913T is
    intern) en *Verwarmer aan-temperatuur* zo laag mogelijk.
 
+### 17 november: water 23 °C, woonkamer-DT4 21,5 °C
+
+Weer (verwachting met.no): ≈ 5 °C gemiddeld (2 – 9 °C), RV ≈ 95 %.
+
+| Periode | Stroom | Warmte | COP (LG-teller) |
+|---|---|---|---|
+| 16-11 hele dag (geen activiteit meer na 19:59) | 25,5 kWh | 46,2 kWh | 1,81 (teller te hoog, zie hierboven) |
+| 17-11 00:00 – 19:40 | 10,7 kWh | 37,3 kWh | **3,49** |
+
+Uit het logboek:
+- **Van 16-11 20:00 tot 17-11 03:46 geen enkele melding.** Na de warmwaterbeurt van 19:59 was het water
+  warm genoeg en zakte de retour langzaam naar 21 °C (= 23 − 2): de LG start nu op zijn eigen
+  waterhysterese, niet op de DT4 (Oper. blijft de hele dag *Heat*).
+- 's Nachts (03:46 – 06:47) en om 16:00 – 16:50 groepjes korte *ODU On/Off*-meldingen bij In/Out 21–22 °C:
+  vermoedelijk opstarten en ontdooien bij ≈ 4 °C en RV ≈ 95 %.
+- 06:47 – 09:26 één lange beurt (stop bij 22 → 26 °C, ≈ 8 kW).
+- **09:30 – 09:53 warm water** (boiler 41 → 47 °C, *Uit* 59 °C), vóór het middagvenster: het doel
+  staat de hele dag op 48 °C, dus het DHW-rooster (11:00 → 48 °C, 16:00 → 40 °C) is nog niet actief.
+- De DHW-teller bleef op **0,0 kWh** staan, terwijl er ≈ 1,3 kWh warmte in de boiler ging. Ook de verdeling
+  verwarming/warm water in de LG-tellers is dus niet betrouwbaar.
+
+Model voor deze dag (5 °C, RV 95 %): ≈ 15 kWh stroom, ≈ 47 kWh warmte, COP 3,1; gemeten (doorgetrokken
+naar 24:00) ≈ 13 kWh en ≈ 45 kWh. Dat klopt redelijk.
+
 **Les:** grote stappen in de watertemperatuur geven een golfbeweging (te warm → DT4 lang uit → vloer koelt af →
 hard inhalen). Liever per stap 1 °C en een dag afwachten.
 
