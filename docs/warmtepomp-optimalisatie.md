@@ -212,6 +212,35 @@ Koude, verzadigde lucht rond het vriespunt: veel ontdooien, lagere COP (model ve
 Warm water kostte 1,5 kWh in de nacht/ochtend: de boiler warmde buiten het middagvenster bij
 (controleer of in Roosters → DHW de regel 16:00 → 40 °C staat).
 
+### 15 en 16 november: uitrusten en inhalen
+
+| Dag | Water | Stroom | Warmte | COP |
+|---|---|---|---|---|
+| 15-11 hele dag | 24 °C, vanaf de ochtend 23 °C | 14,5 kWh (waarvan 12,4 vóór 10:17) | 37,2 kWh | 2,57 |
+| 15-11 10:17 – 24:00 | 23 °C | 2,1 kWh | 5,3 kWh | |
+| 16-11 tot de avond | 23 °C, later 22 °C | 25,5 kWh (25,0 verwarming, 0,4 warm water) | 46,2 kWh | **1,81** |
+
+Op 15-11 was het huis door het opwarmen van 14-11 op 21,5 °C gekomen; de woonkamer-DT4 schakelde uit en
+de warmtepomp deed ruim 14 uur bijna niets. Op 16-11 om 01:11 vroeg de DT4 weer warmte en draaide de LG tot
+14:03 zonder onderbreking. Om 14:03 stond er 23 → 29 °C in het logboek: bij 28,9 L/min is dat ≈ 12 kW, meer
+dan de compressor alleen bij 23 °C water levert. Een COP van 1,8 bij ≈ 7 °C buiten past bij **≈ 15 kWh van het
+elektrische element** (≈ 5 uur op 3 kW).
+
+Twee mogelijke verklaringen, nog niet zeker welke:
+1. **Het element heeft echt bijgesprongen**, omdat na het lange uitrusten het water lang onder het doel bleef.
+   Dan staat de *Verwarmer aan-temperatuur* te hoog (installateur: zo laag mogelijk zetten).
+2. **De LG telt het element wel, maar het draaide niet.** Bij *Energiebewaking* staat de elektrische
+   verwarming als *Extern, 3 kW*; de LG rekent dan met het ingestelde vermogen. De woning-meter (Pulse) gaf
+   voor een dag 15 kWh in totaal, minder dan de 25,5 kWh van de LG alleen. Als dat dezelfde dag is, telt de
+   LG te veel.
+
+Controle: de Pulse-historie per uur van 16-11 (een element geeft blokken van ≈ +3 kW). Warm water: om 14:06
+viel de boiler terug naar 37 °C (douche), de LG stopte na 45 minuten (*DHW tijd actief*) op 44 °C en warmde
+om 19:43–19:59 bij tot 48 °C, midden in de dure avondpiek: de rooster-regel 16:00 → 40 °C staat er nog niet in.
+
+**Les:** grote stappen in de watertemperatuur geven een golfbeweging (te warm → DT4 lang uit → vloer koelt af →
+hard inhalen). Liever per stap 1 °C en een dag afwachten.
+
 **Op het display:** tijdens **Ontdooiing** is *Uitvoer* lager dan *Invoer* (bijv. 22 / 20 °C). Dat is
 normaal: de warmtepomp draait dan even omgekeerd en haalt warmte uit het water om het ijs op het
 buitendeel te smelten. Rond 0–4 °C en hoge luchtvochtigheid gebeurt dat meerdere keren per nacht.
