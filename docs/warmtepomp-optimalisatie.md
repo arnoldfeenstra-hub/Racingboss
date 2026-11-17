@@ -238,6 +238,25 @@ Controle: de Pulse-historie per uur van 16-11 (een element geeft blokken van ≈
 viel de boiler terug naar 37 °C (douche), de LG stopte na 45 minuten (*DHW tijd actief*) op 44 °C en warmde
 om 19:43–19:59 bij tot 48 °C, midden in de dure avondpiek: de rooster-regel 16:00 → 40 °C staat er nog niet in.
 
+**Bevestigd (17-11): de Pulse-meting is van 16 november.** Het hele huis haalde die dag 15 kWh van het net
+(om 22:34), terwijl de LG voor zichzelf 25,5 kWh telde. Dat kan niet: zelfs als de zonnepanelen op deze grijze
+dag 3–5 kWh direct in huis leverden en de rest van het huishouden maar 5–7 kWh gebruikte, kan de warmtepomp
+hooguit ≈ 11–14 kWh hebben verbruikt. De LG-teller telde dus ≈ 11–14 kWh te veel. Waarschijnlijkste oorzaak:
+de LG gaf het signaal voor elektrische bijverwarming en telt dan het ingestelde vermogen (*Extern, 3 kW*),
+terwijl er geen of minder stroom werd gebruikt. Met ≈ 11–14 kWh werkelijk verbruik was de COP op 16-11
+≈ 3,3–4,2 in plaats van 1,81.
+
+**Gevolg voor de hele analyse:** de COP-cijfers in dit document komen uit de LG-tellers. Als de LG vaker
+"spookverbruik" van de bijverwarming telt, ligt de echte COP hoger dan hier staat, ook vóór de wijzigingen
+(11-11: 2,72; jaar: 2,2). De verbetering door minder pendelen blijft (die staat in het logboek), maar de
+absolute COP is onzeker tot er een onafhankelijke meting is:
+1. **Nachtvergelijking:** lees de LG-teller *Energie vandaag* om ≈ 23:00 en ≈ 07:00 af en vergelijk met het
+   Pulse-verbruik over dezelfde uren (min ≈ 0,2 kW sluipverbruik van het huis). 's Nachts is er geen zon.
+2. **Pulse → Fasen:** bij een 3-fase-aansluiting staat de warmtepomp vaak op één fase; dan is hij apart te volgen.
+3. **Tussenmeter** op de groep van de warmtepomp in de meterkast (installateur).
+4. **Installateur:** *Energiebewaking → elektrische verwarming* controleren (het element in de HN0913T is
+   intern) en *Verwarmer aan-temperatuur* zo laag mogelijk.
+
 **Les:** grote stappen in de watertemperatuur geven een golfbeweging (te warm → DT4 lang uit → vloer koelt af →
 hard inhalen). Liever per stap 1 °C en een dag afwachten.
 
