@@ -55,14 +55,17 @@ komende dag(en), bijv. van de weerapp voor Eelde):
 
 | Gemiddelde buitentemperatuur (komende 24 uur) | Water voor woonkamer **21 °C** |
 |---|---|
-| boven 6 °C | **23 °C** |
-| 1 tot 6 °C | **24 °C** |
-| −1 tot 1 °C | **25 °C** |
-| −4 tot −1 °C | **26 °C** |
-| kouder dan −4 °C | **27 °C** |
+| boven 3 °C | **23 °C** |
+| 0 tot 3 °C | **24 °C** |
+| −3 tot 0 °C | **25 °C** |
+| −6 tot −3 °C | **26 °C** |
+| kouder dan −6 °C | **27 °C** |
 | **Woonkamer-DT4** (bovengrens) | **21,5 °C** |
 
-Voor 20 °C in de woonkamer: overal één graad lager water en de DT4 op 20,5 °C. *(Bijgewerkt 14-11:
+Voor 20 °C in de woonkamer: overal één graad lager water (maar nooit onder 22 °C, anders start de LG
+pas als het water onder de kamertemperatuur zakt) en de DT4 op 20,5 °C. *(Bijgewerkt 18-11: met 23 °C
+water bij 5–8 °C buiten bleef de woonkamer op 21,5 °C staan, de grens van de thermostaat. De grens
+tussen 23 en 24 °C water schuift daarom van 6 naar 3 °C.)* *(Bijgewerkt 14-11:
 gemeten gaf 23 °C water bij ≈ 3,5 °C buiten 20,5 °C in de woonkamer; de eerdere tabel lag ≈ 1 °C te
 laag.)*
 
@@ -307,6 +310,14 @@ niet meer aangeraden**. Het gezin douchet ’s ochtends en ’s avonds; na een d
 Het voordeel is in de winter klein: ≈ 1–1,5 kWh warm water per dag, ≈ € 0,05–0,10 per dag verschil tussen
 dure en goedkope uren. Laat de boiler dus gewoon op 48 °C staan. In het voorjaar, met veel zonnestroom,
 kan een rooster 11:00 → 48 °C met een avonddoel van minstens 45 °C zinvol worden.
+
+**18-11 avond:** de woonkamer blijft op **21,5 °C**, precies de stand van de woonkamer-DT4. Bij 5–8 °C
+buiten levert 23 °C water dus iets meer dan nodig en is de DT4 de begrenzer: hij zet bij 21,5 °C de pomp
+beneden en de warmtepomp uit. Dat verklaart de lange pauze van 23:29 tot 10:13. Het logboek laat zien dat
+de LG daarbij niet gaat pendelen (één verwarmingsstart per etmaal): de LG wacht tot het water in de unit
+zelf onder 21 °C (23 − 2) zakt. Wie liever **21,0 °C** heeft, kan de woonkamer-DT4 op 21,0 °C zetten en
+het water op 23 °C laten; dat scheelt ≈ 3 % warmte (≈ 0,4 kWh per dag). Water op 22 °C is bij deze
+hysterese minder geschikt: de LG start dan pas bij 20 °C retour, onder de kamertemperatuur.
 
 **Les:** grote stappen in de watertemperatuur geven een golfbeweging (te warm → DT4 lang uit → vloer koelt af →
 hard inhalen). Liever per stap 1 °C en een dag afwachten.

@@ -345,7 +345,7 @@ const EELDE = [
   ['jul', 31, 17.7, 77, 800], ['aug', 31, 17.4, 79, 700], ['sep', 30, 14.3, 83, 550],
   ['okt', 31, 10.4, 87, 350], ['nov', 30, 6.4, 90, 150], ['dec', 31, 3.6, 90, 100]];
 
-const FIX_RULE = (To, goal) => (To > 6 ? 23 : To > 1 ? 24 : To > -1 ? 25 : To > -4 ? 26 : 27) - (goal >= 21 ? 0 : 1);
+const FIX_RULE = (To, goal) => Math.max(22, (To > 3 ? 23 : To > 0 ? 24 : To > -3 ? 25 : To > -6 ? 26 : 27) - (goal >= 21 ? 0 : 1));
 function curveTarget(p, To) {
   if (p.hmode === 'vast') return clamp(p.fixFollow ? FIX_RULE(To, p.roomGoal ?? 20) : p.fixT, p.wMin, p.wMax);
   let t;
@@ -607,7 +607,7 @@ const HUIDIG = { hmode: 'ai', fixT: 25, fixFollow: false, roomGoal: 20, c1o: -10
   silent: true, flowMode: 'opt', mpFix: 26, dT: 5, pumpMode: 'interval', pumpOn: 1, pumpOff: 10, heaterOn: -10,
   setA: 20, setB: 18.5, cr: 6, ot: 1, wiringA: 'beide', wiringB: 'beide', mA: 18, mB: 12, berg: 100, gpW: 20,
   dhwSet: 48, dhwHyst: 3, compLim: 58, disOn: true, disT: 67, dhwActive: 45, dhwStop: 30, dhwFrom: 0, dhwTo: 24 };
-const BASE = { Tout: 3, RH: 94, sun: 0, H: 115, emit: 0.95, gains: 350, wtwQ: 150, wtwEta: 90, bypass: false, inf: 50, dhwUse: 60,
+const BASE = { Tout: 3, RH: 94, sun: 0, H: 115, emit: 1.1, gains: 350, wtwQ: 150, wtwEta: 90, bypass: false, inf: 50, dhwUse: 60,
   pMinNom: 2.5, pNom: 9, calib: true, pvKWh: 5, baseLoad: 300, price: 0.27, feedIn: 0.05 };
 const HOUSE_KEYS = ['H', 'emit', 'gains', 'wtwQ', 'wtwEta', 'bypass', 'inf', 'dhwUse', 'pMinNom', 'pNom', 'calib', 'pvKWh', 'baseLoad', 'price', 'feedIn'];
 const SCEN_KEYS = Object.keys(HUIDIG);
@@ -1150,8 +1150,8 @@ function syncAdv() {
 
 /* ===================== VERWACHTING EN TABEL PER TEMPERATUUR ===================== */
 const BANDS = [
-  { l: 'boven 6 °C', rep: 8 }, { l: '1 tot 6 °C', rep: 3.5 }, { l: '−1 tot 1 °C', rep: 0 },
-  { l: '−4 tot −1 °C', rep: -2.5 }, { l: 'kouder dan −4 °C', rep: -7 }];
+  { l: 'boven 3 °C', rep: 6 }, { l: '0 tot 3 °C', rep: 1.5 }, { l: '−3 tot 0 °C', rep: -1.5 },
+  { l: '−6 tot −3 °C', rep: -4.5 }, { l: 'kouder dan −6 °C', rep: -8 }];
 async function computeForecast(token) {
   const g = ST.goal, adv = forecastAdvice(g), t = todayStr();
   if (!adv.length) {
@@ -1240,7 +1240,7 @@ function renderAssume() {
     `Afstemming: de rendementen van de compressor zijn vermenigvuldigd met ${nf(K, 2)}, zodat de oude instellingen bij het weer van 11 november (3,0 °C, 94 %) precies de gemeten COP van 2,7 geven. Daarna klopt het model ook met 12 november (gemeten 3,23, model 3,2) en de nacht van 14 november (gemeten 2,98, model 3,05).`,
     'Compressor: rendement volgens Carnot met een deellastcorrectie; 9 kW bij A7/W35, minimaal ≈ 2,5 kW. Na een start is het rendement de eerste minuten lager.',
     'Ontdooien: ijsvorming groeit met de luchtvochtigheid en is het sterkst rond +1 °C; elke ontdooibeurt duurt 4 minuten en haalt warmte uit de buffer.',
-    'Woning: twee zones (beneden met de woonkamer-thermostaat, boven met de slaapkamer-thermostaat), warmteverlies 115 W/K, WTW 150 m³/h met 90 % rendement, pvc-vloeren. Afgestemd op de dagwarmte van 11 en 12 november en de 20,5 °C bij 23 °C water op 14 november.',
+    'Woning: twee zones (beneden met de woonkamer-thermostaat, boven met de slaapkamer-thermostaat), warmteverlies 115 W/K, WTW 150 m³/h met 90 % rendement, pvc-vloeren. Afgestemd op de dagwarmte van 11 en 12 november de 20,5 °C bij 23 °C water op 14 november en de 21,5 °C (begrensd door de thermostaat) bij 23 °C water op 17 en 18 november.',
     'Thermostaten: aan/uit met de ingestelde schakelfrequentie; beide schakelen hun eigen groepspomp en via het relais ook de warmtepomp.',
     'Warm water: 180 L boiler, ≈ 60 L per dag bij 40 °C (past bij het gemeten verbruik), wekelijkse legionellabeurt als gemiddelde per dag.',
     'Bekende afwijking: bij een vaste watertemperatuur schakelt de echte LG harder (≈ 8 kW, 28 min aan, ≈ 100 min uit). Het model rekent met lager vermogen en minder starts; de COP komt wel overeen.',
