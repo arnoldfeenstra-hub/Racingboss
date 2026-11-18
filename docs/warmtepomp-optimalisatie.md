@@ -67,7 +67,7 @@ gemeten gaf 23 °C water bij ≈ 3,5 °C buiten 20,5 °C in de woonkamer; de eer
 laag.)*
 
 Verder: slaapkamer-DT4 op wat je daar wilt (nu 18,5 °C), geen nachtverlaging, stille modus uit, warm
-water via Roosters → DHW (11:00 → 48 °C, 16:00 → 40 °C), groepspompen op HD1 en eventueel de berging
+water op 48 °C zonder rooster (zie 17–18 november), groepspompen op HD1 en eventueel de berging
 teruggeregeld (§6). De DT4-parameters (Cr, Ot) hoeven dan niet te veranderen: omdat de DT4 een
 halve graad boven het doel staat, schakelt hij vrijwel nooit (§5). Staat hij er precies op (bijv. 21,0 °C bij
 een doel van 21), dan gaat hij weer schakelen en pendelt de warmtepomp: bij 3 °C ≈ 24 starts per dag
@@ -281,6 +281,33 @@ Uit het logboek:
 Model voor deze dag (5 °C, RV 95 %): ≈ 15 kWh stroom, ≈ 47 kWh warmte, COP 3,1; gemeten (doorgetrokken
 naar 24:00) ≈ 13 kWh en ≈ 45 kWh. Dat klopt redelijk.
 
+### 17 en 18 november: één lange beurt per dag
+
+| Dag | Weer (verwachting met.no) | Stroom | Warmte | COP (LG-teller) |
+|---|---|---|---|---|
+| 11-11 (oude instellingen, ter vergelijking) | 3,0 °C, RV 94 % | 19,5 kWh | 53,1 kWh | 2,72 |
+| 17-11 hele dag | ≈ 5 °C, RV ≈ 95 % | **12,7 kWh** (12,2 verwarming + 0,5 warm water) | 48,1 kWh | **3,79** |
+| 18-11 00:00 – 19:48 | ≈ 8 °C, RV ≈ 86 % | 8,2 kWh | 34,1 kWh | **4,16** |
+
+Logboek 17-11 23:11 tot 18-11 19:48:
+- **Verwarming:** van 23:29 tot 10:13 (≈ 10,7 uur) geen enkele start. Om 10:13 startte hij bij *In* 21 °C
+  (= 23 − 2) en draaide **onafgebroken tot 19:03** (≈ 9 uur), toen warm water voorging. Eén start voor de
+  verwarming in een etmaal, tegen ≈ 50 op 11-11.
+- **Warm water:** drie beurten, alle drie na het douchen: 23:11–23:29 (boiler 42 → 47 °C), 08:34–09:02
+  (42 → 47 °C) en 19:06–19:39 (37 → 47 °C, *Uit* 58 °C). Elke beurt ≈ 0,5 kWh. De DHW-teller telt nu wel mee.
+
+De simulator verwacht voor deze dagen een COP van ≈ 3,1 (17-11) en ≈ 3,6 (18-11). De gemeten COP ligt
+≈ 0,5 hoger. Twee mogelijke redenen: het model rekent lange, rustige beurten te ongunstig, en/of de LG telde
+met de oude instellingen extra (spook)verbruik van de bijverwarming, waardoor de oude COP van 2,7 te laag
+uitviel. Een hele dag LG-teller naast de Pulse moet dat uitwijzen.
+
+**Bijgesteld advies warm water (18-11):** het rooster 11:00 → 48 °C / 16:00 → 40 °C wordt **in de winter
+niet meer aangeraden**. Het gezin douchet ’s ochtends en ’s avonds; na een douchebeurt staat de boiler op
+37–42 °C. Met een avonddoel van 40 °C warmt hij dan pas de volgende middag op en is de ochtenddouche lauw.
+Het voordeel is in de winter klein: ≈ 1–1,5 kWh warm water per dag, ≈ € 0,05–0,10 per dag verschil tussen
+dure en goedkope uren. Laat de boiler dus gewoon op 48 °C staan. In het voorjaar, met veel zonnestroom,
+kan een rooster 11:00 → 48 °C met een avonddoel van minstens 45 °C zinvol worden.
+
 **Les:** grote stappen in de watertemperatuur geven een golfbeweging (te warm → DT4 lang uit → vloer koelt af →
 hard inhalen). Liever per stap 1 °C en een dag afwachten.
 
@@ -441,7 +468,7 @@ Bereiken komen uit de LG-installatiehandleiding van de HN0913T.
 | Gebruik de tankverwarmer | Gebruik, Cyclus, 60 min | laten | Element pas na 60 min warmtepompbedrijf. |
 | Tank ontsmetting 1 | Gebruik, vrijdag, 12 uur | **laten** | Midden op de dag = warmste buitenlucht (en eventueel zonnestroom). |
 | Tank ontsmetting 2 | 67 °C / 10 min / eind 1 | **60 °C / 10 min / 1** | De warmtepomp doet tot 58 °C; alleen 58 → 60 °C gaat elektrisch in plaats van 58 → 67 °C. Bespaart ≈ 60–90 kWh/jaar. 60 °C blijft de gangbare desinfectietemperatuur; niet uitzetten. |
-| DHW-schema | – | **Roosters → DHW** (niet "DHW verwarming"): elke dag **11:00 → 48 °C** en **16:00 → 40 °C** | Opwarmen naar 48 °C gebeurt dan in de middag: eigen zonnestroom (18 panelen), de warmste buitenlucht en meestal de goedkope middaguren van je dynamische tarief. Na het einde van salderen (1-1-2027) scheelt dat direct geld. Buiten het venster staat het doel op 40 °C (de laagste waarde), zodat hij alleen bijwarmt als de boiler echt leeg raakt (onder ≈ 36 °C). Zet het schema 's avonds niet op "uit": dan warmt hij helemaal niet meer bij. |
+| DHW-schema | – | **In de winter geen rooster** (bijgesteld 18-11, zie §1b). In het voorjaar eventueel **11:00 → 48 °C** met een avonddoel van **minstens 45 °C** | Opwarmen naar 48 °C gebeurt dan in de middag: eigen zonnestroom (18 panelen), de warmste buitenlucht en meestal de goedkope middaguren van je dynamische tarief. Na het einde van salderen (1-1-2027) scheelt dat direct geld. Buiten het venster staat het doel op 40 °C (de laagste waarde), zodat hij alleen bijwarmt als de boiler echt leeg raakt (onder ≈ 36 °C). Zet het schema 's avonds niet op "uit": dan warmt hij helemaal niet meer bij. |
 | Hercirculatietijd | Niet gebruiken | laten | |
 
 ### 4.4 Koelen (zomer, optioneel)
@@ -734,7 +761,7 @@ Vink af wat je gedaan hebt:
 - [ ] *Tank ontsmettingsinstelling 2* → **60** / 10 / 1
 - [ ] *Tank instelling 2* → hysterese **4**
 - [ ] Hoofdscherm, douche-icoon → **48 °C** laten staan
-- [ ] Roosters en bewerken → **DHW** (niet "DHW verwarming"): elke dag **11:00 → 48 °C** en **16:00 → 40 °C**
+- [ ] Roosters en bewerken → **DHW**: in de winter leeg laten (boiler blijft op 48 °C; bijgesteld 18-11)
 - [ ] Roosters en bewerken → **DHW verwarming**: leeg laten (dit is het elektrische element)
 
 **D. Gebruikersmenu**
