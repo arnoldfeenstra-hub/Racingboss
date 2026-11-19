@@ -333,8 +333,8 @@ verwarmingsblokken (05:05–07:23 en 15:19–16:51, ≈ 2 kW) en de warmwaterbeu
 zien. **Op een gewone dag klopt de LG-teller dus**; 16-11 was een uitzondering.
 
 **18-11:** het huis gebruikte 40,3 kWh (35,14 van het net + 5,2 eigen zonnestroom), waarvan 9,5 kWh
-warmtepomp. De overige ≈ 31 kWh is veel meer dan normaal (≈ 8–9 kWh): waarschijnlijk is de auto geladen.
-Deze dag is daarom niet bruikbaar voor de controle.
+warmtepomp. De overige ≈ 31 kWh bestaat voor 24 kWh uit het laden van de auto (bevestigd). Dan blijft voor de rest van
+het huis ≈ 6,8 kWh over (≈ 0,28 kW gemiddeld), net als op 19-11. **Ook op 18-11 klopt de LG-teller dus.**
 
 Logboek 19-11: verwarming 05:05–07:23 en 15:19–16:51 (start telkens bij *In* 21 °C), warm water 07:26–07:54
 (boiler 39 → 47 °C) en 16:55–17:19 (41 → 47 °C), allebei direct na het douchen. Geen foutcodes.
