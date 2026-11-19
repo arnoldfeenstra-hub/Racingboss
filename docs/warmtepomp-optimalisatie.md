@@ -641,6 +641,50 @@ onnodig veel ventileert en dat de bypass in de winter dicht blijft.
   die zonne-overschot of lage prijzen meldt, kan de warmtepomp dan zelf het warmwaterdoel verhogen.
   Dat is pas zinvol na 2027 en met een geschikte energiemanager; bespreek het met de installateur.
 
+### Goedkope en dure uren (dynamisch tarief, analyse 19-11)
+
+Marktprijzen (EPEX day-ahead via EnergyZero) van 21 oktober t/m 20 november, gemiddeld per uur op
+werkdagen, incl. btw. De energiebelasting en de opslag van de leverancier komen daar voor elk uur gelijk bij;
+voor het verschuiven telt alleen dit verschil. (Op 19-11 betaalde je gemiddeld € 0,40/kWh all-in.)
+
+| Uren (werkdag) | Marktprijs incl. btw | |
+|---|---|---|
+| 01:00 – 06:00 | **€ 0,21** | goedkoopst |
+| 11:00 – 15:00 | **€ 0,25** | goedkoop, en de warmste uren (betere COP) en eventueel zon |
+| 21:00 – 24:00 | € 0,26 | |
+| 07:00 – 10:00 | € 0,32 | ochtendpiek |
+| 16:00 – 20:00 | **€ 0,36** | avondpiek, duurst |
+
+In het weekend is het verschil kleiner en is 10:00 – 14:00 het goedkoopst. Gemiddeld verschilt de duurste
+en goedkoopste prijs op een werkdag ≈ € 0,21/kWh.
+
+**Warmtepomp nu (19-11):** verwarming 05:05–07:23 en 15:19–16:51, warm water 07:26 en 16:55, deels in de
+pieken. Verschuiven van 3–5 kWh per dag van de avondpiek naar de middag levert ≈ € 0,35–0,60 per dag op,
+≈ € 50–90 per stookseizoen (naar de nacht iets meer, maar dan is de COP lager door de koudere lucht).
+
+**Hoe (zonder installateur, als het LG-rooster dat toestaat):** bij *Roosters en bewerken* een rooster voor
+verwarming met de watertemperatuur per tijdvak:
+
+| Tijd | Water (bij de tabel-stand 23 °C) |
+|---|---|
+| 11:00 – 16:00 | **24 °C** (vloer opladen in goedkope, warme uren) |
+| 16:00 – 20:00 | **22 °C** (de LG start dan pas bij 20 °C retour: in de praktijk een pauze) |
+| rest van de dag | **23 °C** |
+
+Op koudere dagen (tabel 24 °C) alles één graad hoger. Controle na twee dagen: zakt de woonkamer ’s avonds
+onder 20,8 °C, maak het piekblok korter (17:00 – 19:00). Niet meer dan ±1 °C rond de tabel-stand, om een
+golfbeweging te voorkomen. Warm water verschuiven levert minder dan € 0,15 per dag op en gaat ten koste van
+het comfort; niet doen. De auto (24 kWh per laadbeurt) is veruit de grootste verschuifbare post: laden in de
+avondpiek kost ≈ € 3,50 meer dan ’s nachts.
+
+**Energiebewaking (bevestigd 19-11):** *Instelling elektrische verwarming* staat op **EXTERNAL, 3 kW**. Volgens
+de handleiding zijn de keuzes LG 1Ø / LG 3Ø / EXTERNAL (fabriek: LG 1Ø, 3 kW). Met EXTERNAL rekent de LG
+met het ingevulde vermogen zodra hij het element aanstuurt, zonder te meten. Op 16-11 telde hij zo ≈ 11–14 kWh
+die de Pulse niet zag: het element werd aangestuurd maar trok (vrijwel) geen stroom. Voor de installateur:
+(1) is het interne element van 3 kW aangesloten en werkt het (handleiding p. 181: thermische beveiliging
+resetten)? (2) zet de energiebewaking dan op **LG 1Ø, 3 kW**; (3) controleer *Verwarmer aan-temperatuur*
+(fabriek −5 °C; liever −10 °C of lager).
+
 ---
 
 ## 8. Verwachte effecten (indicatief)
