@@ -319,6 +319,26 @@ zelf onder 21 °C (23 − 2) zakt. Wie liever **21,0 °C** heeft, kan de woonkam
 het water op 23 °C laten; dat scheelt ≈ 3 % warmte (≈ 0,4 kWh per dag). Water op 22 °C is bij deze
 hysterese minder geschikt: de LG start dan pas bij 20 °C retour, onder de kamertemperatuur.
 
+### 18 en 19 november: LG-teller gecontroleerd met de Pulse
+
+| Dag | Weer | Stroom LG | Warmte | COP |
+|---|---|---|---|---|
+| 18-11 hele dag | ≈ 8 °C, zonnig (9,9 kWh zonnestroom) | 9,5 kWh | 38,1 kWh | **4,01** |
+| 19-11 00:00 – ≈ 19:30 | ≈ 5,5 °C, RV ≈ 97 %, grijs (1,2 kWh zon) | 7,1 kWh (5,9 verwarming + 1,2 warm water) | 26,4 kWh | **3,72** |
+
+**Controle 19-11 (t/m 19:27):** het huis haalde 12,72 kWh van het net en gebruikte ≈ 1,15 kWh eigen
+zonnestroom: 13,9 kWh in totaal. Daarvan 7,1 kWh warmtepomp (LG-teller), 6,8 kWh de rest van het huis
+(≈ 0,35 kW gemiddeld, passend bij een nachtverbruik van ≈ 0,2–0,3 kW). In de Pulse-grafiek zijn de
+verwarmingsblokken (05:05–07:23 en 15:19–16:51, ≈ 2 kW) en de warmwaterbeurten (07:26 en 16:55) terug te
+zien. **Op een gewone dag klopt de LG-teller dus**; 16-11 was een uitzondering.
+
+**18-11:** het huis gebruikte 40,3 kWh (35,14 van het net + 5,2 eigen zonnestroom), waarvan 9,5 kWh
+warmtepomp. De overige ≈ 31 kWh is veel meer dan normaal (≈ 8–9 kWh): waarschijnlijk is de auto geladen.
+Deze dag is daarom niet bruikbaar voor de controle.
+
+Logboek 19-11: verwarming 05:05–07:23 en 15:19–16:51 (start telkens bij *In* 21 °C), warm water 07:26–07:54
+(boiler 39 → 47 °C) en 16:55–17:19 (41 → 47 °C), allebei direct na het douchen. Geen foutcodes.
+
 **Les:** grote stappen in de watertemperatuur geven een golfbeweging (te warm → DT4 lang uit → vloer koelt af →
 hard inhalen). Liever per stap 1 °C en een dag afwachten.
 
