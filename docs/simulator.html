@@ -604,7 +604,7 @@ const FORECAST = {"updated": "2026-11-24T09:28:18Z", "days": [{"d": "2026-11-24"
 
 /* ===================== INSTELLINGEN ===================== */
 const HUIDIG = { hmode: 'ai', fixT: 25, fixFollow: false, roomGoal: 20, c1o: -10, c1t: 45, c2o: 20, c2t: 19, ai: 0, ctrl: 'invoer', hOn: -2, hOff: 2, wMin: 15, wMax: 45,
-  silent: true, flowMode: 'opt', mpFix: 26, dT: 5, pumpMode: 'interval', pumpOn: 1, pumpOff: 10, heaterOn: -10,
+  silent: true, flowMode: 'opt', mpFix: 26, dT: 5, pumpMode: 'interval', pumpOn: 1, pumpOff: 10, heaterOn: -3,
   setA: 20, setB: 18.5, cr: 6, ot: 1, wiringA: 'beide', wiringB: 'beide', mA: 18, mB: 12, berg: 100, gpW: 20,
   dhwSet: 48, dhwHyst: 3, compLim: 58, disOn: true, disT: 67, dhwActive: 45, dhwStop: 30, dhwFrom: 0, dhwTo: 24 };
 const BASE = { Tout: 3, RH: 94, sun: 0, H: 115, emit: 1.1, gains: 350, wtwQ: 150, wtwEta: 90, bypass: false, inf: 50, dhwUse: 60,
@@ -622,7 +622,7 @@ const SCN = {
   advies: { name: 'Met de installateur', tag: 'Advies',
     desc: 'De installateur verlaagt de stooklijn en past drie instellingen aan. Daarna past de warmtepomp zich zelf aan het weer aan.',
     build: g => { const [a, b] = curveFor(g); return { ...HUIDIG, c1o: -10, c1t: a, c2o: 10, c2t: b, ai: 0, hOn: -2, hOff: 3, wMax: 35, silent: false,
-      setA: g + 0.5, mB: 10, berg: 50, gpW: 10, dhwHyst: 4, disT: 60, dhwFrom: 11, dhwTo: 16 }; } } };
+      setA: g + 0.5, mB: 10, berg: 50, gpW: 10, dhwHyst: 4, disT: 60, dhwFrom: 11, dhwTo: 16, heaterOn: -10 }; } } };
 const MEASURED = [
   { T: 3.0, cop: 2.72, s: 'oud', l: '11 nov' }, { T: 5.2, cop: 3.23, s: 'nu', l: '12 nov' },
   { T: 6.9, cop: 2.92, s: 'nu', l: '13 nov (met legionellabeurt)' }, { T: 3.5, cop: 2.98, s: 'nu', l: '14 nov, nacht' }, { T: 4.0, cop: 3.55, s: 'nu', l: '14 nov t/m 22:28 (huis warmt op naar 21 °C)' }, { T: 5.0, cop: 3.79, s: 'nu', l: '17 nov, hele dag (water 23 °C)' }, { T: 8.3, cop: 4.01, s: 'nu', l: '18 nov, hele dag (water 23 °C, zonnig)' }, { T: 5.5, cop: 3.72, s: 'nu', l: '19 nov t/m 19:30 (water 23 °C, LG-teller klopt met de Pulse)' },

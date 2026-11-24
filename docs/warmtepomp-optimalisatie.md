@@ -232,6 +232,7 @@ elektrische element** (≈ 5 uur op 3 kW).
 Twee mogelijke verklaringen, nog niet zeker welke:
 1. **Het element heeft echt bijgesprongen**, omdat na het lange uitrusten het water lang onder het doel bleef.
    Dan staat de *Verwarmer aan-temperatuur* te hoog (installateur: zo laag mogelijk zetten).
+   *(24-11: die staat op −3 °C. Op 16-11 was het ≈ 7 °C, dus dit is uitgesloten.)*
 2. **De LG telt het element wel, maar het draaide niet.** Bij *Energiebewaking* staat de elektrische
    verwarming als *Extern, 3 kW*; de LG rekent dan met het ingestelde vermogen. De woning-meter (Pulse) gaf
    voor een dag 15 kWh in totaal, minder dan de 25,5 kWh van de LG alleen. Als dat dezelfde dag is, telt de
@@ -368,18 +369,32 @@ was dat € 0,36. In deze koude, windstille dagen is stroom dus duurder dan de �
    minstens ≈ 25 kWh te hoog (21-11), plus een deel van 16-11.
 2. De LG zet de uitgang van het element aan, maar er komt geen warmte bij. Het element is dus niet aangesloten, of
    de thermische beveiliging is uitgeschakeld (handleiding p. 181). Daarvoor moet de installateur langskomen.
-3. Waarschijnlijk heeft de LG de compressor die avond uit gelaten, omdat hij dacht dat het element warmde. De
-   warmte past daarbij. Bij dit weer is ≈ 50 kWh per dag nodig. Op 21-11 kwam er 36,6 kWh, ≈ 13 kWh te weinig. Op
-   22-11 kwam er 71,6 kWh, ≈ 16 kWh te veel: dat is de inhaalslag. Ook de lagere COP van 22-11 komt deels daardoor.
-4. Mogelijke oorzaak: **Verwarmer aan-temperatuur** staat hoger dan de fabriekswaarde (−5 °C). Het element mag
-   alleen bijspringen als het buiten kouder is dan deze waarde. Op 21-11 was het 's avonds ≈ 3,6 °C. Bij een waarde
-   van bijvoorbeeld +5 mag het element dus aan.
+3. Op 21-11 kwam er 36,6 kWh warmte en op 22-11 71,6 kWh. Dat lijkt op een inhaalslag, maar 21-11 was zonnig
+   (13,5 kWh zonnestroom), dus de zon in huis verklaart een deel. Of de LG die avond echt stil heeft gestaan, is
+   niet zeker.
+4. **Verwarmer aan-temperatuur staat op −3 °C** (foto 24-11; fabriek −5 °C). Het element voor de verwarming mag
+   dus pas als het buiten kouder is dan −3 °C. Op 16-11 (≈ 7 °C) en 21-11 (3–8 °C) was het veel warmer. **Deze
+   instelling verklaart het spookverbruik dus niet**, tenzij de buitenvoeler van de LG veel te laag meet.
+5. **Waarschijnlijker: het element in de boiler.** *Gebruik de tankverwarmer* staat aan (Cyclus, vertraging
+   60 min). Op 16-11 stopte de warmtepomp om ≈ 14:51 met de boiler op 44 °C, na 45 minuten *DHW tijd actief*.
+   Pas om 19:43 warmde hij verder. Die ≈ 5 uur × 3 kW = 15 kWh past precies bij wat de LG die dag te veel telde.
+   Dan zet de LG de tankverwarmer aan om de boiler af te maken en telt hij 3 kW. De Pulse ziet geen stroom: het
+   element in de boiler is er niet, is niet aangesloten of is defect. Eén ding past niet: op 21-11 boekte de LG het
+   spookverbruik onder *Verwarmen* en niet onder *Warm water*. Zeker weten we het dus nog niet.
+6. **Als dat klopt, zijn er twee gevolgen:**
+   * Na een grote tap (het bad, een lange douche) blijft de boiler uren lauw. De LG wacht dan op een element
+     dat niets doet.
+   * De ontsmetting naar 67 °C lukt niet, want de warmtepomp komt maar tot 58 °C. Dat past bij 13-11: om 23:18 was
+     de boiler 51 °C, en voor warm water telde de LG maar 1,6 kWh.
 
 **Controle:**
 * Pulse-historie van 21-11, 20:00–24:00 per uur. Zie je een blok van ≈ 3 kW? Dan draait het element echt, maar
   telt de LG de warmte niet. Zie je niets? Dan stond er alleen een uitgang aan.
 * Gegevensregistratie van de LG van die avond: status en eventuele foutcode.
-* De waarde van *Verwarmer aan-temperatuur* (installateursmenu, alleen aflezen).
+* ~~De waarde van *Verwarmer aan-temperatuur*~~: −3 °C (foto 24-11).
+* De **buitentemperatuur op het LG-scherm**, vergeleken met het echte weer. Meet de buitenvoeler veel te laag?
+* Is op 21-11 (zaterdag) het **bad** gebruikt? Stond de boiler die middag of avond lang onder de 48 °C?
+* **Zit er een elektrisch element in de boiler?** Daar loopt dan een dikke kabel naar een flens of kap op de boiler.
 * Was het op 22-11 's ochtends kouder in de woonkamer dan normaal?
 
 **Waarom nu een COP van 2,8–2,9 en geen 3,7–4,0?** Het is 2–3 °C kouder dan op 17–19 november (5–8 °C), en de
@@ -544,7 +559,7 @@ Bereiken komen uit de LG-installatiehandleiding van de HN0913T.
 
 | Menu | Nu | Advies |
 |---|---|---|
-| Verwarmer aan-temperatuur (*Heater On Temperature*) | niet gefotografeerd | **Zo laag mogelijk (bijv. −10 °C of lager).** De 9 kW-unit dekt deze woning ruim; het element hoeft voor verwarming eigenlijk nooit. |
+| Verwarmer aan-temperatuur (*Heater On Temperature*) | −3 °C (foto 24-11) | **Zo laag mogelijk (bijv. −10 °C of lager).** De 9 kW-unit dekt deze woning ruim; het element hoeft voor verwarming eigenlijk nooit. |
 | Energiebewaking → Instelling elektrische verwarming | Extern, 3 kW | **Laten controleren:** de HN0913T heeft een intern 3 kW-element. Klopt deze instelling niet, dan kloppen de energiecijfers (en je COP-berekening) ook niet. |
 
 ### 4.3 Warm water (180 L)
@@ -743,6 +758,9 @@ die de Pulse niet zag: het element werd aangestuurd maar trok (vrijwel) geen str
 (1) is het interne element van 3 kW aangesloten en werkt het (handleiding p. 181: thermische beveiliging
 resetten)? (2) zet de energiebewaking dan op **LG 1Ø, 3 kW**; (3) controleer *Verwarmer aan-temperatuur*
 (fabriek −5 °C; liever −10 °C of lager).
+*Aanvulling 24-11:* *Verwarmer aan-temperatuur* staat op −3 °C. Het verwarmingselement mocht op 16-11 en 21-11
+dus niet bijspringen. Waarschijnlijk telt de LG het **element in de boiler** (*Gebruik de tankverwarmer* staat aan).
+Zie §1b, 20 tot en met 23 november.
 
 ---
 
@@ -846,6 +864,7 @@ anode laten controleren.
 | Tank ontsmetting 1 / 2 | Gebruik, vrijdag 12 uur / 67 °C, 10 min, eindtijd 1 |
 | Hercirculatietijd | Niet gebruiken (10/20) |
 | Energiebewaking | Gebruik; elektrische verwarming Extern 3 kW |
+| Verwarmer aan-temperatuur | −3 °C (fabriek −5 °C) |
 | Antivriesoptie 1 | Type1 |
 | Vloerdroging | Uit |
 | Koeling | Uitvoer; water 17 (max 24); lucht 16 (max 30); stop 18 °C; hysterese ±0,5; pomp doorlopend |
@@ -855,8 +874,9 @@ anode laten controleren.
 ## 11. Nog te controleren / aan te leveren
 
 * ~~Tabblad Warmteafgifte~~ ontvangen: COP verwerkt in §3.3.
-* Waarde van **Temperatuursensor selecteren** en **Verwarmer aan-temperatuur**. Die laatste is nu
-  belangrijker, gezien de lage jaar-COP.
+* Waarde van **Temperatuursensor selecteren**. (~~Verwarmer aan-temperatuur~~: −3 °C, ontvangen 24-11.)
+* **Element in de boiler:** is het er, is het aangesloten en werkt het? *Gebruik de tankverwarmer* staat aan, en de LG
+  telt dan 3 kW die de Pulse niet ziet (§1b, 20 tot en met 23 november).
 * De **AI-correctie** die nu op het AI-icoon staat.
 * **Pulse-historie 21-11, 20:00–24:00** (per uur) en de **Gegevensregistratie** van die avond: draaide het 3 kW-element
   echt, of telde de LG alleen? Zie §1b, 20 tot en met 23 november.
@@ -933,7 +953,8 @@ Zet daarna de woonkamer-DT4 terug op 21,5 °C.
 - [ ] Berging: 3 groepen terugregelen naar ± 16–18 °C (als de ruimte niet warm hoeft)
 - [ ] Slaapkamergroepen ± 50–60 % van het debiet van de woonkamergroepen
 - [ ] Groepspompen (OEG): knop indrukken tot de lampjes **II + III** branden (= HD1); na een dag de kamers en flowmeters controleren. Buiten het stookseizoen uit
-- [ ] Energiebewaking → elektrische verwarming afstemmen op het interne 3 kW-element
+- [ ] Energiebewaking → elektrische verwarming afstemmen op wat er echt is aangesloten: het interne element en/of een element in de boiler
+- [ ] Element in de boiler controleren. Is het er niet, of werkt het niet? Dan *Gebruik de tankverwarmer* → **Niet gebruiken**, en de ontsmetting aanpassen aan wat de warmtepomp zelf haalt (de compressorlimiet is 58 °C)
 - [ ] WTW: bypassdrempel ≥ 23–24 °C, filters, luchtbalans
 
 ---
