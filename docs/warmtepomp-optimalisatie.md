@@ -387,15 +387,42 @@ was dat € 0,36. In deze koude, windstille dagen is stroom dus duurder dan de �
    * De ontsmetting naar 67 °C lukt niet, want de warmtepomp komt maar tot 58 °C. Dat past bij 13-11: om 23:18 was
      de boiler 51 °C, en voor warm water telde de LG maar 1,6 kWh.
 
-**Controle:**
-* Pulse-historie van 21-11, 20:00–24:00 per uur. Zie je een blok van ≈ 3 kW? Dan draait het element echt, maar
-  telt de LG de warmte niet. Zie je niets? Dan stond er alleen een uitgang aan.
-* Gegevensregistratie van de LG van die avond: status en eventuele foutcode.
-* ~~De waarde van *Verwarmer aan-temperatuur*~~: −3 °C (foto 24-11).
-* De **buitentemperatuur op het LG-scherm**, vergeleken met het echte weer. Meet de buitenvoeler veel te laag?
-* Is op 21-11 (zaterdag) het **bad** gebruikt? Stond de boiler die middag of avond lang onder de 48 °C?
-* **Zit er een elektrisch element in de boiler?** Daar loopt dan een dikke kabel naar een flens of kap op de boiler.
-* Was het op 22-11 's ochtends kouder in de woonkamer dan normaal?
+**Uitslag van de controle (24-11):**
+
+| Wat | Uitkomst |
+|---|---|
+| Buitentemperatuur op het LG-scherm | 3 °C, terwijl het buiten ≈ 2 °C was. De buitenvoeler klopt. |
+| Bad op 21-11 | Ja, het bad is gebruikt. |
+| Pulse 21-11 per uur | 00–15 uur: 0,5–1,5 kWh per uur, de warmtepomp draait. **15–23 uur: maar 0,15–0,4 kWh per uur voor het hele huis**: geen warmtepomp en geen element. 23–24 uur: ≈ 5,6 kWh (waarschijnlijk de auto; navragen). Dagtotaal 20,4 kWh (14,96 net + 5,40 zon). |
+| Boiler | Die zit in de LG-toren; het grijze vat ernaast is het buffervat van 50 L. Naast de toren hangt een **ABB-werkschakelaar (BW425TPSN, 25 A, 4-polig)** met een kabel naar de toren. Dat is vrijwel zeker de aparte voeding van het elektrische element. Stand: nog na te kijken. |
+
+**Conclusie 21-11:**
+* Het hele huis gebruikte die dag 20,4 kWh. De LG zegt dat de warmtepomp alleen al 34,6 kWh gebruikte. Dat kan niet.
+* De warmtepomp gebruikte echt ≈ 8–10 kWh, allemaal vóór 15:00. Bij 36,6 kWh warmte is de COP ≈ 4, net als op 17 en 19 november.
+* De LG telde ≈ 25 kWh die er niet was. Dat is ≈ 8,5 uur × 3 kW, van ≈ 15:30 tot middernacht. Precies in die uren
+  draaide de warmtepomp helemaal niet.
+
+**Wat er gebeurde:** na het bad warmde de warmtepomp de boiler tot ≈ 15:00. Daarna liet de LG het naverwarmen over
+aan het elektrische element (*Gebruik de tankverwarmer: Cyclus*) en telde hij 3 kW. Het element trok geen stroom:
+de werkschakelaar staat uit, of het element of de beveiliging ervan is defect. Ruim 8 uur lang deed de warmtepomp
+niets: geen warm water en geen verwarming. Op 22-11 volgde de inhaalslag (71,6 kWh warmte). Op 16-11 gebeurde
+hetzelfde na het douchen.
+
+**Gevolg:** elke keer dat de boiler na een grote tap niet binnen de 45 minuten *DHW tijd actief* op temperatuur is,
+kan de warmtepomp urenlang stilstaan. Bij het bad (wekelijks) gebeurt dat zeker. Bij ≈ 0 °C buiten (deze week)
+mist het huis dan ≈ 2 kW warmte per uur.
+
+**Advies:**
+1. **De werkschakelaar niet zelf aanzetten.** Als het element dan echt werkt, wordt het spookverbruik echt verbruik:
+   ≈ 25 kWh op zo'n dag (≈ € 10), tegen ≈ 3 kWh als de warmtepomp het doet.
+2. **Zelf (installateursmenu):** *Gebruik de tankverwarmer* → **Niet gebruiken**. Noteer eerst de oude stand
+   (*Gebruik, Cyclus, 60 min*). Het element werkt nu toch niet, dus je mist er niets aan. De warmtepomp warmt de
+   boiler dan zelf verder, en het huis blijft verwarmd. Doe het vóór het volgende bad.
+3. **Controle na de volgende badbeurt:** in de Pulse moet je zien dat de warmtepomp gewoon doorwerkt, en de
+   LG-teller springt niet meer.
+4. **Installateur:** waarom staat de voeding van het element uit (of werkt het niet)? En hoe moet de legionellabeurt
+   dan? De warmtepomp komt maar tot 58 °C. Is de keuze om het element alleen voor de wekelijkse ontsmetting te
+   gebruiken, dan zet de installateur het zo in en niet voor het naverwarmen.
 
 **Waarom nu een COP van 2,8–2,9 en geen 3,7–4,0?** Het is 2–3 °C kouder dan op 17–19 november (5–8 °C), en de
 luchtvochtigheid is hoog. Daardoor ontdooit het buitendeel vaker, en het water moet warmer (24–25 °C) en dus komt
@@ -875,8 +902,10 @@ anode laten controleren.
 
 * ~~Tabblad Warmteafgifte~~ ontvangen: COP verwerkt in §3.3.
 * Waarde van **Temperatuursensor selecteren**. (~~Verwarmer aan-temperatuur~~: −3 °C, ontvangen 24-11.)
-* **Element in de boiler:** is het er, is het aangesloten en werkt het? *Gebruik de tankverwarmer* staat aan, en de LG
-  telt dan 3 kW die de Pulse niet ziet (§1b, 20 tot en met 23 november).
+* **Elektrisch element in de toren:** in welke stand staat de ABB-werkschakelaar naast de toren (de aparte voeding)?
+  Op 21-11 telde de LG ≈ 25 kWh voor het element, maar het trok geen stroom (Pulse). Zet intussen *Gebruik de
+  tankverwarmer* op Niet gebruiken (§1b, 20 tot en met 23 november).
+* **Pulse per uur van 20-11 en 22-11:** liep het spookverbruik door na middernacht? Dan is de COP van 22-11 hoger dan 2,81.
 * De **AI-correctie** die nu op het AI-icoon staat.
 * **Pulse-historie 21-11, 20:00–24:00** (per uur) en de **Gegevensregistratie** van die avond: draaide het 3 kW-element
   echt, of telde de LG alleen? Zie §1b, 20 tot en met 23 november.
@@ -954,7 +983,7 @@ Zet daarna de woonkamer-DT4 terug op 21,5 °C.
 - [ ] Slaapkamergroepen ± 50–60 % van het debiet van de woonkamergroepen
 - [ ] Groepspompen (OEG): knop indrukken tot de lampjes **II + III** branden (= HD1); na een dag de kamers en flowmeters controleren. Buiten het stookseizoen uit
 - [ ] Energiebewaking → elektrische verwarming afstemmen op wat er echt is aangesloten: het interne element en/of een element in de boiler
-- [ ] Element in de boiler controleren. Is het er niet, of werkt het niet? Dan *Gebruik de tankverwarmer* → **Niet gebruiken**, en de ontsmetting aanpassen aan wat de warmtepomp zelf haalt (de compressorlimiet is 58 °C)
+- [ ] Element in de toren controleren: de ABB-werkschakelaar naast de toren, het element zelf en de thermische beveiliging. Werkt het niet, of moet het uit blijven? Dan *Gebruik de tankverwarmer* → **Niet gebruiken**, en de ontsmetting aanpassen aan wat de warmtepomp zelf haalt (de compressorlimiet is 58 °C). Of gebruik het element alleen voor de ontsmetting.
 - [ ] WTW: bypassdrempel ≥ 23–24 °C, filters, luchtbalans
 
 ---
