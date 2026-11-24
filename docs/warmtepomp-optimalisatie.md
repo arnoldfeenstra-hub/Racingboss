@@ -346,9 +346,9 @@ Buitentemperatuur gemeten (Open-Meteo-archief voor Eelderwolde), tellers van de 
 
 | Periode | Buiten gem. (min–max), RV | Stroom LG | Warmte | COP | Controle |
 |---|---|---|---|---|---|
-| 19-11 19:30 – 20-11 24:00 | 3,2 °C (1,0–6,2), 89 % | 21,0 kWh | 54,3 kWh | 2,59 | geen Pulse-gegevens |
+| 19-11 19:30 – 20-11 24:00 | 3,2 °C (1,0–6,2), 89 % | 21,0 kWh | 54,3 kWh | **2,59** | klopt ongeveer met de Pulse (vrijdag: ontsmetting) |
 | 21-11 hele dag | 4,8 °C (3,2–8,5), 86 % | 34,6 kWh | 36,6 kWh | (1,06) | **teller fout**, zie hieronder |
-| 22-11 hele dag | 3,1 °C (0,2–6,0), 85 % | 25,5 kWh | 71,6 kWh | **2,81** | geen Pulse-gegevens |
+| 22-11 hele dag | 3,1 °C (0,2–6,0), 85 % | 25,5 kWh | 71,6 kWh | **2,81** | klopt met de Pulse |
 | 23-11 t/m 23:56 | 2,0 °C (0,1–4,6), 84 % | 22,9 kWh (19,8 verwarming + 3,1 warm water) | 65,7 kWh | **2,87** | klopt met de Pulse |
 
 **Controle 23-11:** van het net 27,11 kWh, zonnestroom 8,3 kWh, teruggeleverd 3,60 kWh: het huis gebruikte
@@ -401,6 +401,21 @@ was dat € 0,36. In deze koude, windstille dagen is stroom dus duurder dan de �
 * De warmtepomp gebruikte echt ≈ 8–10 kWh, allemaal vóór 15:00. Bij 36,6 kWh warmte is de COP ≈ 4, net als op 17 en 19 november.
 * De LG telde ≈ 25 kWh die er niet was. Dat is ≈ 8,5 uur × 3 kW, van ≈ 15:30 tot middernacht. Precies in die uren
   draaide de warmtepomp helemaal niet.
+
+**Controle 20-11 en 22-11 (Pulse per uur + laadhistorie van de auto, 24-11):**
+
+| Dag | Huis totaal | Auto | Huis zonder auto | LG | Rest van het huis | Oordeel |
+|---|---|---|---|---|---|---|
+| 20-11 | 53,7 kWh | ≈ 25 kWh ('s nachts 00–05 uur) | ≈ 28,5 kWh | ≈ 18–19 kWh | ≈ 9–10 kWh | geen groot spookverbruik |
+| 21-11 | 20,4 kWh | ≈ 4,4 kWh (23–24 uur) | ≈ 16,0 kWh | 34,6 kWh | – | **≈ 25 kWh spookverbruik** |
+| 22-11 | 53,1 kWh | 21,6 kWh (00–02 en 04–07 uur) | ≈ 31,5 kWh | 25,5 kWh | ≈ 6 kWh | klopt |
+
+Het spookverbruik liep dus niet door na middernacht. De COP van 22-11 (2,81) en 20-11 (2,59) is echt. Spookverbruik
+is tot nu toe alleen gezien op 16-11 (na het douchen) en 21-11 (na het bad). In de Pulse van vrijdag 20-11
+(ontsmetting om 12:00) is geen blok van een element te zien. Daar staat alleen de warmtepomp (11–13 uur ≈ 2,5 kWh per uur).
+
+**De ABB-werkschakelaar (video 24-11):** de schakelaar zit klem tussen de muur en de toren. Op de video is niet te
+zien of hij op 0 of op I staat. Dit laat ik over aan de installateur.
 
 **Wat er gebeurde:** na het bad warmde de warmtepomp de boiler tot ≈ 15:00. Daarna liet de LG het naverwarmen over
 aan het elektrische element (*Gebruik de tankverwarmer: Cyclus*) en telde hij 3 kW. Het element trok geen stroom:
