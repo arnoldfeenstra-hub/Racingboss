@@ -414,12 +414,19 @@ Het spookverbruik liep dus niet door na middernacht. De COP van 22-11 (2,81) en 
 is tot nu toe alleen gezien op 16-11 (na het douchen) en 21-11 (na het bad). In de Pulse van vrijdag 20-11
 (ontsmetting om 12:00) is geen blok van een element te zien. Daar staat alleen de warmtepomp (11–13 uur ≈ 2,5 kWh per uur).
 
-**De ABB-werkschakelaar (video 24-11):** de schakelaar zit klem tussen de muur en de toren. Op de video is niet te
-zien of hij op 0 of op I staat. Dit laat ik over aan de installateur.
+**De ABB-werkschakelaar staat aan** (bevestigd 24-11). Toch trok het element op 21-11 geen stroom. Mogelijke oorzaken,
+van waarschijnlijk naar minder waarschijnlijk:
+1. De **thermische beveiliging van het element** is uitgeschakeld (handleiding p. 181: met de hand terugzetten,
+   binnen in de unit, alleen door de installateur).
+2. De **groep in de meterkast** voor het element staat uit of is gesprongen.
+3. Het **element is defect**, of de schakelaar voedt iets anders en het element is niet aangesloten.
+
+Eigen waarneming bij de volgende keer: zie je op het LG-scherm een element-symbool, terwijl de Pulse live niet ≈ 3 kW
+hoger gaat? Dan staat het element aan bij de LG, maar komt er geen stroom.
 
 **Wat er gebeurde:** na het bad warmde de warmtepomp de boiler tot ≈ 15:00. Daarna liet de LG het naverwarmen over
-aan het elektrische element (*Gebruik de tankverwarmer: Cyclus*) en telde hij 3 kW. Het element trok geen stroom:
-de werkschakelaar staat uit, of het element of de beveiliging ervan is defect. Ruim 8 uur lang deed de warmtepomp
+aan het elektrische element (*Gebruik de tankverwarmer: Cyclus*) en telde hij 3 kW. Het element trok geen stroom,
+terwijl de werkschakelaar aan staat. Het element, de beveiliging ervan of de groep in de meterkast is dus het probleem. Ruim 8 uur lang deed de warmtepomp
 niets: geen warm water en geen verwarming. Op 22-11 volgde de inhaalslag (71,6 kWh warmte). Op 16-11 gebeurde
 hetzelfde na het douchen.
 
@@ -435,7 +442,7 @@ mist het huis dan ≈ 2 kW warmte per uur.
    boiler dan zelf verder, en het huis blijft verwarmd. Doe het vóór het volgende bad.
 3. **Controle na de volgende badbeurt:** in de Pulse moet je zien dat de warmtepomp gewoon doorwerkt, en de
    LG-teller springt niet meer.
-4. **Installateur:** waarom staat de voeding van het element uit (of werkt het niet)? En hoe moet de legionellabeurt
+4. **Installateur:** waarom trekt het element geen stroom, terwijl de werkschakelaar aan staat? Controleer de thermische beveiliging, de groep en het element. En hoe moet de legionellabeurt
    dan? De warmtepomp komt maar tot 58 °C. Is de keuze om het element alleen voor de wekelijkse ontsmetting te
    gebruiken, dan zet de installateur het zo in en niet voor het naverwarmen.
 
@@ -917,7 +924,7 @@ anode laten controleren.
 
 * ~~Tabblad Warmteafgifte~~ ontvangen: COP verwerkt in §3.3.
 * Waarde van **Temperatuursensor selecteren**. (~~Verwarmer aan-temperatuur~~: −3 °C, ontvangen 24-11.)
-* **Elektrisch element in de toren:** in welke stand staat de ABB-werkschakelaar naast de toren (de aparte voeding)?
+* **Elektrisch element in de toren:** de ABB-werkschakelaar staat aan (24-11), maar het element trekt geen stroom. Installateur: thermische beveiliging, groep en element controleren.
   Op 21-11 telde de LG ≈ 25 kWh voor het element, maar het trok geen stroom (Pulse). Zet intussen *Gebruik de
   tankverwarmer* op Niet gebruiken (§1b, 20 tot en met 23 november).
 * **Pulse per uur van 20-11 en 22-11:** liep het spookverbruik door na middernacht? Dan is de COP van 22-11 hoger dan 2,81.
