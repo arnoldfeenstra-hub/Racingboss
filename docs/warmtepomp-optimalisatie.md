@@ -339,6 +339,65 @@ het huis ≈ 6,8 kWh over (≈ 0,28 kW gemiddeld), net als op 19-11. **Ook op 18
 Logboek 19-11: verwarming 05:05–07:23 en 15:19–16:51 (start telkens bij *In* 21 °C), warm water 07:26–07:54
 (boiler 39 → 47 °C) en 16:55–17:19 (41 → 47 °C), allebei direct na het douchen. Geen foutcodes.
 
+### 20 tot en met 23 november: kouder, en op 21-11 telt de LG weer stroom die er niet is
+
+Buitentemperatuur gemeten (Open-Meteo-archief voor Eelderwolde), tellers van de LG, controle met Pulse + SolarEdge:
+
+| Periode | Buiten gem. (min–max), RV | Stroom LG | Warmte | COP | Controle |
+|---|---|---|---|---|---|
+| 19-11 19:30 – 20-11 24:00 | 3,2 °C (1,0–6,2), 89 % | 21,0 kWh | 54,3 kWh | 2,59 | geen Pulse-gegevens |
+| 21-11 hele dag | 4,8 °C (3,2–8,5), 86 % | 34,6 kWh | 36,6 kWh | (1,06) | **teller fout**, zie hieronder |
+| 22-11 hele dag | 3,1 °C (0,2–6,0), 85 % | 25,5 kWh | 71,6 kWh | **2,81** | geen Pulse-gegevens |
+| 23-11 t/m 23:56 | 2,0 °C (0,1–4,6), 84 % | 22,9 kWh (19,8 verwarming + 3,1 warm water) | 65,7 kWh | **2,87** | klopt met de Pulse |
+
+**Controle 23-11:** van het net 27,11 kWh, zonnestroom 8,3 kWh, teruggeleverd 3,60 kWh: het huis gebruikte
+31,8 kWh. Daarvan 22,9 kWh warmtepomp, 8,9 kWh de rest van het huis (≈ 0,37 kW gemiddeld, net als op 18 en 19 november).
+**De LG-teller klopt op 23-11.** De Pulse rekende € 11,46 voor 27,11 kWh: gemiddeld **€ 0,42 per kWh**. Op 21-11
+was dat € 0,36. In deze koude, windstille dagen is stroom dus duurder dan de € 0,27 waarmee de simulator rekent.
+
+**21-11: de teller telt 3 kW die er niet is.**
+* Om 20:25 gaf de LG 25,5 kWh voor die dag. Het hele huis gebruikte tot dan 13,8 kWh: 8,41 van het net, plus 13,5
+  zonnestroom, min 8,10 teruggeleverd. De warmtepomp kan niet meer gebruiken dan het hele huis. Met 4–6 kWh voor
+  de rest van het huis gebruikte de warmtepomp echt **≈ 8–10 kWh**. Bij 36,5 kWh warmte is dat een COP van ≈ 3,7–4,7.
+* Tussen 20:25 en 24:00 telde de LG nog 9,1 kWh stroom bij, terwijl er maar 0,1 kWh warmte bij kwam. Dat is precies
+  **3,0 uur × 3 kW**: de instelling *Energiebewaking → Extern, 3 kW*. De LG telt dan 3 kW zolang hij de uitgang van het
+  elektrische element aanzet, zonder te meten. Op 16-11 gebeurde hetzelfde.
+
+**Wat dat betekent:**
+1. Op zulke dagen kloppen de dagteller, de maandteller en de COP in de app niet. De maandteller van november staat
+   minstens ≈ 25 kWh te hoog (21-11), plus een deel van 16-11.
+2. De LG zet de uitgang van het element aan, maar er komt geen warmte bij. Het element is dus niet aangesloten, of
+   de thermische beveiliging is uitgeschakeld (handleiding p. 181). Daarvoor moet de installateur langskomen.
+3. Waarschijnlijk heeft de LG de compressor die avond uit gelaten, omdat hij dacht dat het element warmde. De
+   warmte past daarbij. Bij dit weer is ≈ 50 kWh per dag nodig. Op 21-11 kwam er 36,6 kWh, ≈ 13 kWh te weinig. Op
+   22-11 kwam er 71,6 kWh, ≈ 16 kWh te veel: dat is de inhaalslag. Ook de lagere COP van 22-11 komt deels daardoor.
+4. Mogelijke oorzaak: **Verwarmer aan-temperatuur** staat hoger dan de fabriekswaarde (−5 °C). Het element mag
+   alleen bijspringen als het buiten kouder is dan deze waarde. Op 21-11 was het 's avonds ≈ 3,6 °C. Bij een waarde
+   van bijvoorbeeld +5 mag het element dus aan.
+
+**Controle:**
+* Pulse-historie van 21-11, 20:00–24:00 per uur. Zie je een blok van ≈ 3 kW? Dan draait het element echt, maar
+  telt de LG de warmte niet. Zie je niets? Dan stond er alleen een uitgang aan.
+* Gegevensregistratie van de LG van die avond: status en eventuele foutcode.
+* De waarde van *Verwarmer aan-temperatuur* (installateursmenu, alleen aflezen).
+* Was het op 22-11 's ochtends kouder in de woonkamer dan normaal?
+
+**Waarom nu een COP van 2,8–2,9 en geen 3,7–4,0?** Het is 2–3 °C kouder dan op 17–19 november (5–8 °C), en de
+luchtvochtigheid is hoog. Daardoor ontdooit het buitendeel vaker, en het water moet warmer (24–25 °C) en dus komt
+er meer temperatuurverschil bij. De simulator voorspelde voor 23-11 een COP van 2,88, gemeten is 2,87. Dit is dus
+normaal en geen storing. Rond 0 °C verwacht het model een COP van ≈ 2,7.
+
+**Advies 24 november – 3 december** (met.no, opgehaald 24-11 09:28; zet de nieuwe stand telkens de avond ervoor):
+
+| Dagen | Buiten gem. | Water | Verwacht verbruik warmtepomp | COP |
+|---|---|---|---|---|
+| di 24 – vr 27 nov | −0,6 tot 0,3 °C | **25 °C** | ≈ 24–25 kWh per dag | ≈ 2,7 |
+| za 28 – zo 29 nov | 0,1 tot 1,9 °C | **24 °C** | ≈ 20–23 kWh | ≈ 2,9 |
+| ma 30 nov – do 3 dec | 3,6 tot 6,0 °C | **23 °C** | ≈ 13–17 kWh | ≈ 3,0–3,3 |
+
+De woonkamer-DT4 blijft op 21,5 °C. De watertemperatuur volgt het gemiddelde van die dag en de dag erna.
+Met € 0,42 per kWh kost een dag rond 0 °C ≈ € 10. In de simulator staat ≈ € 6,70, omdat die met € 0,27 rekent.
+
 **Les:** grote stappen in de watertemperatuur geven een golfbeweging (te warm → DT4 lang uit → vloer koelt af →
 hard inhalen). Liever per stap 1 °C en een dag afwachten.
 
@@ -799,6 +858,9 @@ anode laten controleren.
 * Waarde van **Temperatuursensor selecteren** en **Verwarmer aan-temperatuur**. Die laatste is nu
   belangrijker, gezien de lage jaar-COP.
 * De **AI-correctie** die nu op het AI-icoon staat.
+* **Pulse-historie 21-11, 20:00–24:00** (per uur) en de **Gegevensregistratie** van die avond: draaide het 3 kW-element
+  echt, of telde de LG alleen? Zie §1b, 20 tot en met 23 november.
+* Foto van het scherm **Roosters**: kan daar ook een watertemperatuur voor verwarmen worden ingepland?
 * **Bedrading van de DT4's:** wat schakelt welke thermostaat (LG-ingang en/of groepspomp)?
 * **Type en stand van de twee groepspompen**, en de **flowmeterstanden** per verdeler.
 * Is de **berging** binnen de geïsoleerde schil, en moet die warm zijn?

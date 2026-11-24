@@ -214,7 +214,7 @@ table.tbl tr.change td.water::after { content: " ← wijzigen"; font-family: var
   <header class="top">
     <span class="tag">LG THERMA V · HN0913T · 9 kW · EELDERWOLDE</span>
     <h1>Therma V Simulator</h1>
-    <p class="sub">Rekent uit wat je warmtepomp doet bij ander weer en andere instellingen. Het model is afgestemd op je eigen metingen van 11 tot en met 14 november.</p>
+    <p class="sub">Rekent uit wat je warmtepomp doet bij ander weer en andere instellingen. Het model is afgestemd op je eigen metingen van 11 tot en met 23 november.</p>
     <div class="topbar">
       <div class="ctl-inline"><span>Weergave</span>
         <div class="seg" id="mode-seg" role="group" aria-label="Weergave"><button type="button" data-v="eenvoudig">Eenvoudig</button><button type="button" data-v="expert">Expert</button></div>
@@ -600,7 +600,7 @@ function calibrate(pBase, goal = 2.7) {
 }
 
 /* ===================== WEERSVERWACHTING (met.no, Eelde) ===================== */
-const FORECAST = {"updated": "2026-11-19T18:28:32Z", "days": [{"d": "2026-11-20", "n": 24, "tmin": -0.1, "tmax": 6.0, "tmean": 2.9, "rh": 93}, {"d": "2026-11-21", "n": 24, "tmin": 3.0, "tmax": 8.0, "tmean": 4.9, "rh": 94}, {"d": "2026-11-22", "n": 24, "tmin": 1.7, "tmax": 6.2, "tmean": 3.3, "rh": 88}, {"d": "2026-11-23", "n": 24, "tmin": 0.8, "tmax": 4.7, "tmean": 2.3, "rh": 85}, {"d": "2026-11-24", "n": 24, "tmin": -0.8, "tmax": 2.7, "tmean": 0.4, "rh": 87}, {"d": "2026-11-25", "n": 24, "tmin": -0.7, "tmax": 1.6, "tmean": 0.2, "rh": 82}, {"d": "2026-11-26", "n": 24, "tmin": 0.9, "tmax": 3.1, "tmean": 2.0, "rh": 92}, {"d": "2026-11-27", "n": 24, "tmin": 2.4, "tmax": 5.4, "tmean": 3.8, "rh": 91}, {"d": "2026-11-28", "n": 24, "tmin": 4.0, "tmax": 7.1, "tmean": 5.5, "rh": 90}, {"d": "2026-11-29", "n": 19, "tmin": 4.4, "tmax": 6.2, "tmean": 5.3, "rh": 90}]};
+const FORECAST = {"updated": "2026-11-24T09:28:18Z", "days": [{"d": "2026-11-24", "n": 13, "tmin": -1.4, "tmax": 2.8, "tmean": 0.3, "rh": 93}, {"d": "2026-11-25", "n": 24, "tmin": -1.6, "tmax": 1.5, "tmean": -0.5, "rh": 87}, {"d": "2026-11-26", "n": 24, "tmin": -1.6, "tmax": 2.5, "tmean": -0.1, "rh": 88}, {"d": "2026-11-27", "n": 24, "tmin": -1.3, "tmax": 0.9, "tmean": -0.6, "rh": 84}, {"d": "2026-11-28", "n": 24, "tmin": -1.6, "tmax": 1.7, "tmean": 0.1, "rh": 79}, {"d": "2026-11-29", "n": 24, "tmin": 0.4, "tmax": 3.3, "tmean": 1.9, "rh": 81}, {"d": "2026-11-30", "n": 24, "tmin": 2.5, "tmax": 5.1, "tmean": 3.6, "rh": 87}, {"d": "2026-12-01", "n": 24, "tmin": 3.5, "tmax": 5.3, "tmean": 4.4, "rh": 93}, {"d": "2026-12-02", "n": 24, "tmin": 1.4, "tmax": 7.5, "tmean": 3.7, "rh": 84}, {"d": "2026-12-03", "n": 24, "tmin": 4.9, "tmax": 7.2, "tmean": 6.0, "rh": 87}]};
 
 /* ===================== INSTELLINGEN ===================== */
 const HUIDIG = { hmode: 'ai', fixT: 25, fixFollow: false, roomGoal: 20, c1o: -10, c1t: 45, c2o: 20, c2t: 19, ai: 0, ctrl: 'invoer', hOn: -2, hOff: 2, wMin: 15, wMax: 45,
@@ -625,7 +625,8 @@ const SCN = {
       setA: g + 0.5, mB: 10, berg: 50, gpW: 10, dhwHyst: 4, disT: 60, dhwFrom: 11, dhwTo: 16 }; } } };
 const MEASURED = [
   { T: 3.0, cop: 2.72, s: 'oud', l: '11 nov' }, { T: 5.2, cop: 3.23, s: 'nu', l: '12 nov' },
-  { T: 6.9, cop: 2.92, s: 'nu', l: '13 nov (met legionellabeurt)' }, { T: 3.5, cop: 2.98, s: 'nu', l: '14 nov, nacht' }, { T: 4.0, cop: 3.55, s: 'nu', l: '14 nov t/m 22:28 (huis warmt op naar 21 °C)' }, { T: 5.0, cop: 3.79, s: 'nu', l: '17 nov, hele dag (water 23 °C)' }, { T: 8.3, cop: 4.01, s: 'nu', l: '18 nov, hele dag (water 23 °C, zonnig)' }, { T: 5.5, cop: 3.72, s: 'nu', l: '19 nov t/m 19:30 (water 23 °C, LG-teller klopt met de Pulse)' }];
+  { T: 6.9, cop: 2.92, s: 'nu', l: '13 nov (met legionellabeurt)' }, { T: 3.5, cop: 2.98, s: 'nu', l: '14 nov, nacht' }, { T: 4.0, cop: 3.55, s: 'nu', l: '14 nov t/m 22:28 (huis warmt op naar 21 °C)' }, { T: 5.0, cop: 3.79, s: 'nu', l: '17 nov, hele dag (water 23 °C)' }, { T: 8.3, cop: 4.01, s: 'nu', l: '18 nov, hele dag (water 23 °C, zonnig)' }, { T: 5.5, cop: 3.72, s: 'nu', l: '19 nov t/m 19:30 (water 23 °C, LG-teller klopt met de Pulse)' },
+  { T: 3.1, cop: 2.81, s: 'nu', l: '22 nov, hele dag (niet met de Pulse gecontroleerd)' }, { T: 2.0, cop: 2.87, s: 'nu', l: '23 nov, hele dag (LG-teller klopt met de Pulse)' }];
 const WHO = { hmode: 'zelf', fixFollow: 'zelf', roomGoal: 'zelf', fixT: 'zelf', ai: 'zelf', silent: 'zelf', setA: 'zelf', setB: 'zelf', cr: 'zelf', ot: 'zelf',
   mA: 'zelf', mB: 'zelf', berg: 'zelf', gpW: 'zelf', dhwSet: 'zelf', dhwFrom: 'zelf', dhwTo: 'zelf', wtwQ: 'zelf', bypass: 'zelf',
   c1o: 'inst', c1t: 'inst', c2o: 'inst', c2t: 'inst', ctrl: 'inst', hOn: 'inst', hOff: 'inst', wMax: 'inst', flowMode: 'inst', mpFix: 'inst', dT: 'inst',
