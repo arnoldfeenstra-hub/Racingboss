@@ -462,6 +462,24 @@ normaal en geen storing. Rond 0 °C verwacht het model een COP van ≈ 2,7.
 De woonkamer-DT4 blijft op 21,5 °C. De watertemperatuur volgt het gemiddelde van die dag en de dag erna.
 Met € 0,42 per kWh kost een dag rond 0 °C ≈ € 10. In de simulator staat ≈ € 6,70, omdat die met € 0,27 rekent.
 
+### 24 en 25 november: rond 0 °C en heel vochtig
+
+| Periode | Buiten gem. (min–max), RV | Stroom LG | Warmte | COP |
+|---|---|---|---|---|
+| 24-11 hele dag | −0,2 °C (−2,3 – 2,3), **94 %** | 21,8 kWh | 49,3 kWh | **2,26** |
+| 25-11 t/m 11:25 | ≈ −1,2 °C, 95 % | 14,7 kWh (13,0 verwarming + 1,6 warm water) | 36,6 kWh | **2,49** |
+| november t/m 25-11 11:25 | | 356,4 kWh | 974,9 kWh | 2,74 (incl. ≈ 40 kWh spookverbruik; zonder: ≈ 3,1) |
+
+* 24-11 komt uit de maandtellers: begin 25-11 = 341,7 kWh stroom / 938,3 kWh warmte; eind 23-11 = 319,9 / 889,0.
+* Rond 0 °C met een luchtvochtigheid van 94–95 % rijpt het buitendeel het snelst aan. Het ontdooit dan het vaakst, en
+  elke ontdooibeurt haalt warmte uit het water. Dit is het slechtste weer voor een lucht-waterwarmtepomp.
+* De simulator verwachtte voor 24-11 een COP van ≈ 2,7. Gemeten is 2,26. Dat verschil is groter dan op de andere
+  dagen (23-11: 2,87 gemeten, 2,88 verwacht).
+* **Nog te controleren:** Pulse per uur van 24-11 en de lading van de auto die dag (≈ 20 kWh). Is "huis min auto
+  min LG" minder dan ≈ 5 kWh? Dan telde de LG weer te veel, en is de echte COP hoger.
+* Op 25-11 wordt er 's ochtends gemiddeld 3,2 kW warmte geleverd, terwijl het huis bij −1 °C ≈ 2,5 kW vraagt. De vloer
+  laadt dus op na het verhogen naar 25 °C.
+
 **Les:** grote stappen in de watertemperatuur geven een golfbeweging (te warm → DT4 lang uit → vloer koelt af →
 hard inhalen). Liever per stap 1 °C en een dag afwachten.
 
