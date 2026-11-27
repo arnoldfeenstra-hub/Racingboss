@@ -846,6 +846,9 @@ die van het ingebouwde element. Dan zou het element nooit aangaan, en dat past b
 welk element er zit, op hoeveel fasen het is aangesloten, en zet daarna het type goed. De werkschakelaar is 4-polig
 (25 A); dat kan op een aansluiting met 3 fasen wijzen. **27-11: de warmtepomp is volgens de bewoner een 3-fasen-uitvoering.** Is het element het ingebouwde LG-element, dan is
 **LG 3Ø** het juiste type. Laat de installateur ook het vermogen bevestigen: 3 of 6 kW.
+**27-11, ≈ 15:30: zelf omgezet naar LG 3Ø, 3 kW** (oud: Extern, 3 kW). Om 16:00 loopt er een testontsmetting. Werkt het
+element nu wel, dan stijgt de boiler boven 58 °C met het buitendeel stil, en toont de Pulse een vast blok van ≈ 3 kW.
+Dan lag het aan *Extern*. Blijft de boiler op 55–58 °C staan, dan zit het probleem in het element zelf (installateur).
 
 *Aanvulling 24-11:* *Verwarmer aan-temperatuur* staat op −3 °C. Het verwarmingselement mocht op 16-11 en 21-11
 dus niet bijspringen. Waarschijnlijk telt de LG het **element in de boiler** (*Gebruik de tankverwarmer* staat aan).
@@ -952,7 +955,7 @@ anode laten controleren.
 | DHW tijdsinstelling | Actief 45 min, stop 30 min |
 | Tank ontsmetting 1 / 2 | Gebruik, vrijdag 12 uur / 67 °C, 10 min, eindtijd 1 |
 | Hercirculatietijd | Niet gebruiken (10/20) |
-| Energiebewaking | Gebruik; elektrische verwarming Extern 3 kW |
+| Energiebewaking | Gebruik; elektrische verwarming Extern 3 kW (27-11 zelf naar LG 3Ø, 3 kW) |
 | Verwarmer aan-temperatuur | −3 °C (fabriek −5 °C) |
 | Antivriesoptie 1 | Type1 |
 | Vloerdroging | Uit |
