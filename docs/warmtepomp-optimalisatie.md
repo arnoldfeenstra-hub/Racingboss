@@ -649,11 +649,11 @@ Bereiken komen uit de LG-installatiehandleiding van de HN0913T.
 |---|---|---|---|
 | DHW-temperatuur (gebruiker) | 48 °C | **48 °C laten** | Met een regendouche (≈ 10–12 L/min) en twee volwassenen is 180 L op 46 °C krap bij twee douchebeurten achter elkaar. De winst haal je met het tijdvenster hieronder. |
 | Tank instelling 2 → Hysterese | 3 | **4** (maximum) | Minder korte naverwarmingsbeurten. "Verwarming voorrang" staat bij IWT altijd op DHW. |
-| Tank instelling 1 | Min 5 / Comp.limiet 58 | laten | Warmtepomp mag tot 58 °C. |
+| Tank instelling 1 | Min 5 / Comp.limiet 58 | laten | De warmtepomp mag de boiler tot 58 °C verwarmen. **58 °C is het maximum** (bereik 40–58 °C, fabriek 55 °C). Hoger kan alleen met het element. |
 | DHW tijdsinstelling | 45 / 30 | laten | |
 | Gebruik de tankverwarmer | Gebruik, Cyclus, 60 min | **Niet gebruiken** (bijgesteld 24-11) | Het element trekt geen stroom (Pulse 21-11; ontsmetting 27-11 strandt op 55–58 °C). De LG wacht dan uren op het element, met de warmtepomp stil. Ook met een werkend element is naverwarmen met de warmtepomp ≈ 3× zuiniger. |
 | Tank ontsmetting 1 | Gebruik, vrijdag, 12 uur | **laten** | Midden op de dag = warmste buitenlucht (en eventueel zonnestroom). |
-| Tank ontsmetting 2 | 67 °C / 10 min / eind 1 | **60 °C / 10 min / 1**, maar alleen met een werkend element. Zonder element haalt de boiler 55–58 °C (27-11): laat de installateur kiezen | De warmtepomp doet tot 58 °C; alleen 58 → 60 °C gaat elektrisch in plaats van 58 → 67 °C. Bespaart ≈ 60–90 kWh/jaar. 60 °C blijft de gangbare desinfectietemperatuur; niet uitzetten. |
+| Tank ontsmetting 2 | 67 °C / 10 min / eind 1 | **60 °C / 10 min / 1**, maar alleen met een werkend element. Zonder element haalt de boiler 55–58 °C (27-11): tussenoplossing ontsmetting op **55 °C** en de tijd langer (30–60 min, als het menu dat toestaat), zodat de warmtepomp de beurt zelf kan afmaken. De installateur beslist | De warmtepomp doet tot 58 °C; alleen 58 → 60 °C gaat elektrisch in plaats van 58 → 67 °C. Bespaart ≈ 60–90 kWh/jaar. 60 °C blijft de gangbare desinfectietemperatuur; niet uitzetten. |
 | DHW-schema | – | **In de winter geen rooster** (bijgesteld 18-11, zie §1b). In het voorjaar eventueel **11:00 → 48 °C** met een avonddoel van **minstens 45 °C** | Opwarmen naar 48 °C gebeurt dan in de middag: eigen zonnestroom (18 panelen), de warmste buitenlucht en meestal de goedkope middaguren van je dynamische tarief. Na het einde van salderen (1-1-2027) scheelt dat direct geld. Buiten het venster staat het doel op 40 °C (de laagste waarde), zodat hij alleen bijwarmt als de boiler echt leeg raakt (onder ≈ 36 °C). Zet het schema 's avonds niet op "uit": dan warmt hij helemaal niet meer bij. |
 | Hercirculatietijd | Niet gebruiken | laten | |
 
@@ -844,7 +844,8 @@ resetten)? (2) zet de energiebewaking dan op **LG 1Ø, 3 kW**; (3) controleer *V
 energiebewaking, en dus bij het tellen. Een kleine kans blijft dat de LG met *Extern* een andere uitgang schakelt dan
 die van het ingebouwde element. Dan zou het element nooit aangaan, en dat past bij wat we zien. Vraag de installateur
 welk element er zit, op hoeveel fasen het is aangesloten, en zet daarna het type goed. De werkschakelaar is 4-polig
-(25 A); dat kan op een aansluiting met 3 fasen wijzen.
+(25 A); dat kan op een aansluiting met 3 fasen wijzen. **27-11: de warmtepomp is volgens de bewoner een 3-fasen-uitvoering.** Is het element het ingebouwde LG-element, dan is
+**LG 3Ø** het juiste type. Laat de installateur ook het vermogen bevestigen: 3 of 6 kW.
 
 *Aanvulling 24-11:* *Verwarmer aan-temperatuur* staat op −3 °C. Het verwarmingselement mocht op 16-11 en 21-11
 dus niet bijspringen. Waarschijnlijk telt de LG het **element in de boiler** (*Gebruik de tankverwarmer* staat aan).
