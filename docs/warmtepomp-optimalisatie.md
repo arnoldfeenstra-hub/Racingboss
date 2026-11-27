@@ -1053,7 +1053,8 @@ Laat de nieuwe instellingen **48 uur** ongemoeid. Controleer daarna dit:
 | Slaapkamers | thermometer/DT4 | **18,5–19 °C** | Groepen op de verdeler bijregelen |
 | COP (dag) | Samenvatting: Warmteafgifte ÷ Energie (Totaal), beide tabbladen **direct na elkaar** fotograferen | **≥ 4** bij 0–5 °C buiten (nulmeting: 2,7 vandaag, 3,1 november) | Stuur de cijfers op; dan zoeken we verder (debiet, buffer, ontdooien, stand-by) |
 | COP warm water (week) | idem, kolom DHW | **≥ 2,5** | Meestal ligt het dan aan de ontsmetting of het element |
-| Element | Energie, kolom Warmte, op een dag boven 0 °C | geen sprongen van ≥ 3 kWh in een uur | *Verwarmer aan-temperatuur* controleren |
+| Element | LG *Energie vandaag* naast de Pulse (live of per uur) | loopt de LG ≈ 3 kWh per uur op, terwijl de Pulse niet ≈ 3 kW hoger staat? Dan staat het element aan bij de LG, maar komt er geen stroom | Installateur: thermische beveiliging, groep en element meten |
+| Element (ontsmetting) | DHW-temperatuur op vrijdag vanaf 12:00 | stijgt boven 58 °C en haalt de ingestelde ontsmettingstemperatuur | blijft hangen op 55–58 °C → het element werkt niet (zo gezien op 27-11) |
 
 **Om de optimalisatie af te ronden:** maak na 48 uur een foto van de Samenvatting (**Energie** en
 **Warmteafgifte**) en van twee schermen Gegevensregistratie. Noteer ook de gemiddelde buitentemperatuur.
