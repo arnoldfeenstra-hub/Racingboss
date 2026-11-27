@@ -385,7 +385,8 @@ was dat € 0,36. In deze koude, windstille dagen is stroom dus duurder dan de �
    * Na een grote tap (het bad, een lange douche) blijft de boiler uren lauw. De LG wacht dan op een element
      dat niets doet.
    * De ontsmetting naar 67 °C lukt niet, want de warmtepomp komt maar tot 58 °C. Dat past bij 13-11: om 23:18 was
-     de boiler 51 °C, en voor warm water telde de LG maar 1,6 kWh.
+     de boiler 51 °C, en voor warm water telde de LG maar 1,6 kWh. **Bevestigd op vrijdag 27-11:** tijdens de
+     ontsmetting kwam de boiler niet verder dan 55–58 °C.
 
 **Uitslag van de controle (24-11):**
 
@@ -479,6 +480,19 @@ Met € 0,42 per kWh kost een dag rond 0 °C ≈ € 10. In de simulator staat �
   min LG" minder dan ≈ 5 kWh? Dan telde de LG weer te veel, en is de echte COP hoger.
 * Op 25-11 wordt er 's ochtends gemiddeld 3,2 kW warmte geleverd, terwijl het huis bij −1 °C ≈ 2,5 kW vraagt. De vloer
   laadt dus op na het verhogen naar 25 °C.
+
+### 27 november: weersverwachting bijgesteld, vrijdagnacht tot −4 °C
+
+| Dag | Buiten gem. (min–max) | Water |
+|---|---|---|
+| za 28-11 | −1,7 °C (−4,0 – 0,4) | **25 °C** (vrijdagavond laten staan) |
+| zo 29-11 | 1,2 °C | **24 °C** (zaterdagavond) |
+| ma 30-11 en later | 3,6 tot 6,7 °C | **23 °C** (zondagavond) |
+
+Omdat het element niet werkt en het in de nacht naar zaterdag −4 °C wordt (onder de *Verwarmer aan-temperatuur* van
+−3 °C):
+* **Verwarmer aan-temperatuur → −10 °C.** Dan rekent de LG niet op een element dat niets doet.
+* **Gebruik de tankverwarmer → Niet gebruiken**, vóór het bad van zaterdag.
 
 **Les:** grote stappen in de watertemperatuur geven een golfbeweging (te warm → DT4 lang uit → vloer koelt af →
 hard inhalen). Liever per stap 1 °C en een dag afwachten.
@@ -637,9 +651,9 @@ Bereiken komen uit de LG-installatiehandleiding van de HN0913T.
 | Tank instelling 2 → Hysterese | 3 | **4** (maximum) | Minder korte naverwarmingsbeurten. "Verwarming voorrang" staat bij IWT altijd op DHW. |
 | Tank instelling 1 | Min 5 / Comp.limiet 58 | laten | Warmtepomp mag tot 58 °C. |
 | DHW tijdsinstelling | 45 / 30 | laten | |
-| Gebruik de tankverwarmer | Gebruik, Cyclus, 60 min | laten | Element pas na 60 min warmtepompbedrijf. |
+| Gebruik de tankverwarmer | Gebruik, Cyclus, 60 min | **Niet gebruiken** (bijgesteld 24-11) | Het element trekt geen stroom (Pulse 21-11; ontsmetting 27-11 strandt op 55–58 °C). De LG wacht dan uren op het element, met de warmtepomp stil. Ook met een werkend element is naverwarmen met de warmtepomp ≈ 3× zuiniger. |
 | Tank ontsmetting 1 | Gebruik, vrijdag, 12 uur | **laten** | Midden op de dag = warmste buitenlucht (en eventueel zonnestroom). |
-| Tank ontsmetting 2 | 67 °C / 10 min / eind 1 | **60 °C / 10 min / 1** | De warmtepomp doet tot 58 °C; alleen 58 → 60 °C gaat elektrisch in plaats van 58 → 67 °C. Bespaart ≈ 60–90 kWh/jaar. 60 °C blijft de gangbare desinfectietemperatuur; niet uitzetten. |
+| Tank ontsmetting 2 | 67 °C / 10 min / eind 1 | **60 °C / 10 min / 1**, maar alleen met een werkend element. Zonder element haalt de boiler 55–58 °C (27-11): laat de installateur kiezen | De warmtepomp doet tot 58 °C; alleen 58 → 60 °C gaat elektrisch in plaats van 58 → 67 °C. Bespaart ≈ 60–90 kWh/jaar. 60 °C blijft de gangbare desinfectietemperatuur; niet uitzetten. |
 | DHW-schema | – | **In de winter geen rooster** (bijgesteld 18-11, zie §1b). In het voorjaar eventueel **11:00 → 48 °C** met een avonddoel van **minstens 45 °C** | Opwarmen naar 48 °C gebeurt dan in de middag: eigen zonnestroom (18 panelen), de warmste buitenlucht en meestal de goedkope middaguren van je dynamische tarief. Na het einde van salderen (1-1-2027) scheelt dat direct geld. Buiten het venster staat het doel op 40 °C (de laagste waarde), zodat hij alleen bijwarmt als de boiler echt leeg raakt (onder ≈ 36 °C). Zet het schema 's avonds niet op "uit": dan warmt hij helemaal niet meer bij. |
 | Hercirculatietijd | Niet gebruiken | laten | |
 
