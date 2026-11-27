@@ -839,6 +839,13 @@ die de Pulse niet zag: het element werd aangestuurd maar trok (vrijwel) geen str
 (1) is het interne element van 3 kW aangesloten en werkt het (handleiding p. 181: thermische beveiliging
 resetten)? (2) zet de energiebewaking dan op **LG 1Ø, 3 kW**; (3) controleer *Verwarmer aan-temperatuur*
 (fabriek −5 °C; liever −10 °C of lager).
+*Aanvulling 27-11:* **Extern** is bedoeld voor een element van een ander merk, dat de LG via een uitgang aanstuurt.
+**LG 1Ø / LG 3Ø** is voor het eigen LG-element op 1 of 3 fasen. Volgens de handleiding hoort de instelling bij de
+energiebewaking, en dus bij het tellen. Een kleine kans blijft dat de LG met *Extern* een andere uitgang schakelt dan
+die van het ingebouwde element. Dan zou het element nooit aangaan, en dat past bij wat we zien. Vraag de installateur
+welk element er zit, op hoeveel fasen het is aangesloten, en zet daarna het type goed. De werkschakelaar is 4-polig
+(25 A); dat kan op een aansluiting met 3 fasen wijzen.
+
 *Aanvulling 24-11:* *Verwarmer aan-temperatuur* staat op −3 °C. Het verwarmingselement mocht op 16-11 en 21-11
 dus niet bijspringen. Waarschijnlijk telt de LG het **element in de boiler** (*Gebruik de tankverwarmer* staat aan).
 Zie §1b, 20 tot en met 23 november.
